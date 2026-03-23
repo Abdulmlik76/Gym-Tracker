@@ -25,10 +25,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Cairo'
 
 /* ── APP SHELL ── */
 #app{display:flex;flex-direction:column;height:100%;height:100dvh;padding-top:var(--top)}
-.view{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;flex-direction:column;padding-bottom:calc(var(--bot) + 64px)}
+.view{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;flex-direction:column;padding-bottom:calc(var(--bot) + 70px)}
 .view.active{display:flex}
 
-/* ── NAV BAR ── */
+/* ── LOADING SCREEN ── */
+#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+#loading-screen.hide{opacity:0;pointer-events:none}
+.loader-icon{font-size:48px;margin-bottom:16px;animation:pulse 1.2s infinite}
+.loader-text{font-size:14px;color:var(--muted);font-weight:600}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* ── NAV BAR — iPhone 16 Pro safe ── */
 nav{
   position:fixed;bottom:0;left:0;right:0;
   display:flex;
@@ -65,7 +72,7 @@ nav{
 
 .days-scroll{flex:1;overflow-y:auto;padding:0 20px 8px;display:flex;flex-direction:column;gap:10px}
 
-.day-tile{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .15s;active:opacity:.8}
+.day-tile{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .15s}
 .day-tile:active{transform:scale(.98);opacity:.8}
 .day-tile.rest-tile{opacity:.45;cursor:default}
 .day-tile-top{display:flex;align-items:center;gap:12px}
@@ -133,31 +140,32 @@ nav{
 .sets-header .sh-set{width:32px}
 .sets-header .sh-w{flex:1;text-align:center}
 .sets-header .sh-r{flex:1;text-align:center}
-.sets-header .sh-done{width:38px}
+.sets-header .sh-done{width:44px}
 
 .sets-logger{display:flex;flex-direction:column;gap:7px}
-.set-row{display:flex;align-items:center;gap:7px}
+.set-row{display:flex;align-items:center;gap:6px}
 .set-num{width:28px;height:28px;border-radius:7px;background:rgba(245,166,35,.1);color:var(--acc);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .set-input-group{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.set-input{background:var(--s1);border:1.5px solid var(--border);border-radius:9px;padding:9px 6px;color:var(--text);font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;width:100%;text-align:center;-webkit-appearance:none;transition:border-color .2s}
+.set-input{background:var(--s1);border:1.5px solid var(--border);border-radius:9px;padding:10px 6px;color:var(--text);font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;width:100%;text-align:center;-webkit-appearance:none;transition:border-color .2s}
 .set-input:focus{border-color:var(--acc);outline:none;background:rgba(245,166,35,.04)}
 .set-input::placeholder{color:var(--muted);font-size:11px;font-weight:400}
-.set-done-btn{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.set-done-btn{width:44px;height:44px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
 .set-done-btn.done{background:var(--green);border-color:var(--green);color:#fff}
 .set-done-btn svg{width:16px;height:16px}
 
-.sets-actions{display:flex;gap:8px;margin-top:10px}
+.sets-actions{display:flex;gap:8px;margin-top:12px}
 .add-set-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;border:1.5px dashed var(--border);border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .2s}
 .add-set-btn:active{border-color:var(--acc);color:var(--acc)}
 
-/* SAVE BUTTON — FIXED ALWAYS VISIBLE */
+/* SAVE BUTTON — large & always visible */
 .save-ex-btn{
-  flex:2;padding:11px;border-radius:10px;
+  flex:2;padding:14px;border-radius:12px;
   background:linear-gradient(135deg,var(--acc),#e0941a);
   border:none;color:#000;font-family:'Cairo',sans-serif;
-  font-size:14px;font-weight:900;cursor:pointer;
+  font-size:15px;font-weight:900;cursor:pointer;
   box-shadow:0 4px 16px rgba(245,166,35,.3);
   transition:all .2s;
+  min-height:48px;
 }
 .save-ex-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(245,166,35,.2)}
 
@@ -181,7 +189,14 @@ nav{
 .chart-ex-name{font-weight:700;font-size:14px}
 .chart-pr-badge{font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(245,166,35,.15);color:var(--acc);font-weight:700}
 .chart-muscle{font-size:11px;color:var(--muted);margin-bottom:12px}
-.chart-wrap{position:relative;height:140px}
+.chart-wrap{position:relative;height:160px}
+
+/* Volume chart */
+.volume-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;overflow:hidden}
+.volume-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.volume-title{font-weight:700;font-size:14px}
+.volume-badge{font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(78,205,196,.15);color:var(--acc3);font-weight:700}
+.volume-wrap{position:relative;height:180px}
 
 /* History cards */
 .prog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
@@ -201,7 +216,7 @@ nav{
 
 /* ══════════ STATS ══════════ */
 #stats{background:var(--bg)}
-.stats-grid{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.stats-grid{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
 .stat-card-title{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
 .mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -213,6 +228,14 @@ nav{
 .pr-ex{font-size:13px;font-weight:600}
 .pr-val{font-size:13px;color:var(--acc);font-weight:700}
 .pr-date{font-size:10px;color:var(--muted);text-align:left}
+
+/* Muscle volume summary */
+.muscle-volume-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mv-item{background:var(--s2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:4px}
+.mv-name{font-size:11px;color:var(--muted);font-weight:600}
+.mv-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden}
+.mv-fill{height:100%;border-radius:2px;transition:width .6s}
+.mv-val{font-size:13px;font-weight:900}
 
 /* ══════════ TOAST ══════════ */
 .toast{position:fixed;bottom:calc(72px + var(--bot) + 12px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--text);opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.6)}
@@ -226,9 +249,24 @@ nav{
 ::-webkit-scrollbar{display:none}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+
+/* ══════════ iPhone 16 Pro specific ══════════ */
+@supports(padding: max(0px)){
+  nav{padding-bottom:max(var(--bot), 20px)}
+  .view{padding-bottom:calc(max(var(--bot), 20px) + 70px)}
+}
+@media screen and (max-width:393px){
+  .set-input{padding:9px 4px;font-size:14px}
+  .set-done-btn{width:40px;height:40px}
+  .ex-title{font-size:13px}
+}
 </style>
 </head>
 <body>
+<div id="loading-screen">
+  <div class="loader-icon">💪</div>
+  <div class="loader-text">جاري تحميل بياناتك...</div>
+</div>
 <div id="app">
 
   <!-- ══ HOME ══ -->
@@ -276,7 +314,7 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
   <!-- ══ STATS ══ -->
   <div id="stats" class="view">
     <div class="page-header"><h1>الإنجازات 🏆</h1><p>نظرة شاملة على رحلتك</p></div>
-    <div class="stats-grid" id="stats-grid"></div>
+    <div class="stats-grid" id="stats-grid" style="overflow-y:auto;flex:1"></div>
   </div>
 
   <nav>
@@ -395,76 +433,113 @@ const WEEKS = {
 };
 
 // ════════════════════════════════
-// STATE
+// STATE & STORAGE
 // ════════════════════════════════
-let currentWeek=1;
-let logs=JSON.parse(localStorage.getItem('gym_logs_v2')||'{}');
-let activeCharts={};
-let progTab='history';
+let currentWeek = 1;
+let logs = {};
+let activeCharts = {};
+let progTab = 'history';
+let storageAvailable = false;
 
-function saveLogs(){localStorage.setItem('gym_logs_v2',JSON.stringify(logs))}
+// Try persistent storage first, fall back to in-memory
+async function initStorage() {
+  try {
+    if (window.storage) {
+      storageAvailable = true;
+      const result = await window.storage.get('gym_logs_v2');
+      if (result && result.value) {
+        logs = JSON.parse(result.value);
+      }
+    }
+  } catch (e) {
+    console.log('Storage init:', e);
+    // Try localStorage as fallback
+    try {
+      const local = localStorage.getItem('gym_logs_v2');
+      if (local) logs = JSON.parse(local);
+    } catch (e2) { /* in-memory only */ }
+  }
+  // Hide loading, render
+  document.getElementById('loading-screen').classList.add('hide');
+  setTimeout(function(){ document.getElementById('loading-screen').style.display='none'; }, 500);
+  renderHome();
+}
+
+async function saveLogs() {
+  try {
+    if (storageAvailable && window.storage) {
+      await window.storage.set('gym_logs_v2', JSON.stringify(logs));
+    }
+  } catch (e) {
+    console.log('Save error:', e);
+  }
+  // Also try localStorage
+  try { localStorage.setItem('gym_logs_v2', JSON.stringify(logs)); } catch(e){}
+}
 
 // ════════════════════════════════
 // UTILS
 // ════════════════════════════════
-function today(){return new Date().toISOString().split('T')[0]}
+function today(){ return new Date().toISOString().split('T')[0]; }
 function fmtDate(d){
-  const[y,m,day]=d.split('-');
-  const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  return `${parseInt(day)} ${months[parseInt(m)-1]}`;
+  var parts = d.split('-');
+  var y = parts[0], m = parts[1], day = parts[2];
+  var months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  return parseInt(day) + ' ' + months[parseInt(m)-1];
 }
 function bestSet(sets){
-  if(!sets||!sets.length)return null;
-  return sets.reduce((b,s)=>(s.w*s.r)>(b.w*b.r)?s:b,sets[0]);
+  if(!sets || !sets.length) return null;
+  return sets.reduce(function(b,s){ return (s.w*s.r)>(b.w*b.r)?s:b; }, sets[0]);
 }
 function allExercises(){
-  const map={};
-  [1,2].forEach(w=>WEEKS[w].forEach(d=>d.exercises.forEach(e=>{map[e.id]=e;})));
+  var map = {};
+  [1,2].forEach(function(w){ WEEKS[w].forEach(function(d){ d.exercises.forEach(function(e){ map[e.id]=e; }); }); });
   return map;
 }
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
 function getLastSession(exId){
-  const sessions=(logs[exId]||[]).filter(s=>s.date!==today());
-  if(!sessions.length)return null;
+  var sessions = (logs[exId]||[]).filter(function(s){ return s.date !== today(); });
+  if(!sessions.length) return null;
   return sessions[sessions.length-1];
 }
-const DAYS_AR=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+var DAYS_AR = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
 // ════════════════════════════════
 // HOME
 // ════════════════════════════════
 function setWeek(w){
-  currentWeek=w;
-  document.querySelectorAll('.wtab').forEach((t,i)=>t.classList.toggle('active',i+1===w));
+  currentWeek = w;
+  document.querySelectorAll('.wtab').forEach(function(t,i){ t.classList.toggle('active', i+1===w); });
   renderHome();
 }
 function renderHome(){
-  const h=new Date().getHours();
-  document.getElementById('greeting').textContent=h<12?'صباح الخير،':h<17?'مساء النهار،':h<21?'مساء الخير،':'مساء النور،';
-  const now=new Date();
-  document.getElementById('hero-date').textContent=`${DAYS_AR[now.getDay()]} • ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
-  const c=document.getElementById('days-container');
-  c.innerHTML='';
-  WEEKS[currentWeek].forEach((day,idx)=>{
-    const tile=document.createElement('div');
-    tile.className='day-tile'+(day.rest?' rest-tile':'');
-    const done=day.rest?0:day.exercises.filter(e=>(logs[e.id]||[]).some(s=>s.date===today())).length;
-    tile.innerHTML=`
-      <div class="day-tile-top">
-        <div class="day-badge ${day.rest?'badge-rest':(currentWeek===1?'badge-w1':'badge-w2')}">${idx+1}</div>
-        <div class="day-info">
-          <div class="day-name">${day.day}</div>
-          <div class="day-focus">${day.focus}</div>
-        </div>
-        ${done>0?`<div class="day-done-badge">✓ ${done}/${day.exercises.length}</div>`:''}
-      </div>
-      ${day.chips.length?`<div class="muscle-chips">${day.chips.map((c,i)=>`<span class="chip ${c}">${day.labels[i]}</span>`).join('')}</div>`:''}
-    `;
-    if(!day.rest)tile.onclick=()=>openWorkout(currentWeek,idx);
+  var h = new Date().getHours();
+  document.getElementById('greeting').textContent = h<12?'صباح الخير،':h<17?'مساء النهار،':h<21?'مساء الخير،':'مساء النور،';
+  var now = new Date();
+  document.getElementById('hero-date').textContent = DAYS_AR[now.getDay()] + ' • ' + now.getDate()+'/'+( now.getMonth()+1)+'/'+now.getFullYear();
+  var c = document.getElementById('days-container');
+  c.innerHTML = '';
+  WEEKS[currentWeek].forEach(function(day, idx){
+    var tile = document.createElement('div');
+    tile.className = 'day-tile' + (day.rest?' rest-tile':'');
+    var done = day.rest ? 0 : day.exercises.filter(function(e){ return (logs[e.id]||[]).some(function(s){ return s.date===today(); }); }).length;
+    tile.innerHTML =
+      '<div class="day-tile-top">' +
+        '<div class="day-badge '+(day.rest?'badge-rest':(currentWeek===1?'badge-w1':'badge-w2'))+'">'+(idx+1)+'</div>' +
+        '<div class="day-info">' +
+          '<div class="day-name">'+day.day+'</div>' +
+          '<div class="day-focus">'+day.focus+'</div>' +
+        '</div>' +
+        (done>0?'<div class="day-done-badge">✓ '+done+'/'+day.exercises.length+'</div>':'') +
+      '</div>' +
+      (day.chips.length?'<div class="muscle-chips">'+day.chips.map(function(ch,i){ return '<span class="chip '+ch+'">'+day.labels[i]+'</span>'; }).join('')+'</div>':'');
+    if(!day.rest){
+      (function(w,di){ tile.onclick = function(){ openWorkout(w,di); }; })(currentWeek, idx);
+    }
     c.appendChild(tile);
   });
 }
@@ -472,267 +547,320 @@ function renderHome(){
 // ════════════════════════════════
 // WORKOUT
 // ════════════════════════════════
-function openWorkout(week,dayIdx){
-  const day=WEEKS[week][dayIdx];
-  document.getElementById('workout-title').textContent=day.day+' — '+day.focus;
-  document.getElementById('workout-subtitle').textContent=day.exercises.length+' تمارين';
-  const c=document.getElementById('exercises-container');
-  c.innerHTML='';
-  day.exercises.forEach(ex=>c.appendChild(buildExCard(ex)));
-  switchView('workout',null);
+function openWorkout(week, dayIdx){
+  var day = WEEKS[week][dayIdx];
+  document.getElementById('workout-title').textContent = day.day+' — '+day.focus;
+  document.getElementById('workout-subtitle').textContent = day.exercises.length+' تمارين';
+  var c = document.getElementById('exercises-container');
+  c.innerHTML = '';
+  day.exercises.forEach(function(ex){ c.appendChild(buildExCard(ex)); });
+  switchView('workout', null);
 }
 
 function buildExCard(ex){
-  const card=document.createElement('div');
-  card.className='exercise-card';
-  card.id='card-'+ex.id;
+  var card = document.createElement('div');
+  card.className = 'exercise-card';
+  card.id = 'card-'+ex.id;
 
-  const last=getLastSession(ex.id);
-  const todayLog=(logs[ex.id]||[]).find(s=>s.date===today());
+  var last = getLastSession(ex.id);
+  var todayLog = (logs[ex.id]||[]).find(function(s){ return s.date===today(); });
 
   // Sets: today's log OR last session's sets (memory!) OR 3 empty
-  let initSets;
+  var initSets;
   if(todayLog){
-    initSets=todayLog.sets.map(s=>({...s}));
+    initSets = todayLog.sets.map(function(s){ return {w:s.w, r:s.r, done:s.done}; });
   } else if(last){
-    initSets=last.sets.map(s=>({w:s.w,r:s.r,done:false}));
+    initSets = last.sets.map(function(s){ return {w:s.w, r:s.r, done:false}; });
   } else {
-    initSets=[{w:'',r:'',done:false},{w:'',r:'',done:false},{w:'',r:'',done:false}];
+    initSets = [{w:'',r:'',done:false},{w:'',r:'',done:false},{w:'',r:'',done:false}];
   }
 
   // Last session banner
-  let lastHtml='';
+  var lastHtml = '';
   if(last){
-    lastHtml=`<div class="last-banner">
-      <div class="last-banner-top">
-        <div class="last-banner-label">⏱ آخر جلسة</div>
-        <div class="last-banner-date">${fmtDate(last.date)}</div>
-      </div>
-      <div class="last-banner-sets">
-        ${last.sets.map((s,i)=>`<span class="last-pill" onclick="fillSet('${ex.id}',${i},${s.w},${s.r})">${s.w}كج × ${s.r}</span>`).join('')}
-      </div>
-      ${!todayLog?`<button class="use-last-btn" onclick="useLastSession('${ex.id}')">↩ استخدم نفس الأوزان</button>`:''}
-    </div>`;
+    lastHtml = '<div class="last-banner">' +
+      '<div class="last-banner-top">' +
+        '<div class="last-banner-label">⏱ آخر جلسة</div>' +
+        '<div class="last-banner-date">'+fmtDate(last.date)+'</div>' +
+      '</div>' +
+      '<div class="last-banner-sets">' +
+        last.sets.map(function(s,i){ return '<span class="last-pill" onclick="fillSet(\''+ex.id+'\','+i+','+s.w+','+s.r+')">'+s.w+'كج × '+s.r+'</span>'; }).join('') +
+      '</div>' +
+      (!todayLog ? '<button class="use-last-btn" onclick="useLastSession(\''+ex.id+'\')">↩ استخدم نفس الأوزان</button>':'') +
+    '</div>';
   }
 
-  const savedCount=todayLog?todayLog.sets.filter(s=>s.done).length:0;
+  card.innerHTML =
+    '<div class="ex-header" onclick="toggleEx(this)">' +
+      '<div class="ex-header-left">' +
+        '<div class="ex-title">'+ex.name+'</div>' +
+        '<div class="ex-muscle">'+ex.muscle+'</div>' +
+      '</div>' +
+      '<div class="ex-header-right">' +
+        '<div class="ex-target">'+ex.target+'</div>' +
+        '<div class="ex-status '+(todayLog?'show':'')+'" id="status-'+ex.id+'">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<div class="ex-expand">▾</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="ex-body">' +
+      lastHtml +
+      '<div class="sets-header">' +
+        '<span class="sh-set">ست</span>' +
+        '<span class="sh-w" style="flex:1;text-align:center">الوزن (كج)</span>' +
+        '<span class="sh-r" style="flex:1;text-align:center">التكرار</span>' +
+        '<span class="sh-done" style="width:44px"></span>' +
+      '</div>' +
+      '<div class="sets-logger" id="sets-'+ex.id+'"></div>' +
+      '<div class="sets-actions">' +
+        '<button class="add-set-btn" onclick="addSet(\''+ex.id+'\')">+ ست</button>' +
+        '<button class="save-ex-btn" onclick="saveExercise(\''+ex.id+'\')">💾 حفظ</button>' +
+      '</div>' +
+    '</div>';
 
-  card.innerHTML=`
-    <div class="ex-header" onclick="toggleEx(this)">
-      <div class="ex-header-left">
-        <div class="ex-title">${ex.name}</div>
-        <div class="ex-muscle">${ex.muscle}</div>
-      </div>
-      <div class="ex-header-right">
-        <div class="ex-target">${ex.target}</div>
-        <div class="ex-status ${todayLog?'show':''}" id="status-${ex.id}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="ex-expand">▾</div>
-      </div>
-    </div>
-    <div class="ex-body">
-      ${lastHtml}
-      <div class="sets-header">
-        <span class="sh-set">ست</span>
-        <span class="sh-w" style="flex:1;text-align:center">الوزن (كج)</span>
-        <span class="sh-r" style="flex:1;text-align:center">التكرار</span>
-        <span class="sh-done" style="width:38px"></span>
-      </div>
-      <div class="sets-logger" id="sets-${ex.id}"></div>
-      <div class="sets-actions">
-        <button class="add-set-btn" onclick="addSet('${ex.id}')">+ ست</button>
-        <button class="save-ex-btn" onclick="saveExercise('${ex.id}')">💾 حفظ</button>
-      </div>
-    </div>
-  `;
-
-  const setsC=card.querySelector(`#sets-${ex.id}`);
-  initSets.forEach((s,i)=>appendSetRow(setsC,ex.id,i,s));
+  var setsC = card.querySelector('#sets-'+ex.id);
+  initSets.forEach(function(s,i){ appendSetRow(setsC, ex.id, i, s); });
 
   return card;
 }
 
-function appendSetRow(container,exId,idx,data){
-  const row=document.createElement('div');
-  row.className='set-row';
-  row.id=`set-${exId}-${idx}`;
-  row.innerHTML=`
-    <div class="set-num">${idx+1}</div>
-    <div class="set-input-group">
-      <input class="set-input" type="number" inputmode="decimal" placeholder="كج" value="${data.w||''}" id="w-${exId}-${idx}">
-      <input class="set-input" type="number" inputmode="numeric" placeholder="تكرار" value="${data.r||''}" id="r-${exId}-${idx}">
-    </div>
-    <button class="set-done-btn ${data.done?'done':''}" onclick="toggleSetDone(this)" id="done-${exId}-${idx}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-    </button>
-  `;
+function appendSetRow(container, exId, idx, data){
+  var row = document.createElement('div');
+  row.className = 'set-row';
+  row.id = 'set-'+exId+'-'+idx;
+  row.innerHTML =
+    '<div class="set-num">'+(idx+1)+'</div>' +
+    '<div class="set-input-group">' +
+      '<input class="set-input" type="number" inputmode="decimal" placeholder="كج" value="'+(data.w||'')+'" id="w-'+exId+'-'+idx+'">' +
+      '<input class="set-input" type="number" inputmode="numeric" placeholder="تكرار" value="'+(data.r||'')+'" id="r-'+exId+'-'+idx+'">' +
+    '</div>' +
+    '<button class="set-done-btn '+(data.done?'done':'')+'" onclick="toggleSetDone(this)" id="done-'+exId+'-'+idx+'">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' +
+    '</button>';
   container.appendChild(row);
 }
 
-function toggleEx(header){header.closest('.exercise-card').classList.toggle('open')}
-function toggleSetDone(btn){btn.classList.toggle('done')}
+function toggleEx(header){ header.closest('.exercise-card').classList.toggle('open'); }
+function toggleSetDone(btn){ btn.classList.toggle('done'); }
 
-function fillSet(exId,idx,w,r){
-  const wEl=document.getElementById(`w-${exId}-${idx}`);
-  const rEl=document.getElementById(`r-${exId}-${idx}`);
-  if(wEl)wEl.value=w;
-  if(rEl)rEl.value=r;
+function fillSet(exId, idx, w, r){
+  var wEl = document.getElementById('w-'+exId+'-'+idx);
+  var rEl = document.getElementById('r-'+exId+'-'+idx);
+  if(wEl) wEl.value = w;
+  if(rEl) rEl.value = r;
 }
 
 function useLastSession(exId){
-  const last=getLastSession(exId);
-  if(!last)return;
-  const c=document.getElementById(`sets-${exId}`);
-  c.innerHTML='';
-  last.sets.forEach((s,i)=>appendSetRow(c,exId,i,{w:s.w,r:s.r,done:false}));
+  var last = getLastSession(exId);
+  if(!last) return;
+  var c = document.getElementById('sets-'+exId);
+  c.innerHTML = '';
+  last.sets.forEach(function(s,i){ appendSetRow(c, exId, i, {w:s.w, r:s.r, done:false}); });
   showToast('✅ تم تحميل آخر جلسة');
 }
 
 function addSet(exId){
-  const c=document.getElementById(`sets-${exId}`);
-  const idx=c.children.length;
-  appendSetRow(c,exId,idx,{w:'',r:'',done:false});
+  var c = document.getElementById('sets-'+exId);
+  var idx = c.children.length;
+  appendSetRow(c, exId, idx, {w:'',r:'',done:false});
 }
 
 function saveExercise(exId){
-  const c=document.getElementById(`sets-${exId}`);
-  const sets=[];
-  c.querySelectorAll('.set-row').forEach((row,i)=>{
-    const w=parseFloat(document.getElementById(`w-${exId}-${i}`)?.value)||0;
-    const r=parseInt(document.getElementById(`r-${exId}-${i}`)?.value)||0;
-    const done=document.getElementById(`done-${exId}-${i}`)?.classList.contains('done')||false;
-    if(w||r)sets.push({w,r,done});
+  var c = document.getElementById('sets-'+exId);
+  var sets = [];
+  c.querySelectorAll('.set-row').forEach(function(row,i){
+    var wEl = document.getElementById('w-'+exId+'-'+i);
+    var rEl = document.getElementById('r-'+exId+'-'+i);
+    var doneEl = document.getElementById('done-'+exId+'-'+i);
+    var w = parseFloat(wEl ? wEl.value : 0) || 0;
+    var r = parseInt(rEl ? rEl.value : 0) || 0;
+    var done = doneEl ? doneEl.classList.contains('done') : false;
+    if(w || r) sets.push({w:w, r:r, done:done});
   });
-  if(!sets.length){showToast('⚠️ أدخل الوزن والتكرار أول');return;}
-  if(!logs[exId])logs[exId]=[];
-  const ei=logs[exId].findIndex(s=>s.date===today());
-  if(ei>=0)logs[exId][ei].sets=sets;
-  else logs[exId].push({date:today(),sets});
+  if(!sets.length){ showToast('⚠️ أدخل الوزن والتكرار أول'); return; }
+  if(!logs[exId]) logs[exId] = [];
+  var ei = logs[exId].findIndex(function(s){ return s.date===today(); });
+  if(ei >= 0) logs[exId][ei].sets = sets;
+  else logs[exId].push({date:today(), sets:sets});
   saveLogs();
 
   // PR check
-  const all=logs[exId];
-  const cur=bestSet(sets);
-  const prev=all.slice(0,-1).map(s=>bestSet(s.sets)).filter(Boolean);
-  const isPR=prev.length>0&&cur&&prev.every(p=>(cur.w*cur.r)>=(p.w*p.r));
+  var all = logs[exId];
+  var cur = bestSet(sets);
+  var prev = all.slice(0,-1).map(function(s){ return bestSet(s.sets); }).filter(Boolean);
+  var isPR = prev.length>0 && cur && prev.every(function(p){ return (cur.w*cur.r)>=(p.w*p.r); });
 
-  showToast(isPR?'🏆 رقم قياسي جديد!':'✅ تم الحفظ!');
+  showToast(isPR ? '🏆 رقم قياسي جديد!' : '✅ تم الحفظ!');
 
-  // Update status icon
-  const statusEl=document.getElementById('status-'+exId);
-  if(statusEl)statusEl.classList.add('show');
+  var statusEl = document.getElementById('status-'+exId);
+  if(statusEl) statusEl.classList.add('show');
 
   renderHome();
 }
 
 function goHome(){
-  switchView('home',document.querySelector('.nav-btn'));
+  switchView('home', document.querySelector('.nav-btn'));
   renderHome();
 }
 
 // ════════════════════════════════
 // PROGRESS
 // ════════════════════════════════
-let currentProgTab='history';
+var currentProgTab = 'history';
 
-function switchProgTab(tab,btn){
-  currentProgTab=tab;
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+function switchProgTab(tab, btn){
+  currentProgTab = tab;
+  document.querySelectorAll('.ptab').forEach(function(t){ t.classList.remove('active'); });
   btn.classList.add('active');
-  const histEl=document.getElementById('prog-list');
-  const chartEl=document.getElementById('charts-container');
-  const searchEl=document.getElementById('prog-search-wrap');
+  var histEl = document.getElementById('prog-list');
+  var chartEl = document.getElementById('charts-container');
+  var searchEl = document.getElementById('prog-search-wrap');
   if(tab==='history'){
-    histEl.style.display='flex';chartEl.style.display='none';searchEl.style.display='block';
+    histEl.style.display='flex'; chartEl.style.display='none'; searchEl.style.display='block';
     renderProgress();
   } else {
-    histEl.style.display='none';chartEl.style.display='flex';searchEl.style.display='none';
+    histEl.style.display='none'; chartEl.style.display='flex'; searchEl.style.display='none';
     renderCharts();
   }
 }
 
 function renderProgress(){
-  const query=(document.getElementById('prog-search')?.value||'').toLowerCase();
-  const list=document.getElementById('prog-list');
-  const allExs=allExercises();
-  list.innerHTML='';
-  const ids=Object.keys(logs).filter(id=>logs[id]?.length&&allExs[id]);
-  const filtered=ids.filter(id=>!query||allExs[id].name.toLowerCase().includes(query)||allExs[id].muscle.includes(query));
+  var query = (document.getElementById('prog-search') ? document.getElementById('prog-search').value : '').toLowerCase();
+  var list = document.getElementById('prog-list');
+  var allExs = allExercises();
+  list.innerHTML = '';
+  var ids = Object.keys(logs).filter(function(id){ return logs[id] && logs[id].length && allExs[id]; });
+  var filtered = ids.filter(function(id){ return !query || allExs[id].name.toLowerCase().indexOf(query)!==-1 || allExs[id].muscle.indexOf(query)!==-1; });
   if(!filtered.length){
-    list.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>`;
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>';
     return;
   }
-  filtered.forEach(id=>{
-    const ex=allExs[id];
-    const sessions=logs[id];
-    let overallBest=null;
-    sessions.forEach(s=>{const b=bestSet(s.sets);if(b&&(!overallBest||(b.w*b.r)>(overallBest.w*overallBest.r)))overallBest=b;});
-    const card=document.createElement('div');
-    card.className='prog-card';
-    card.innerHTML=`
-      <div class="prog-card-header" onclick="this.closest('.prog-card').classList.toggle('open')">
-        <div><div class="prog-ex-name">${ex.name}</div><div class="prog-sessions">${sessions.length} جلسة • ${ex.muscle}</div></div>
-        <div><div class="prog-best-val">${overallBest?overallBest.w+'كج':'—'}</div><div class="prog-best-label">${overallBest?'× '+overallBest.r+' تكرار':''}</div></div>
-      </div>
-      <div class="prog-history">
-        ${sessions.slice().reverse().map(s=>{
-          const sb=bestSet(s.sets);
-          return `<div class="hist-row">
-            <div class="hist-date">${fmtDate(s.date)}</div>
-            <div class="hist-sets">${s.sets.map((st,i)=>`<span class="hist-set-pill">${st.w}كج × ${st.r}</span>`).join('')}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    `;
+  filtered.forEach(function(id){
+    var ex = allExs[id];
+    var sessions = logs[id];
+    var overallBest = null;
+    sessions.forEach(function(s){ var b = bestSet(s.sets); if(b && (!overallBest || (b.w*b.r)>(overallBest.w*overallBest.r))) overallBest=b; });
+    var card = document.createElement('div');
+    card.className = 'prog-card';
+    card.innerHTML =
+      '<div class="prog-card-header" onclick="this.closest(\'.prog-card\').classList.toggle(\'open\')">' +
+        '<div><div class="prog-ex-name">'+ex.name+'</div><div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+'</div></div>' +
+        '<div><div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div><div class="prog-best-label">'+(overallBest?'× '+overallBest.r+' تكرار':'')+'</div></div>' +
+      '</div>' +
+      '<div class="prog-history">' +
+        sessions.slice().reverse().map(function(s){
+          return '<div class="hist-row">' +
+            '<div class="hist-date">'+fmtDate(s.date)+'</div>' +
+            '<div class="hist-sets">'+s.sets.map(function(st){ return '<span class="hist-set-pill">'+st.w+'كج × '+st.r+'</span>'; }).join('')+'</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
     list.appendChild(card);
   });
 }
 
 function renderCharts(){
-  const container=document.getElementById('charts-container');
-  container.innerHTML='';
+  var container = document.getElementById('charts-container');
+  container.innerHTML = '';
   // destroy old charts
-  Object.values(activeCharts).forEach(c=>{try{c.destroy()}catch(e){}});
-  activeCharts={};
+  Object.values(activeCharts).forEach(function(c){ try{c.destroy();}catch(e){} });
+  activeCharts = {};
 
-  const allExs=allExercises();
-  const ids=Object.keys(logs).filter(id=>logs[id]?.length>=2&&allExs[id]);
+  var allExs = allExercises();
+  var ids = Object.keys(logs).filter(function(id){ return logs[id] && logs[id].length>=2 && allExs[id]; });
 
   if(!ids.length){
-    container.innerHTML=`<div class="empty"><div class="empty-icon">📊</div><p>تحتاج جلستين على الأقل لكل تمرين عشان يظهر الرسم البياني</p></div>`;
+    container.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><p>تحتاج جلستين على الأقل لكل تمرين عشان يظهر الرسم البياني</p></div>';
     return;
   }
 
-  ids.forEach(id=>{
-    const ex=allExs[id];
-    const sessions=logs[id];
-    const labels=sessions.map(s=>fmtDate(s.date));
-    const data=sessions.map(s=>{const b=bestSet(s.sets);return b?b.w:0;});
-    const maxW=Math.max(...data);
+  // Total volume chart (all exercises combined by date)
+  var volumeByDate = {};
+  Object.keys(logs).forEach(function(id){
+    if(!allExs[id]) return;
+    (logs[id]||[]).forEach(function(s){
+      var vol = s.sets.reduce(function(sum, st){ return sum + (st.w * st.r); }, 0);
+      if(!volumeByDate[s.date]) volumeByDate[s.date] = 0;
+      volumeByDate[s.date] += vol;
+    });
+  });
+  var volDates = Object.keys(volumeByDate).sort();
+  if(volDates.length >= 2){
+    var volCard = document.createElement('div');
+    volCard.className = 'volume-card';
+    volCard.innerHTML =
+      '<div class="volume-card-header">' +
+        '<div class="volume-title">إجمالي الحجم التدريبي</div>' +
+        '<div class="volume-badge">📊 كج × تكرار</div>' +
+      '</div>' +
+      '<div class="volume-wrap"><canvas id="chart-total-volume"></canvas></div>';
+    container.appendChild(volCard);
+    setTimeout(function(){
+      var ctx = document.getElementById('chart-total-volume');
+      if(!ctx) return;
+      activeCharts['total-vol'] = new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels: volDates.map(fmtDate),
+          datasets:[{
+            label:'الحجم الكلي',
+            data: volDates.map(function(d){ return volumeByDate[d]; }),
+            backgroundColor:'rgba(78,205,196,0.4)',
+            borderColor:'#4ecdc4',
+            borderWidth:2,
+            borderRadius:6,
+          }]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            tooltip:{
+              backgroundColor:'#1e1e28',borderColor:'#2c2c3e',borderWidth:1,
+              titleColor:'#eeeef5',bodyColor:'#4ecdc4',rtl:true,
+              callbacks:{label:function(ctx){ return ctx.raw.toLocaleString()+' كج'; }}
+            }
+          },
+          scales:{
+            x:{ticks:{color:'#6b6b8a',font:{size:9,family:'Cairo'},maxRotation:30},grid:{color:'rgba(255,255,255,.04)'}},
+            y:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},callback:function(v){return v>=1000?(v/1000).toFixed(1)+'k':v;}},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:true}
+          }
+        }
+      });
+    }, 50);
+  }
 
-    const card=document.createElement('div');
-    card.className='chart-card';
-    card.innerHTML=`
-      <div class="chart-card-header">
-        <div class="chart-ex-name">${ex.name}</div>
-        <div class="chart-pr-badge">🏆 ${maxW}كج</div>
-      </div>
-      <div class="chart-muscle">${ex.muscle}</div>
-      <div class="chart-wrap"><canvas id="chart-${id}"></canvas></div>
-    `;
+  // Per-exercise weight charts
+  ids.forEach(function(id){
+    var ex = allExs[id];
+    var sessions = logs[id];
+    var labels = sessions.map(function(s){ return fmtDate(s.date); });
+    var data = sessions.map(function(s){ var b = bestSet(s.sets); return b ? b.w : 0; });
+    var maxW = Math.max.apply(null, data);
+
+    var card = document.createElement('div');
+    card.className = 'chart-card';
+    card.innerHTML =
+      '<div class="chart-card-header">' +
+        '<div class="chart-ex-name">'+ex.name+'</div>' +
+        '<div class="chart-pr-badge">🏆 '+maxW+'كج</div>' +
+      '</div>' +
+      '<div class="chart-muscle">'+ex.muscle+'</div>' +
+      '<div class="chart-wrap"><canvas id="chart-'+id+'"></canvas></div>';
     container.appendChild(card);
 
-    setTimeout(()=>{
-      const ctx=document.getElementById(`chart-${id}`);
-      if(!ctx)return;
-      activeCharts[id]=new Chart(ctx,{
+    setTimeout(function(){
+      var ctx = document.getElementById('chart-'+id);
+      if(!ctx) return;
+      activeCharts[id] = new Chart(ctx, {
         type:'line',
         data:{
-          labels,
+          labels:labels,
           datasets:[{
             label:'أفضل وزن (كج)',
-            data,
+            data:data,
             borderColor:'#f5a623',
             backgroundColor:'rgba(245,166,35,0.12)',
             borderWidth:2.5,
@@ -749,22 +877,18 @@ function renderCharts(){
           plugins:{
             legend:{display:false},
             tooltip:{
-              backgroundColor:'#1e1e28',
-              borderColor:'#2c2c3e',
-              borderWidth:1,
-              titleColor:'#eeeef5',
-              bodyColor:'#f5a623',
-              rtl:true,
-              callbacks:{label:ctx=>`${ctx.raw}كج`}
+              backgroundColor:'#1e1e28',borderColor:'#2c2c3e',borderWidth:1,
+              titleColor:'#eeeef5',bodyColor:'#f5a623',rtl:true,
+              callbacks:{label:function(ctx){ return ctx.raw+'كج'; }}
             }
           },
           scales:{
             x:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},maxRotation:30},grid:{color:'rgba(255,255,255,.04)'}},
-            y:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},callback:v=>v+'كج'},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:false}
+            y:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},callback:function(v){return v+'كج';}},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:false}
           }
         }
       });
-    },50);
+    }, 50);
   });
 }
 
@@ -772,62 +896,89 @@ function renderCharts(){
 // STATS
 // ════════════════════════════════
 function renderStats(){
-  const grid=document.getElementById('stats-grid');
-  grid.innerHTML='';
-  const allExs=allExercises();
-  const uniqueDays=new Set(Object.values(logs).flatMap(a=>a.map(s=>s.date))).size;
-  const totalSessions=Object.values(logs).reduce((n,a)=>n+a.length,0);
-  const totalExs=Object.keys(logs).filter(k=>logs[k]?.length).length;
+  var grid = document.getElementById('stats-grid');
+  grid.innerHTML = '';
+  var allExs = allExercises();
+  var uniqueDays = {};
+  Object.values(logs).forEach(function(arr){ arr.forEach(function(s){ uniqueDays[s.date]=true; }); });
+  var uniqueDaysCount = Object.keys(uniqueDays).length;
+  var totalSessions = Object.values(logs).reduce(function(n,a){ return n+a.length; },0);
+  var totalExs = Object.keys(logs).filter(function(k){ return logs[k] && logs[k].length; }).length;
 
-  const prs=[];
-  Object.keys(logs).forEach(id=>{
-    if(!allExs[id]||!logs[id]?.length)return;
-    let best=null,bestDate='';
-    logs[id].forEach(s=>{const b=bestSet(s.sets);if(b&&(!best||(b.w*b.r)>(best.w*best.r))){best={...b};bestDate=s.date;}});
-    if(best)prs.push({...best,date:bestDate,exId:id});
+  var prs = [];
+  Object.keys(logs).forEach(function(id){
+    if(!allExs[id] || !logs[id] || !logs[id].length) return;
+    var best = null, bestDate = '';
+    logs[id].forEach(function(s){ var b = bestSet(s.sets); if(b && (!best || (b.w*b.r)>(best.w*best.r))){best={w:b.w,r:b.r};bestDate=s.date;} });
+    if(best) prs.push({w:best.w, r:best.r, date:bestDate, exId:id});
   });
-  prs.sort((a,b)=>(b.w*b.r)-(a.w*a.r));
+  prs.sort(function(a,b){ return (b.w*b.r)-(a.w*a.r); });
 
-  grid.innerHTML=`
-    <div class="stat-card">
-      <div class="stat-card-title">📊 الملخص العام</div>
-      <div class="mini-stats">
-        <div class="mini-stat"><div class="mini-val">${uniqueDays}</div><div class="mini-label">أيام تمرين</div></div>
-        <div class="mini-stat"><div class="mini-val">${totalSessions}</div><div class="mini-label">إجمالي السجلات</div></div>
-        <div class="mini-stat"><div class="mini-val">${totalExs}</div><div class="mini-label">تمارين مسجلة</div></div>
-        <div class="mini-stat"><div class="mini-val">${prs.length}</div><div class="mini-label">أرقام قياسية</div></div>
-      </div>
-    </div>
-    ${prs.length?`
-    <div class="stat-card">
-      <div class="stat-card-title">🏆 أفضل الأداءات</div>
-      ${prs.slice(0,10).map(p=>`
-        <div class="pr-row">
-          <div><div class="pr-ex">${allExs[p.exId]?.name||p.exId}</div><div class="pr-date">${fmtDate(p.date)}</div></div>
-          <div class="pr-val">${p.w}كج × ${p.r}</div>
-        </div>
-      `).join('')}
-    </div>`:`<div class="empty"><div class="empty-icon">🌱</div><p>ابدأ التسجيل وراح تشوف إحصائياتك هنا</p></div>`}
-  `;
+  // Muscle volume breakdown
+  var muscleVol = {};
+  Object.keys(logs).forEach(function(id){
+    if(!allExs[id]) return;
+    var muscle = allExs[id].muscle;
+    var vol = (logs[id]||[]).reduce(function(sum,s){ return sum + s.sets.reduce(function(ss,st){ return ss+(st.w*st.r); },0); },0);
+    if(!muscleVol[muscle]) muscleVol[muscle] = 0;
+    muscleVol[muscle] += vol;
+  });
+  var maxVol = Math.max.apply(null, Object.values(muscleVol).concat([1]));
+  var muscleColors = {'صدر':'#e74c3c','ظهر':'#3498db','كتف':'#9b59b6','ترايسبس':'#e67e22','بايسبس':'#2ecc71','أرجل':'#f1c40f','كور':'#1abc9c','جلوتس':'#e07060'};
+
+  var mvHtml = '';
+  if(Object.keys(muscleVol).length){
+    mvHtml = '<div class="stat-card"><div class="stat-card-title">💪 الحجم حسب العضلة</div><div class="muscle-volume-grid">';
+    Object.keys(muscleVol).sort(function(a,b){ return muscleVol[b]-muscleVol[a]; }).forEach(function(m){
+      var pct = Math.round((muscleVol[m]/maxVol)*100);
+      var color = '#f5a623';
+      Object.keys(muscleColors).forEach(function(k){ if(m.indexOf(k)!==-1) color = muscleColors[k]; });
+      mvHtml += '<div class="mv-item"><div class="mv-name">'+m+'</div><div class="mv-bar"><div class="mv-fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="mv-val" style="color:'+color+'">'+muscleVol[m].toLocaleString()+'</div></div>';
+    });
+    mvHtml += '</div></div>';
+  }
+
+  grid.innerHTML =
+    '<div class="stat-card">' +
+      '<div class="stat-card-title">📊 الملخص العام</div>' +
+      '<div class="mini-stats">' +
+        '<div class="mini-stat"><div class="mini-val">'+uniqueDaysCount+'</div><div class="mini-label">أيام تمرين</div></div>' +
+        '<div class="mini-stat"><div class="mini-val">'+totalSessions+'</div><div class="mini-label">إجمالي السجلات</div></div>' +
+        '<div class="mini-stat"><div class="mini-val">'+totalExs+'</div><div class="mini-label">تمارين مسجلة</div></div>' +
+        '<div class="mini-stat"><div class="mini-val">'+prs.length+'</div><div class="mini-label">أرقام قياسية</div></div>' +
+      '</div>' +
+    '</div>' +
+    mvHtml +
+    (prs.length ?
+    '<div class="stat-card">' +
+      '<div class="stat-card-title">🏆 أفضل الأداءات</div>' +
+      prs.slice(0,10).map(function(p){
+        return '<div class="pr-row">' +
+          '<div><div class="pr-ex">'+(allExs[p.exId] ? allExs[p.exId].name : p.exId)+'</div><div class="pr-date">'+fmtDate(p.date)+'</div></div>' +
+          '<div class="pr-val">'+p.w+'كج × '+p.r+'</div>' +
+        '</div>';
+      }).join('') +
+    '</div>'
+    : '<div class="empty"><div class="empty-icon">🌱</div><p>ابدأ التسجيل وراح تشوف إحصائياتك هنا</p></div>');
 }
 
 // ════════════════════════════════
 // VIEW SWITCHER
 // ════════════════════════════════
-function switchView(id,btn){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+function switchView(id, btn){
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  if(id==='progress-view'){currentProgTab='history';renderProgress();}
-  if(id==='stats')renderStats();
-  if(id==='home')renderHome();
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  if(id==='progress-view'){ currentProgTab='history'; renderProgress(); }
+  if(id==='stats') renderStats();
+  if(id==='home') renderHome();
 }
 
 // ════════════════════════════════
 // INIT
 // ════════════════════════════════
-renderHome();
+initStorage();
 </script>
 </body>
 </html>
