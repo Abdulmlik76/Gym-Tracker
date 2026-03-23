@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GYM عبدالملك">
+<meta name="theme-color" content="#0a0a0f">
+<title>GYM — عبدالملك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --bg: #0a0a0f;
+  --s1: #111118;
+  --s2: #18181f;
+  --card: #1e1e28;
+  --border: #2c2c3e;
+  --acc: #f5a623;
+  --acc2: #e8503a;
+  --acc3: #4ecdc4;
+  --text: #eeeef5;
+  --muted: #6b6b8a;
+  --green: #2ecc71;
+  --safe: env(safe-area-inset-bottom, 0px);
+}
+
+html, body { height:100%; background:var(--bg); color:var(--text); font-family:'Cairo',sans-serif; overflow:hidden; }
+
+/* ───────── LAYOUT ───────── */
+#app { display:flex; flex-direction:column; height:100%; height:100dvh; }
+
+.view { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; display:none; flex-direction:column; }
+.view.active { display:flex; }
+
+/* ───────── NAV ───────── */
+nav {
+  display:flex; background:rgba(10,10,15,0.95);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding-bottom:calc(var(--safe) + 4px);
+  flex-shrink:0; z-index:100;
+}
+.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:10px 0 6px; cursor:pointer; transition:all .2s; border:none; background:none; color:var(--muted); font-family:'Cairo',sans-serif; }
+.nav-btn.active { color:var(--acc); }
+.nav-btn svg { width:22px; height:22px; }
+.nav-btn span { font-size:10px; font-weight:700; letter-spacing:.5px; }
+
+/* ───────── HEADER ───────── */
+.page-header {
+  padding: 56px 20px 20px;
+  background: linear-gradient(180deg, var(--s1) 0%, transparent 100%);
+  flex-shrink:0;
+}
+.page-header h1 { font-size:26px; font-weight:900; }
+.page-header p { font-size:13px; color:var(--muted); margin-top:3px; }
+
+/* ───────── HOME VIEW ───────── */
+#home { background: var(--bg); }
+
+.home-hero {
+  padding: 60px 20px 24px;
+  background: linear-gradient(180deg, rgba(245,166,35,.08) 0%, transparent 80%);
+  flex-shrink:0;
+}
+.greeting { font-size:14px; color:var(--muted); margin-bottom:4px; }
+.hero-name { font-size:28px; font-weight:900; }
+.hero-name span { color:var(--acc); }
+.hero-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+
+.week-toggle { display:flex; gap:8px; padding:0 20px 16px; flex-shrink:0; }
+.wtab { flex:1; padding:10px; text-align:center; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; border:2px solid transparent; transition:all .2s; }
+.wtab.w1 { background:rgba(58,107,199,.15); border-color:#3a6bc7; color:#7ca3e8; }
+.wtab.w2 { background:rgba(199,80,58,.15); border-color:#c7503a; color:#e87c6a; }
+.wtab.active { opacity:1; transform:scale(1.02); }
+.wtab:not(.active) { opacity:.5; }
+
+.days-scroll { flex:1; overflow-y:auto; padding:0 20px 16px; display:flex; flex-direction:column; gap:10px; }
+
+.day-tile {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:16px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden;
+}
+.day-tile:active { transform:scale(.98); opacity:.85; }
+.day-tile.rest-tile { opacity:.5; }
+.day-tile-top { display:flex; align-items:center; gap:12px; }
+.day-badge { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; flex-shrink:0; }
+.badge-w1 { background:rgba(58,107,199,.25); color:#7ca3e8; }
+.badge-w2 { background:rgba(199,80,58,.25); color:#e87c6a; }
+.badge-rest { background:rgba(107,107,138,.15); color:var(--muted); }
+.day-info { flex:1; }
+.day-name { font-weight:700; font-size:15px; }
+.day-focus { font-size:12px; color:var(--muted); margin-top:2px; }
+.day-done-badge { font-size:10px; padding:3px 8px; border-radius:20px; background:rgba(46,204,113,.15); color:var(--green); font-weight:700; }
+
+.muscle-chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+.chip { font-size:10px; padding:3px 8px; border-radius:5px; font-weight:600; }
+.ch-chest { background:rgba(231,76,60,.2); color:#e74c3c; }
+.ch-back { background:rgba(52,152,219,.2); color:#3498db; }
+.ch-shoulder { background:rgba(155,89,182,.2); color:#9b59b6; }
+.ch-tricep { background:rgba(230,126,34,.2); color:#e67e22; }
+.ch-bicep { background:rgba(46,204,113,.2); color:#2ecc71; }
+.ch-leg { background:rgba(241,196,15,.2); color:#f1c40f; }
+.ch-core { background:rgba(26,188,156,.2); color:#1abc9c; }
+.ch-glute { background:rgba(231,76,60,.2); color:#e07060; }
+
+/* ───────── WORKOUT VIEW ───────── */
+#workout { background:var(--bg); }
+.workout-header {
+  padding:56px 20px 16px;
+  background:linear-gradient(180deg, var(--s1) 0%, transparent 100%);
+  flex-shrink:0; display:flex; align-items:flex-start; gap:12px;
+}
+.back-btn { width:36px; height:36px; border-radius:10px; background:var(--card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; margin-top:2px; }
+.back-btn svg { width:18px; height:18px; color:var(--text); }
+.workout-header-text { flex:1; }
+.workout-header h2 { font-size:20px; font-weight:900; }
+.workout-header p { font-size:12px; color:var(--muted); margin-top:2px; }
+
+.exercises-list { flex:1; overflow-y:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:12px; }
+
+.exercise-card {
+  background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden;
+}
+.ex-header { padding:14px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.ex-title { font-weight:700; font-size:14px; }
+.ex-muscle { font-size:11px; color:var(--muted); margin-top:2px; }
+.ex-target { font-size:12px; color:var(--acc); font-weight:700; }
+.ex-expand { color:var(--muted); transition:transform .3s; }
+.exercise-card.open .ex-expand { transform:rotate(180deg); }
+
+.ex-body { display:none; padding:0 16px 16px; }
+.exercise-card.open .ex-body { display:block; }
+
+/* Last session */
+.last-session { background:rgba(245,166,35,.07); border-radius:8px; padding:10px 12px; margin-bottom:12px; }
+.last-label { font-size:10px; color:var(--acc); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; }
+.last-rows { display:flex; flex-direction:column; gap:3px; }
+.last-row { font-size:12px; color:var(--muted); }
+.last-row strong { color:var(--text); }
+
+/* Sets logger */
+.sets-logger { display:flex; flex-direction:column; gap:8px; }
+.set-row { display:flex; align-items:center; gap:8px; }
+.set-num { width:24px; height:24px; border-radius:6px; background:rgba(245,166,35,.12); color:var(--acc); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.set-input-group { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.set-input { background:var(--s1); border:1px solid var(--border); border-radius:8px; padding:8px 10px; color:var(--text); font-family:'Cairo',sans-serif; font-size:14px; font-weight:600; width:100%; text-align:center; -webkit-appearance:none; }
+.set-input:focus { border-color:var(--acc); outline:none; }
+.set-input::placeholder { color:var(--muted); font-size:11px; }
+.set-done-btn { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:transparent; color:var(--muted); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all .2s; }
+.set-done-btn.done { background:var(--green); border-color:var(--green); color:#fff; }
+.set-done-btn svg { width:16px; height:16px; }
+
+.add-set-btn { display:flex; align-items:center; justify-content:center; gap:6px; padding:8px; border:1.5px dashed var(--border); border-radius:8px; background:transparent; color:var(--muted); font-size:12px; font-weight:600; font-family:'Cairo',sans-serif; cursor:pointer; margin-top:4px; width:100%; transition:all .2s; }
+.add-set-btn:active { border-color:var(--acc); color:var(--acc); }
+
+.save-ex-btn { width:100%; padding:11px; border-radius:10px; background:var(--acc); border:none; color:#000; font-family:'Cairo',sans-serif; font-size:14px; font-weight:900; cursor:pointer; margin-top:10px; transition:all .2s; }
+.save-ex-btn:active { transform:scale(.97); }
+
+/* ───────── PROGRESS VIEW ───────── */
+#progress-view { background:var(--bg); }
+
+.prog-search { padding:0 20px 14px; flex-shrink:0; }
+.search-input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:11px 16px; color:var(--text); font-family:'Cairo',sans-serif; font-size:14px; -webkit-appearance:none; }
+.search-input:focus { border-color:var(--acc); outline:none; }
+.search-input::placeholder { color:var(--muted); }
+
+.prog-list { flex:1; overflow-y:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:12px; }
+
+.prog-card { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.prog-card-header { padding:14px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.prog-ex-name { font-weight:700; font-size:14px; }
+.prog-sessions { font-size:11px; color:var(--muted); margin-top:2px; }
+.prog-best { text-align:left; }
+.prog-best-val { font-size:18px; font-weight:900; color:var(--acc); }
+.prog-best-label { font-size:10px; color:var(--muted); }
+
+.prog-history { display:none; padding:0 16px 16px; }
+.prog-card.open .prog-history { display:block; }
+
+.hist-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.hist-row:last-child { border-bottom:none; }
+.hist-date { font-size:11px; color:var(--muted); width:80px; flex-shrink:0; }
+.hist-sets { flex:1; display:flex; flex-wrap:wrap; gap:5px; }
+.hist-set-pill { background:var(--s1); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:11px; font-weight:600; }
+.hist-pr { background:rgba(245,166,35,.15); border-color:rgba(245,166,35,.4); color:var(--acc); }
+
+/* ───────── STATS VIEW ───────── */
+#stats { background:var(--bg); }
+.stats-grid { padding:0 20px 20px; display:flex; flex-direction:column; gap:12px; }
+
+.stat-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; }
+.stat-card-title { font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.5px; text-transform:uppercase; margin-bottom:12px; }
+.big-stat { display:flex; align-items:baseline; gap:6px; }
+.big-num { font-size:42px; font-weight:900; color:var(--acc); line-height:1; }
+.big-unit { font-size:14px; color:var(--muted); }
+
+.streak-bar { display:flex; gap:4px; margin-top:8px; }
+.streak-dot { flex:1; height:8px; border-radius:3px; background:var(--border); }
+.streak-dot.done { background:var(--acc); }
+.streak-dot.today { background:var(--acc2); }
+
+.mini-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mini-stat { background:var(--s2); border-radius:10px; padding:12px; text-align:center; }
+.mini-val { font-size:22px; font-weight:900; color:var(--text); }
+.mini-label { font-size:11px; color:var(--muted); margin-top:2px; }
+
+.recent-prs { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+.pr-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.pr-row:last-child { border-bottom:none; }
+.pr-ex { font-size:13px; font-weight:600; }
+.pr-val { font-size:13px; color:var(--acc); font-weight:700; }
+
+/* ───────── TOAST ───────── */
+.toast {
+  position:fixed; bottom:calc(80px + var(--safe)); left:50%; transform:translateX(-50%) translateY(20px);
+  background:#1e1e28; border:1px solid var(--border); border-radius:12px;
+  padding:10px 20px; font-size:13px; font-weight:700; color:var(--text);
+  opacity:0; transition:all .3s; pointer-events:none; white-space:nowrap; z-index:999;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ───────── EMPTY STATE ───────── */
+.empty { text-align:center; padding:50px 20px; color:var(--muted); }
+.empty-icon { font-size:48px; margin-bottom:12px; }
+.empty p { font-size:14px; line-height:1.6; }
+
+/* ───────── SCROLLBAR ───────── */
+::-webkit-scrollbar { display:none; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <div id="home" class="view active">
+    <div class="home-hero">
+      <div class="greeting" id="greeting">صباح الخير,</div>
+      <div class="hero-name">عبدالملك <span>💪</span></div>
+      <div class="hero-sub" id="today-label">اليوم الأحد</div>
+    </div>
+    <div class="week-toggle">
+      <div class="wtab w1 active" onclick="setWeek(1)">الأسبوع الأول</div>
+      <div class="wtab w2" onclick="setWeek(2)">الأسبوع الثاني</div>
+    </div>
+    <div class="days-scroll" id="days-container"></div>
+  </div>
+
+  <!-- ═══════════════ WORKOUT ═══════════════ -->
+  <div id="workout" class="view">
+    <div class="workout-header">
+      <div class="back-btn" onclick="goHome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="workout-header-text">
+        <h2 id="workout-title">اليوم</h2>
+        <p id="workout-subtitle">0 تمارين</p>
+      </div>
+    </div>
+    <div class="exercises-list" id="exercises-container"></div>
+  </div>
+
+  <!-- ═══════════════ PROGRESS ═══════════════ -->
+  <div id="progress-view" class="view">
+    <div class="page-header">
+      <h1>التقدم 📈</h1>
+      <p>سجل أوزانك وشوف تطورك</p>
+    </div>
+    <div class="prog-search">
+      <input class="search-input" type="text" placeholder="ابحث عن تمرين..." id="prog-search" oninput="renderProgress()">
+    </div>
+    <div class="prog-list" id="prog-list"></div>
+  </div>
+
+  <!-- ═══════════════ STATS ═══════════════ -->
+  <div id="stats" class="view">
+    <div class="page-header">
+      <h1>الإحصائيات 🏆</h1>
+      <p>نظرة شاملة على رحلتك</p>
+    </div>
+    <div class="stats-grid" id="stats-grid"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <button class="nav-btn active" onclick="switchView('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button class="nav-btn" onclick="switchView('progress-view',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>التقدم</span>
+    </button>
+    <button class="nav-btn" onclick="switchView('stats',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="18" rx="1"/><rect x="9.5" y="8" width="7" height="13" rx="1"/><rect x="17" y="13" width="5" height="8" rx="1"/></svg>
+      <span>الإنجازات</span>
+    </button>
+  </nav>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────── DATA ───────────
+const WEEKS = {
+  1: [
+    { day:'الأحد', focus:'صدر + ترايسبس', chips:['ch-chest','ch-tricep'], labels:['صدر','ترايسبس'],
+      exercises:[
+        {id:'bench_barbell', name:'Barbell Bench Press', muscle:'الصدر الوسط', target:'4 × 10'},
+        {id:'incline_db_press', name:'Incline Dumbbell Press', muscle:'الصدر العلوي', target:'3 × 12'},
+        {id:'machine_fly', name:'Machine Chest Fly', muscle:'الصدر كامل', target:'3 × 15'},
+        {id:'cable_pushdown', name:'Cable Pushdown (Bar)', muscle:'ترايسبس', target:'3 × 12'},
+        {id:'overhead_db_ext', name:'Overhead Dumbbell Extension', muscle:'الرأس الطويل', target:'3 × 12'},
+      ]
+    },
+    { day:'الاثنين', focus:'ظهر + بايسبس', chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
+      exercises:[
+        {id:'lat_pulldown_wide', name:'Lat Pulldown (Wide)', muscle:'العضلة العريضة', target:'4 × 10'},
+        {id:'seated_cable_row', name:'Seated Cable Row', muscle:'الظهر الوسط', target:'3 × 12'},
+        {id:'machine_row', name:'Machine Row', muscle:'الظهر', target:'3 × 12'},
+        {id:'barbell_curl', name:'Barbell Curl', muscle:'بايسبس', target:'3 × 12'},
+        {id:'hammer_curl', name:'Hammer Curl', muscle:'بايسبس + ساعد', target:'3 × 12'},
+      ]
+    },
+    { day:'الثلاثاء', focus:'أرجل + كور', chips:['ch-leg','ch-core'], labels:['أرجل','كور'],
+      exercises:[
+        {id:'leg_press', name:'Leg Press', muscle:'كوادز + جلوتس', target:'4 × 12'},
+        {id:'leg_ext', name:'Leg Extension', muscle:'كوادز', target:'3 × 15'},
+        {id:'leg_curl_lying', name:'Leg Curl (Lying)', muscle:'هامسترينج', target:'3 × 12'},
+        {id:'rdl_light', name:'Romanian Deadlift (Light)', muscle:'هامسترينج', target:'3 × 12'},
+        {id:'plank', name:'Plank', muscle:'كور', target:'3 × 30 ث'},
+      ]
+    },
+    { day:'الأربعاء', focus:'أكتاف + كور', chips:['ch-shoulder','ch-core'], labels:['أكتاف','كور'],
+      exercises:[
+        {id:'db_shoulder_press', name:'Dumbbell Shoulder Press', muscle:'الكتف الأمامي والجانبي', target:'4 × 10'},
+        {id:'lateral_raise', name:'Lateral Raise', muscle:'الكتف الجانبي', target:'3 × 15'},
+        {id:'front_raise', name:'Front Raise', muscle:'الكتف الأمامي', target:'3 × 12'},
+        {id:'face_pull', name:'Face Pull (Cable)', muscle:'الكتف الخلفي', target:'3 × 15'},
+        {id:'crunches', name:'Crunches', muscle:'كور علوي', target:'3 × 20'},
+        {id:'leg_raises_lying', name:'Leg Raises (Lying)', muscle:'كور سفلي', target:'3 × 15'},
+      ]
+    },
+    { day:'الخميس', focus:'صدر + ظهر', chips:['ch-chest','ch-back'], labels:['صدر','ظهر'],
+      exercises:[
+        {id:'cable_crossover', name:'Cable Crossover', muscle:'الصدر الداخلي', target:'3 × 15'},
+        {id:'decline_db_press', name:'Decline Dumbbell Press', muscle:'الصدر السفلي', target:'3 × 12'},
+        {id:'lat_narrow', name:'Lat Pulldown (Narrow)', muscle:'العضلة العريضة', target:'3 × 12'},
+        {id:'single_arm_row', name:'Single Arm Dumbbell Row', muscle:'الظهر الجانبي', target:'3 × 12'},
+        {id:'incline_pushup', name:'Incline Push-Up', muscle:'صدر علوي + ترايسبس', target:'3 × 15'},
+      ]
+    },
+    { day:'الجمعة', focus:'جلوتس + ساق + أذرع', chips:['ch-glute','ch-leg','ch-bicep','ch-tricep'], labels:['جلوتس','ساق','أذرع'],
+      exercises:[
+        {id:'hip_thrust', name:'Hip Thrust (Barbell)', muscle:'جلوتس', target:'4 × 12'},
+        {id:'goblet_squat', name:'Goblet Squat', muscle:'كوادز + جلوتس', target:'3 × 15'},
+        {id:'calf_raise_stand', name:'Standing Calf Raise', muscle:'ساق', target:'4 × 20'},
+        {id:'cable_curl', name:'Cable Curl', muscle:'بايسبس', target:'3 × 15'},
+        {id:'skull_crusher', name:'Skull Crushers', muscle:'ترايسبس', target:'3 × 12'},
+      ]
+    },
+    { day:'السبت', focus:'راحة 😴', chips:[], labels:[], rest:true, exercises:[] },
+  ],
+  2: [
+    { day:'الأحد', focus:'صدر + ترايسبس', chips:['ch-chest','ch-tricep'], labels:['صدر','ترايسبس'],
+      exercises:[
+        {id:'db_bench', name:'Dumbbell Bench Press', muscle:'صدر وسط', target:'4 × 10'},
+        {id:'low_cable_fly', name:'Low Cable Fly', muscle:'الصدر العلوي', target:'3 × 15'},
+        {id:'std_pushup', name:'Standard Push-Up', muscle:'صدر + ترايسبس', target:'3 × 15'},
+        {id:'tricep_dips_machine', name:'Tricep Dips (Machine)', muscle:'ترايسبس', target:'3 × 12'},
+        {id:'single_pushdown_rope', name:'Single Arm Pushdown (Rope)', muscle:'ترايسبس جانبي', target:'3 × 12 لكل يد'},
+      ]
+    },
+    { day:'الاثنين', focus:'ظهر + بايسبس', chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
+      exercises:[
+        {id:'chest_supported_row', name:'Chest Supported Row', muscle:'الظهر الوسط', target:'4 × 12'},
+        {id:'straight_arm_pull', name:'Straight Arm Pulldown', muscle:'العضلة العريضة', target:'3 × 15'},
+        {id:'face_pull_hl', name:'Face Pull (High to Low)', muscle:'الظهر العلوي', target:'3 × 15'},
+        {id:'incline_db_curl', name:'Incline Dumbbell Curl', muscle:'بايسبس رأس طويل', target:'3 × 12'},
+        {id:'concentration_curl', name:'Concentration Curl', muscle:'بايسبس', target:'3 × 12 لكل يد'},
+      ]
+    },
+    { day:'الثلاثاء', focus:'أرجل Squat + كور', chips:['ch-leg','ch-glute','ch-core'], labels:['كوادز','جلوتس','كور'],
+      exercises:[
+        {id:'back_squat', name:'Barbell Back Squat', muscle:'كوادز + جلوتس', target:'4 × 10'},
+        {id:'walking_lunges', name:'Walking Lunges', muscle:'كوادز + جلوتس', target:'3 × 12 خطوة'},
+        {id:'seated_leg_curl', name:'Seated Leg Curl', muscle:'هامسترينج', target:'3 × 15'},
+        {id:'cable_crunch', name:'Cable Crunch', muscle:'كور علوي', target:'3 × 20'},
+        {id:'side_plank', name:'Side Plank', muscle:'كور جانبي', target:'3 × 25 ث لكل جانب'},
+      ]
+    },
+    { day:'الأربعاء', focus:'أكتاف + ترابيزيوس + كور', chips:['ch-shoulder','ch-back','ch-core'], labels:['أكتاف','ترابيزيوس','كور'],
+      exercises:[
+        {id:'machine_shoulder_press', name:'Machine Shoulder Press', muscle:'الكتف الأمامي والجانبي', target:'4 × 12'},
+        {id:'cable_lateral', name:'Cable Lateral Raise', muscle:'الكتف الجانبي', target:'3 × 15 لكل جانب'},
+        {id:'rev_pec_deck', name:'Reverse Pec Deck', muscle:'الكتف الخلفي', target:'3 × 15'},
+        {id:'barbell_shrug', name:'Barbell Shrug', muscle:'ترابيزيوس', target:'3 × 15'},
+        {id:'dead_bug', name:'Dead Bug', muscle:'كور عميق', target:'3 × 10 لكل جانب'},
+      ]
+    },
+    { day:'الخميس', focus:'صدر + ظهر Upper', chips:['ch-chest','ch-back'], labels:['صدر','ظهر'],
+      exercises:[
+        {id:'incline_machine_press', name:'Incline Machine Press', muscle:'الصدر العلوي', target:'4 × 12'},
+        {id:'db_pullover', name:'Dumbbell Pullover', muscle:'صدر سفلي + عريضة', target:'3 × 12'},
+        {id:'t_bar_row', name:'T-Bar Row', muscle:'الظهر الوسط', target:'4 × 10'},
+        {id:'assisted_pullup', name:'Assisted Pull-Up (Machine)', muscle:'العضلة العريضة', target:'3 × 10'},
+        {id:'cable_row_wide', name:'Seated Cable Row (Wide)', muscle:'الظهر العلوي', target:'3 × 12'},
+      ]
+    },
+    { day:'الجمعة', focus:'أرجل Deadlift + أذرع', chips:['ch-leg','ch-glute','ch-bicep','ch-tricep'], labels:['هامسترينج','جلوتس','أذرع'],
+      exercises:[
+        {id:'rdl', name:'Romanian Deadlift', muscle:'هامسترينج + جلوتس', target:'4 × 10'},
+        {id:'bulgarian_split', name:'Bulgarian Split Squat', muscle:'كوادز + جلوتس', target:'3 × 10 لكل رجل'},
+        {id:'seated_calf', name:'Seated Calf Raise', muscle:'ساق (Soleus)', target:'4 × 20'},
+        {id:'ez_curl', name:'EZ Bar Curl', muscle:'بايسبس', target:'3 × 12'},
+        {id:'close_grip_bench', name:'Close Grip Bench Press', muscle:'ترايسبس + صدر داخلي', target:'3 × 12'},
+      ]
+    },
+    { day:'السبت', focus:'راحة 😴', chips:[], labels:[], rest:true, exercises:[] },
+  ]
+};
+
+// ─────────── STATE ───────────
+let currentWeek = 1;
+let currentDayIdx = null;
+let logs = JSON.parse(localStorage.getItem('gym_logs') || '{}');
+// logs[exId] = [{date:'2025-03-15', sets:[{w:80,r:10,done:true},...]}]
+
+function saveLogs() { localStorage.setItem('gym_logs', JSON.stringify(logs)); }
+
+// ─────────── UTILS ───────────
+function today() { return new Date().toISOString().split('T')[0]; }
+function fmtDate(d) {
+  const [y,m,day] = d.split('-');
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  return `${parseInt(day)} ${months[parseInt(m)-1]}`;
+}
+function bestSet(sets) {
+  if (!sets || !sets.length) return null;
+  return sets.reduce((best,s) => {
+    const cur = (parseFloat(s.w)||0) * (parseInt(s.r)||0);
+    const bst = (parseFloat(best.w)||0) * (parseInt(best.r)||0);
+    return cur > bst ? s : best;
+  }, sets[0]);
+}
+function allExercises() {
+  const map = {};
+  [1,2].forEach(w => WEEKS[w].forEach(d => d.exercises.forEach(e => { map[e.id] = e; })));
+  return map;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function greet() {
+  const h = new Date().getHours();
+  if (h < 12) return 'صباح الخير،';
+  if (h < 17) return 'مساء النهار،';
+  if (h < 21) return 'مساء الخير،';
+  return 'مساء النور،';
+}
+const DAYS_AR = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+// ─────────── HOME ───────────
+function setWeek(w) {
+  currentWeek = w;
+  document.querySelectorAll('.wtab').forEach((t,i) => t.classList.toggle('active', i+1===w));
+  renderHome();
+}
+
+function renderHome() {
+  document.getElementById('greeting').textContent = greet();
+  document.getElementById('today-label').textContent = 'اليوم ' + DAYS_AR[new Date().getDay()];
+
+  const container = document.getElementById('days-container');
+  const days = WEEKS[currentWeek];
+  container.innerHTML = '';
+
+  days.forEach((day, idx) => {
+    const tile = document.createElement('div');
+    tile.className = 'day-tile' + (day.rest ? ' rest-tile' : '');
+
+    const doneSessions = day.rest ? 0 : getDoneCount(day);
+    const hasDone = doneSessions > 0;
+
+    tile.innerHTML = `
+      <div class="day-tile-top">
+        <div class="day-badge ${day.rest ? 'badge-rest' : (currentWeek===1?'badge-w1':'badge-w2')}">${idx+1}</div>
+        <div class="day-info">
+          <div class="day-name">${day.day}</div>
+          <div class="day-focus">${day.focus}</div>
+        </div>
+        ${hasDone ? `<div class="day-done-badge">✓ ${doneSessions}</div>` : ''}
+      </div>
+      ${day.chips.length ? `<div class="muscle-chips">${day.chips.map((c,i)=>`<span class="chip ${c}">${day.labels[i]}</span>`).join('')}</div>` : ''}
+    `;
+    if (!day.rest) tile.onclick = () => openWorkout(currentWeek, idx);
+    container.appendChild(tile);
+  });
+}
+
+function getDoneCount(day) {
+  // count how many exercises have logs today
+  return day.exercises.filter(e => {
+    const l = logs[e.id];
+    return l && l.some(s => s.date === today());
+  }).length;
+}
+
+// ─────────── WORKOUT ───────────
+function openWorkout(week, dayIdx) {
+  currentDayIdx = { week, dayIdx };
+  const day = WEEKS[week][dayIdx];
+  document.getElementById('workout-title').textContent = day.day + ' — ' + day.focus;
+  document.getElementById('workout-subtitle').textContent = day.exercises.length + ' تمارين';
+  renderExercises(day);
+  switchView('workout', null);
+}
+
+function renderExercises(day) {
+  const c = document.getElementById('exercises-container');
+  c.innerHTML = '';
+  day.exercises.forEach(ex => {
+    c.appendChild(buildExCard(ex));
+  });
+}
+
+function buildExCard(ex) {
+  const card = document.createElement('div');
+  card.className = 'exercise-card';
+  card.id = 'card-' + ex.id;
+
+  // Build last session HTML
+  const exLogs = logs[ex.id] || [];
+  const pastSessions = exLogs.filter(s => s.date !== today()).slice(-2).reverse();
+  let lastHtml = '';
+  if (pastSessions.length) {
+    lastHtml = `<div class="last-session">
+      <div class="last-label">⏱ آخر تسجيل</div>
+      <div class="last-rows">
+        ${pastSessions.map(s => `
+          <div class="last-row">${fmtDate(s.date)} — ${s.sets.map(st=>`<strong>${st.w}كج</strong> × ${st.r}`).join(', ')}</div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Build today's sets
+  const todayLog = exLogs.find(s => s.date === today());
+  const sets = todayLog ? todayLog.sets.map(s => ({...s})) : [{w:'',r:'',done:false},{w:'',r:'',done:false},{w:'',r:'',done:false}];
+
+  card.innerHTML = `
+    <div class="ex-header" onclick="toggleEx(this)">
+      <div>
+        <div class="ex-title">${ex.name}</div>
+        <div class="ex-muscle">${ex.muscle}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="ex-target">${ex.target}</div>
+        <div class="ex-expand">▾</div>
+      </div>
+    </div>
+    <div class="ex-body">
+      ${lastHtml}
+      <div class="sets-logger" id="sets-${ex.id}"></div>
+      <button class="add-set-btn" onclick="addSet('${ex.id}')">+ إضافة ست</button>
+      <button class="save-ex-btn" onclick="saveExercise('${ex.id}')">💾 حفظ التمرين</button>
+    </div>
+  `;
+
+  // Render sets
+  const setsContainer = card.querySelector(`#sets-${ex.id}`);
+  sets.forEach((s, i) => appendSetRow(setsContainer, ex.id, i, s));
+
+  return card;
+}
+
+function appendSetRow(container, exId, idx, data) {
+  const row = document.createElement('div');
+  row.className = 'set-row';
+  row.id = `set-${exId}-${idx}`;
+  row.innerHTML = `
+    <div class="set-num">${idx+1}</div>
+    <div class="set-input-group">
+      <input class="set-input" type="number" inputmode="decimal" placeholder="الوزن كج" value="${data.w||''}" id="w-${exId}-${idx}">
+      <input class="set-input" type="number" inputmode="numeric" placeholder="التكرار" value="${data.r||''}" id="r-${exId}-${idx}">
+    </div>
+    <button class="set-done-btn ${data.done?'done':''}" onclick="toggleSetDone('${exId}',${idx},this)" id="done-${exId}-${idx}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </button>
+  `;
+  container.appendChild(row);
+}
+
+function toggleEx(header) {
+  header.closest('.exercise-card').classList.toggle('open');
+}
+
+function toggleSetDone(exId, idx, btn) {
+  btn.classList.toggle('done');
+}
+
+function addSet(exId) {
+  const container = document.getElementById(`sets-${exId}`);
+  const idx = container.children.length;
+  appendSetRow(container, exId, idx, {w:'',r:'',done:false});
+}
+
+function saveExercise(exId) {
+  const container = document.getElementById(`sets-${exId}`);
+  const sets = [];
+  container.querySelectorAll('.set-row').forEach((row, i) => {
+    const w = document.getElementById(`w-${exId}-${i}`)?.value;
+    const r = document.getElementById(`r-${exId}-${i}`)?.value;
+    const done = document.getElementById(`done-${exId}-${i}`)?.classList.contains('done');
+    if (w || r) sets.push({ w: parseFloat(w)||0, r: parseInt(r)||0, done });
+  });
+
+  if (!sets.length) { showToast('⚠️ أدخل الوزن والتكرار أول'); return; }
+
+  if (!logs[exId]) logs[exId] = [];
+  const existing = logs[exId].findIndex(s => s.date === today());
+  if (existing >= 0) logs[exId][existing].sets = sets;
+  else logs[exId].push({ date: today(), sets });
+
+  saveLogs();
+
+  // Check PR
+  const allSessions = logs[exId];
+  const curBest = bestSet(sets);
+  const prevBest = allSessions.slice(0,-1).map(s => bestSet(s.sets)).filter(Boolean);
+  const isPR = prevBest.length === 0 || (curBest && prevBest.every(p => (curBest.w * curBest.r) >= (p.w * p.r)));
+
+  showToast(isPR && prevBest.length > 0 ? '🏆 رقم قياسي جديد!' : '✅ تم الحفظ!');
+
+  // rebuild card
+  const card = document.getElementById('card-' + exId);
+  if (card) {
+    const allExs = allExercises();
+    const newCard = buildExCard(allExs[exId]);
+    newCard.classList.add('open');
+    card.replaceWith(newCard);
+  }
+}
+
+function goHome() {
+  switchView('home', document.querySelector('.nav-btn'));
+  renderHome();
+}
+
+// ─────────── PROGRESS ───────────
+function renderProgress() {
+  const query = document.getElementById('prog-search')?.value?.toLowerCase() || '';
+  const list = document.getElementById('prog-list');
+  const allExs = allExercises();
+  list.innerHTML = '';
+
+  const exercisesWithLogs = Object.keys(logs).filter(id => logs[id]?.length > 0 && allExs[id]);
+  const filtered = exercisesWithLogs.filter(id => {
+    if (!query) return true;
+    return allExs[id].name.toLowerCase().includes(query) || allExs[id].muscle.includes(query);
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>`;
+    return;
+  }
+
+  filtered.forEach(id => {
+    const ex = allExs[id];
+    const sessions = logs[id];
+    const card = document.createElement('div');
+    card.className = 'prog-card';
+
+    // Find overall best
+    let overallBest = null;
+    sessions.forEach(s => {
+      const b = bestSet(s.sets);
+      if (b && (!overallBest || (b.w * b.r) > (overallBest.w * overallBest.r))) overallBest = b;
+    });
+
+    card.innerHTML = `
+      <div class="prog-card-header" onclick="this.closest('.prog-card').classList.toggle('open')">
+        <div>
+          <div class="prog-ex-name">${ex.name}</div>
+          <div class="prog-sessions">${sessions.length} جلسة مسجلة</div>
+        </div>
+        <div class="prog-best">
+          <div class="prog-best-val">${overallBest ? overallBest.w + 'كج' : '—'}</div>
+          <div class="prog-best-label">${overallBest ? '× ' + overallBest.r + ' تكرار' : 'لا يوجد'}</div>
+        </div>
+      </div>
+      <div class="prog-history">
+        ${sessions.slice().reverse().map(s => {
+          const sb = bestSet(s.sets);
+          const isPR = sb && sessions.slice(0, sessions.indexOf(s)).every(prev => {
+            const pb = bestSet(prev.sets);
+            return !pb || (sb.w * sb.r) >= (pb.w * pb.r);
+          });
+          return `<div class="hist-row">
+            <div class="hist-date">${fmtDate(s.date)}</div>
+            <div class="hist-sets">
+              ${s.sets.map((st,i) => `<span class="hist-set-pill ${isPR && i===s.sets.indexOf(sb)?'hist-pr':''}">${st.w}كج × ${st.r}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ─────────── STATS ───────────
+function renderStats() {
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = '';
+  const allExs = allExercises();
+
+  // Total sessions
+  const totalSessions = Object.values(logs).reduce((n, arr) => n + arr.length, 0);
+  const uniqueDays = new Set(Object.values(logs).flatMap(arr => arr.map(s => s.date))).size;
+  const totalExercises = Object.keys(logs).filter(k => logs[k]?.length).length;
+
+  // PRs
+  const prs = [];
+  Object.keys(logs).forEach(id => {
+    if (!allExs[id] || !logs[id]?.length) return;
+    let best = null;
+    logs[id].forEach(s => {
+      const b = bestSet(s.sets);
+      if (b && (!best || (b.w * b.r) > (best.w * best.r))) best = { ...b, date: s.date, exId: id };
+    });
+    if (best) prs.push(best);
+  });
+  prs.sort((a,b) => (b.w*b.r) - (a.w*a.r));
+
+  grid.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-card-title">📊 الملخص العام</div>
+      <div class="mini-stats">
+        <div class="mini-stat"><div class="mini-val">${uniqueDays}</div><div class="mini-label">أيام تمرين</div></div>
+        <div class="mini-stat"><div class="mini-val">${totalSessions}</div><div class="mini-label">إجمالي السجلات</div></div>
+        <div class="mini-stat"><div class="mini-val">${totalExercises}</div><div class="mini-label">تمارين مسجلة</div></div>
+        <div class="mini-stat"><div class="mini-val">${prs.length}</div><div class="mini-label">أرقام قياسية</div></div>
+      </div>
+    </div>
+
+    ${prs.length ? `
+    <div class="stat-card">
+      <div class="stat-card-title">🏆 أفضل الأداءات</div>
+      <div class="recent-prs">
+        ${prs.slice(0,8).map(p => `
+          <div class="pr-row">
+            <div class="pr-ex">${allExs[p.exId]?.name || p.exId}</div>
+            <div class="pr-val">${p.w}كج × ${p.r}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : `<div class="empty"><div class="empty-icon">🌱</div><p>ابدأ التسجيل وراح تشوف إحصائياتك هنا</p></div>`}
+  `;
+}
+
+// ─────────── VIEW SWITCHER ───────────
+function switchView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  if (id === 'progress-view') renderProgress();
+  if (id === 'stats') renderStats();
+  if (id === 'home') renderHome();
+}
+
+// ─────────── INIT ───────────
+renderHome();
+</script>
+</body>
+</html>
