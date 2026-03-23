@@ -534,24 +534,55 @@ let activeCharts = {};
 let progTab = 'history';
 let storageAvailable = false;
 
-// Try persistent storage first, fall back to in-memory
+// Robust persistent storage with proper error handling
 async function initStorage() {
-  try {
-    if (window.storage) {
-      storageAvailable = true;
-      const result = await window.storage.get('gym_logs_v2');
-      if (result && result.value) {
-        logs = JSON.parse(result.value);
+  // Step 1: Try window.storage (persistent across sessions)
+  if (window.storage) {
+    try {
+      // Test if storage works with a probe write/read
+      await window.storage.set('gym_probe', 'ok');
+      var probe = await window.storage.get('gym_probe');
+      if (probe && probe.value === 'ok') {
+        storageAvailable = true;
+        console.log('Persistent storage: available');
+      }
+    } catch (e) {
+      console.log('Persistent storage probe failed:', e);
+      storageAvailable = false;
+    }
+
+    if (storageAvailable) {
+      try {
+        var result = await window.storage.get('gym_logs_v2');
+        if (result && result.value) {
+          logs = JSON.parse(result.value);
+          console.log('Loaded from persistent storage:', Object.keys(logs).length, 'exercises');
+        }
+      } catch (e) {
+        // Key doesn't exist yet — that's fine, first time user
+        console.log('No existing data in persistent storage (first use)');
       }
     }
-  } catch (e) {
-    console.log('Storage init:', e);
-    // Try localStorage as fallback
-    try {
-      const local = localStorage.getItem('gym_logs_v2');
-      if (local) logs = JSON.parse(local);
-    } catch (e2) { /* in-memory only */ }
   }
+
+  // Step 2: If persistent storage had no data, try localStorage as migration source
+  if (Object.keys(logs).length === 0) {
+    try {
+      var local = localStorage.getItem('gym_logs_v2');
+      if (local) {
+        logs = JSON.parse(local);
+        console.log('Migrated from localStorage:', Object.keys(logs).length, 'exercises');
+        // Migrate to persistent storage immediately
+        if (storageAvailable) {
+          await window.storage.set('gym_logs_v2', JSON.stringify(logs));
+          console.log('Migration to persistent storage complete');
+        }
+      }
+    } catch (e) {
+      console.log('localStorage fallback:', e);
+    }
+  }
+
   // Hide loading, render
   document.getElementById('loading-screen').classList.add('hide');
   setTimeout(function(){ document.getElementById('loading-screen').style.display='none'; }, 500);
@@ -559,15 +590,26 @@ async function initStorage() {
 }
 
 async function saveLogs() {
-  try {
-    if (storageAvailable && window.storage) {
-      await window.storage.set('gym_logs_v2', JSON.stringify(logs));
+  var data = JSON.stringify(logs);
+
+  // Primary: persistent storage
+  if (storageAvailable && window.storage) {
+    try {
+      var result = await window.storage.set('gym_logs_v2', data);
+      if (result) {
+        console.log('Saved to persistent storage');
+      } else {
+        console.log('Persistent save returned null, retrying...');
+        // Retry once
+        try { await window.storage.set('gym_logs_v2', data); } catch(e2){}
+      }
+    } catch (e) {
+      console.log('Persistent save error:', e);
     }
-  } catch (e) {
-    console.log('Save error:', e);
   }
-  // Also try localStorage
-  try { localStorage.setItem('gym_logs_v2', JSON.stringify(logs)); } catch(e){}
+
+  // Backup: localStorage (works while app is open)
+  try { localStorage.setItem('gym_logs_v2', data); } catch(e){}
 }
 
 // ════════════════════════════════
@@ -820,7 +862,8 @@ function saveExercise(exId){
   var prev = all.slice(0,-1).map(function(s){ return bestSet(s.sets); }).filter(Boolean);
   var isPR = prev.length>0 && cur && prev.every(function(p){ return (cur.w*cur.r)>=(p.w*p.r); });
 
-  showToast(isPR ? '🏆 رقم قياسي جديد!' : '✅ تم الحفظ!');
+  var saveIcon = storageAvailable ? '☁️ ' : '';
+  showToast(isPR ? '🏆 رقم قياسي جديد!' : saveIcon + '✅ تم الحفظ!');
 
   var statusEl = document.getElementById('status-'+exId);
   if(statusEl) statusEl.classList.add('show');
