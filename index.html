@@ -104,10 +104,11 @@ nav{
 .workout-header h2{font-size:18px;font-weight:900;line-height:1.2}
 .workout-header p{font-size:12px;color:var(--muted);margin-top:2px}
 
-.exercises-list{flex:1;overflow-y:auto;padding:0 16px 100px;display:flex;flex-direction:column;gap:10px}
+.exercises-list{flex:0 0 auto;overflow:visible;padding:0 16px 100px;display:flex;flex-direction:column;gap:10px}
 
 /* Exercise card */
 .exercise-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.exercise-card.open{overflow:visible}
 .ex-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:8px}
 .ex-header-left{flex:1;min-width:0}
 .ex-title{font-weight:700;font-size:14px;line-height:1.3}
@@ -787,6 +788,11 @@ function addSet(exId){
   var c = document.getElementById('sets-'+exId);
   var idx = c.children.length;
   appendSetRow(c, exId, idx, {w:'',r:'',done:false});
+  // Scroll the new row into view
+  setTimeout(function(){
+    var newRow = document.getElementById('set-'+exId+'-'+idx);
+    if(newRow) newRow.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 50);
 }
 
 function saveExercise(exId){
