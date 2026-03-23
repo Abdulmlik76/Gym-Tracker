@@ -104,7 +104,7 @@ nav{
 .workout-header h2{font-size:18px;font-weight:900;line-height:1.2}
 .workout-header p{font-size:12px;color:var(--muted);margin-top:2px}
 
-.exercises-list{flex:1;overflow-y:auto;padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
+.exercises-list{flex:1;overflow-y:auto;padding:0 16px 100px;display:flex;flex-direction:column;gap:10px}
 
 /* Exercise card */
 .exercise-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
@@ -157,17 +157,36 @@ nav{
 .add-set-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;border:1.5px dashed var(--border);border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .2s}
 .add-set-btn:active{border-color:var(--acc);color:var(--acc)}
 
-/* SAVE BUTTON — large & always visible */
-.save-ex-btn{
-  flex:2;padding:14px;border-radius:12px;
+/* FLOATING SAVE BAR — fixed at bottom when exercise is open */
+.floating-save-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  padding:12px 16px;padding-bottom:calc(var(--bot) + 70px);
+  background:linear-gradient(0deg, rgba(10,10,15,1) 70%, rgba(10,10,15,0) 100%);
+  z-index:150;display:none;
+  gap:10px;
+}
+.floating-save-bar.visible{display:flex}
+.floating-save-btn{
+  flex:2;padding:15px;border-radius:12px;
   background:linear-gradient(135deg,var(--acc),#e0941a);
   border:none;color:#000;font-family:'Cairo',sans-serif;
   font-size:15px;font-weight:900;cursor:pointer;
-  box-shadow:0 4px 16px rgba(245,166,35,.3);
+  box-shadow:0 4px 20px rgba(245,166,35,.4);
   transition:all .2s;
-  min-height:48px;
+  min-height:52px;
 }
-.save-ex-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(245,166,35,.2)}
+.floating-save-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(245,166,35,.2)}
+.floating-add-btn{
+  flex:1;padding:15px;border-radius:12px;
+  border:1.5px dashed var(--border);background:rgba(30,30,40,.9);
+  color:var(--muted);font-family:'Cairo',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;
+  min-height:52px;transition:all .2s;
+}
+.floating-add-btn:active{border-color:var(--acc);color:var(--acc)}
+
+/* inline save button hidden (replaced by floating) */
+.save-ex-btn{display:none}
 
 /* ══════════ PROGRESS VIEW ══════════ */
 #progress-view{background:var(--bg)}
@@ -207,11 +226,8 @@ nav{
 .prog-best-label{font-size:10px;color:var(--muted);text-align:left}
 .prog-history{display:none;padding:0 16px 14px}
 .prog-card.open .prog-history{display:block}
-.hist-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.hist-row:last-child{border-bottom:none}
 .hist-date{font-size:11px;color:var(--muted);width:70px;flex-shrink:0;padding-top:3px}
 .hist-sets{flex:1;display:flex;flex-wrap:wrap;gap:5px}
-.hist-set-pill{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600}
 .hist-pr{background:rgba(245,166,35,.15);border-color:rgba(245,166,35,.4);color:var(--acc)}
 
 /* ══════════ STATS ══════════ */
@@ -236,6 +252,67 @@ nav{
 .mv-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden}
 .mv-fill{height:100%;border-radius:2px;transition:width .6s}
 .mv-val{font-size:13px;font-weight:900}
+
+/* ══════════ DELETE / EDIT HISTORY ══════════ */
+.hist-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);position:relative}
+.hist-row:last-child{border-bottom:none}
+.hist-delete-session{
+  width:30px;height:30px;border-radius:8px;border:1px solid rgba(231,76,60,.2);
+  background:rgba(231,76,60,.08);color:var(--red);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:all .2s;margin-top:1px;
+}
+.hist-delete-session:active{background:rgba(231,76,60,.25);transform:scale(.92)}
+.hist-delete-session svg{width:14px;height:14px}
+.hist-set-pill{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;position:relative;cursor:pointer;transition:all .15s}
+.hist-set-pill .pill-delete{
+  display:none;position:absolute;top:-6px;right:-6px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:9px;font-weight:900;
+  align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:pointer;z-index:2;
+}
+.hist-set-pill.edit-mode .pill-delete{display:flex}
+.hist-set-pill.edit-mode{border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.06)}
+.prog-edit-toggle{
+  font-size:10px;padding:4px 10px;border-radius:8px;
+  background:rgba(107,107,138,.1);border:1px solid var(--border);
+  color:var(--muted);font-weight:700;font-family:'Cairo',sans-serif;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.prog-edit-toggle.active{border-color:var(--red);color:var(--red);background:rgba(231,76,60,.08)}
+.prog-edit-toggle:active{transform:scale(.95)}
+
+/* Confirm modal */
+.confirm-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:500;display:none;align-items:center;justify-content:center;padding:20px;
+}
+.confirm-overlay.show{display:flex}
+.confirm-box{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:24px 20px;max-width:320px;width:100%;text-align:center;
+  animation:modalIn .2s ease-out;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.confirm-icon{font-size:36px;margin-bottom:12px}
+.confirm-title{font-size:16px;font-weight:900;margin-bottom:6px}
+.confirm-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.confirm-actions{display:flex;gap:10px}
+.confirm-cancel{
+  flex:1;padding:12px;border-radius:10px;
+  background:var(--s2);border:1px solid var(--border);
+  color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+}
+.confirm-cancel:active{opacity:.7}
+.confirm-delete{
+  flex:1;padding:12px;border-radius:10px;
+  background:var(--red);border:none;
+  color:#fff;font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer;
+  box-shadow:0 4px 12px rgba(231,76,60,.3);
+}
+.confirm-delete:active{opacity:.7;transform:scale(.97)}
 
 /* ══════════ TOAST ══════════ */
 .toast{position:fixed;bottom:calc(72px + var(--bot) + 12px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--text);opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.6)}
@@ -331,6 +408,21 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
       <span>الإنجازات</span>
     </button>
   </nav>
+</div>
+<div class="floating-save-bar" id="floating-save-bar">
+  <button class="floating-add-btn" id="floating-add-btn" onclick="floatingAddSet()">+ ست</button>
+  <button class="floating-save-btn" id="floating-save-btn" onclick="floatingSave()">💾 حفظ التمرين</button>
+</div>
+<div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirm(event)">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirm-icon">🗑️</div>
+    <div class="confirm-title" id="confirm-title">حذف؟</div>
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="closeConfirm()">إلغاء</button>
+      <button class="confirm-delete" id="confirm-delete-btn" onclick="execDelete()">حذف</button>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -641,7 +733,38 @@ function appendSetRow(container, exId, idx, data){
   container.appendChild(row);
 }
 
-function toggleEx(header){ header.closest('.exercise-card').classList.toggle('open'); }
+var activeExId = null;
+
+function toggleEx(header){
+  var card = header.closest('.exercise-card');
+  var wasOpen = card.classList.contains('open');
+  // Close all other cards
+  document.querySelectorAll('.exercise-card.open').forEach(function(c){
+    if(c !== card) c.classList.remove('open');
+  });
+  card.classList.toggle('open');
+  var bar = document.getElementById('floating-save-bar');
+  if(!wasOpen){
+    // Opening this card
+    var exId = card.id.replace('card-','');
+    activeExId = exId;
+    bar.classList.add('visible');
+    // Scroll card into view
+    setTimeout(function(){ card.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+  } else {
+    // Closing
+    activeExId = null;
+    bar.classList.remove('visible');
+  }
+}
+
+function floatingSave(){
+  if(activeExId) saveExercise(activeExId);
+}
+function floatingAddSet(){
+  if(activeExId) addSet(activeExId);
+}
+
 function toggleSetDone(btn){ btn.classList.toggle('done'); }
 
 function fillSet(exId, idx, w, r){
@@ -700,6 +823,8 @@ function saveExercise(exId){
 }
 
 function goHome(){
+  activeExId = null;
+  document.getElementById('floating-save-bar').classList.remove('visible');
   switchView('home', document.querySelector('.nav-btn'));
   renderHome();
 }
@@ -725,6 +850,8 @@ function switchProgTab(tab, btn){
   }
 }
 
+var editModeCards = {};
+
 function renderProgress(){
   var query = (document.getElementById('prog-search') ? document.getElementById('prog-search').value : '').toLowerCase();
   var list = document.getElementById('prog-list');
@@ -741,23 +868,98 @@ function renderProgress(){
     var sessions = logs[id];
     var overallBest = null;
     sessions.forEach(function(s){ var b = bestSet(s.sets); if(b && (!overallBest || (b.w*b.r)>(overallBest.w*overallBest.r))) overallBest=b; });
+    var isEditing = editModeCards[id] || false;
     var card = document.createElement('div');
     card.className = 'prog-card';
     card.innerHTML =
       '<div class="prog-card-header" onclick="this.closest(\'.prog-card\').classList.toggle(\'open\')">' +
-        '<div><div class="prog-ex-name">'+ex.name+'</div><div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+'</div></div>' +
-        '<div><div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div><div class="prog-best-label">'+(overallBest?'× '+overallBest.r+' تكرار':'')+'</div></div>' +
+        '<div style="flex:1"><div class="prog-ex-name">'+ex.name+'</div><div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+'</div></div>' +
+        '<button class="prog-edit-toggle '+(isEditing?'active':'')+'" onclick="event.stopPropagation();toggleEditMode(\''+id+'\')">'+
+          (isEditing?'✓ تم':'✏️ تعديل')+
+        '</button>' +
+        '<div style="text-align:left;margin-right:8px"><div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div><div class="prog-best-label">'+(overallBest?'× '+overallBest.r+' تكرار':'')+'</div></div>' +
       '</div>' +
       '<div class="prog-history">' +
-        sessions.slice().reverse().map(function(s){
+        sessions.slice().reverse().map(function(s, revIdx){
+          var origIdx = sessions.length - 1 - revIdx;
+          var deleteSessionBtn = isEditing ?
+            '<div class="hist-delete-session" onclick="confirmDeleteSession(\''+id+'\','+origIdx+',\''+ex.name+'\',\''+s.date+'\')">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14"/></svg>' +
+            '</div>' : '';
+          var pillsHtml = s.sets.map(function(st, setIdx){
+            var pillClass = 'hist-set-pill' + (isEditing?' edit-mode':'');
+            var deleteX = isEditing ?
+              '<span class="pill-delete" onclick="event.stopPropagation();confirmDeleteSet(\''+id+'\','+origIdx+','+setIdx+',\''+ex.name+'\','+st.w+','+st.r+')">✕</span>' : '';
+            return '<span class="'+pillClass+'">'+st.w+'كج × '+st.r + deleteX + '</span>';
+          }).join('');
           return '<div class="hist-row">' +
+            deleteSessionBtn +
             '<div class="hist-date">'+fmtDate(s.date)+'</div>' +
-            '<div class="hist-sets">'+s.sets.map(function(st){ return '<span class="hist-set-pill">'+st.w+'كج × '+st.r+'</span>'; }).join('')+'</div>' +
+            '<div class="hist-sets">'+pillsHtml+'</div>' +
           '</div>';
         }).join('') +
       '</div>';
     list.appendChild(card);
   });
+}
+
+function toggleEditMode(exId){
+  editModeCards[exId] = !editModeCards[exId];
+  renderProgress();
+}
+
+// ════════════════════════════════
+// DELETE CONFIRM SYSTEM
+// ════════════════════════════════
+var pendingDelete = null;
+
+function confirmDeleteSession(exId, sessionIdx, exName, date){
+  pendingDelete = {type:'session', exId:exId, sessionIdx:sessionIdx};
+  document.getElementById('confirm-icon').textContent = '🗑️';
+  document.getElementById('confirm-title').textContent = 'حذف جلسة كاملة؟';
+  document.getElementById('confirm-msg').textContent = 'بتنحذف جلسة "'+exName+'" بتاريخ '+fmtDate(date)+' بكل السيتات. هل أنت متأكد؟';
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+
+function confirmDeleteSet(exId, sessionIdx, setIdx, exName, w, r){
+  pendingDelete = {type:'set', exId:exId, sessionIdx:sessionIdx, setIdx:setIdx};
+  document.getElementById('confirm-icon').textContent = '⚠️';
+  document.getElementById('confirm-title').textContent = 'حذف ست واحد؟';
+  document.getElementById('confirm-msg').textContent = 'بتنحذف الست ('+w+'كج × '+r+') من "'+exName+'". هل أنت متأكد؟';
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+
+function closeConfirm(e){
+  if(e && e.target !== document.getElementById('confirm-overlay')) return;
+  document.getElementById('confirm-overlay').classList.remove('show');
+  pendingDelete = null;
+}
+
+function execDelete(){
+  if(!pendingDelete) return;
+  var d = pendingDelete;
+  if(d.type === 'session'){
+    if(logs[d.exId] && logs[d.exId][d.sessionIdx] !== undefined){
+      logs[d.exId].splice(d.sessionIdx, 1);
+      if(logs[d.exId].length === 0) delete logs[d.exId];
+      saveLogs();
+      showToast('🗑️ تم حذف الجلسة');
+    }
+  } else if(d.type === 'set'){
+    if(logs[d.exId] && logs[d.exId][d.sessionIdx]){
+      var session = logs[d.exId][d.sessionIdx];
+      session.sets.splice(d.setIdx, 1);
+      if(session.sets.length === 0){
+        logs[d.exId].splice(d.sessionIdx, 1);
+        if(logs[d.exId].length === 0) delete logs[d.exId];
+      }
+      saveLogs();
+      showToast('🗑️ تم حذف الست');
+    }
+  }
+  document.getElementById('confirm-overlay').classList.remove('show');
+  pendingDelete = null;
+  renderProgress();
 }
 
 function renderCharts(){
@@ -970,6 +1172,11 @@ function switchView(id, btn){
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
   if(btn) btn.classList.add('active');
+  // Hide floating save bar when leaving workout
+  if(id !== 'workout'){
+    activeExId = null;
+    document.getElementById('floating-save-bar').classList.remove('visible');
+  }
   if(id==='progress-view'){ currentProgTab='history'; renderProgress(); }
   if(id==='stats') renderStats();
   if(id==='home') renderHome();
