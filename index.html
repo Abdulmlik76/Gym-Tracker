@@ -187,39 +187,61 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .ptab{flex:1;padding:9px;text-align:center;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);color:var(--muted);background:var(--card)}
 .ptab.active{border-color:var(--acc);color:var(--acc);background:rgba(245,166,35,.08)}
 
-/* Weight input */
-.weight-input-wrap{padding:0 20px 14px;flex-shrink:0}
-.weight-input-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px}
-.weight-input-label{font-size:13px;font-weight:700;flex-shrink:0}
-.weight-input-label span{font-size:16px}
-.weight-input{flex:1;background:var(--s1);border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;text-align:center;-webkit-appearance:none;max-width:120px}
-.weight-input:focus{border-color:var(--acc);outline:none}
+/* Weight card */
+.weight-card-wrap{padding:0 20px 16px;flex-shrink:0}
+.weight-card{background:linear-gradient(135deg,rgba(78,205,196,.1),rgba(78,205,196,.03));border:1.5px solid rgba(78,205,196,.25);border-radius:16px;padding:18px;overflow:hidden}
+.weight-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.weight-card-icon{width:48px;height:48px;border-radius:14px;background:rgba(78,205,196,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.weight-card-info{flex:1}
+.weight-card-title{font-size:16px;font-weight:900}
+.weight-card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.weight-card-current{text-align:left;flex-shrink:0}
+.weight-card-val{font-size:24px;font-weight:900;color:var(--acc3)}
+.weight-card-unit{font-size:11px;color:var(--muted)}
+.weight-card-input-row{display:flex;gap:8px;align-items:center}
+.weight-input{flex:1;background:var(--s1);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;text-align:center;-webkit-appearance:none}
+.weight-input:focus{border-color:var(--acc3);outline:none;background:rgba(78,205,196,.04)}
 .weight-input::placeholder{color:var(--muted);font-size:12px;font-weight:400}
-.weight-unit{font-size:12px;color:var(--muted);font-weight:600}
-.weight-save-btn{padding:8px 16px;border-radius:8px;background:var(--acc);border:none;color:#000;font-family:'Cairo',sans-serif;font-size:12px;font-weight:900;cursor:pointer}
-.weight-history-peek{font-size:11px;color:var(--muted);margin-top:6px;text-align:center}
+.weight-save-btn{padding:12px 20px;border-radius:10px;background:var(--acc3);border:none;color:#000;font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0}
+.weight-save-btn:active{opacity:.8}
+.weight-history-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.weight-history-chip{font-size:10px;padding:4px 10px;border-radius:6px;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.12);color:var(--acc3);font-weight:600}
+.weight-trend{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
 
-.prog-search{padding:0 20px 12px;flex-shrink:0}
+.prog-search{padding:0 20px 10px;flex-shrink:0}
 .search-input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:11px 16px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;-webkit-appearance:none}
 .search-input:focus{border-color:var(--acc);outline:none}
 .search-input::placeholder{color:var(--muted)}
-.prog-list{flex:1;overflow-y:auto;padding:0 20px 20px;display:flex;flex-direction:column;gap:12px}
 
-.prog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.prog-card-header{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.prog-ex-name{font-weight:700;font-size:14px}
+/* Muscle filters */
+.muscle-filters{padding:0 20px 14px;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.muscle-filters-inner{display:flex;gap:6px;white-space:nowrap}
+.muscle-filter{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;flex-shrink:0}
+.muscle-filter.active{border-color:var(--acc);color:var(--acc);background:rgba(245,166,35,.08)}
+.muscle-filter:active{transform:scale(.95)}
+
+.prog-list{flex:1;overflow-y:auto;padding:0 20px 20px;display:flex;flex-direction:column;gap:10px}
+
+/* Progress cards — clean isolated layout */
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:visible;position:relative;z-index:1;flex-shrink:0}
+.prog-card-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.prog-card-header-info{flex:1;min-width:0;overflow:hidden}
+.prog-ex-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prog-sessions{font-size:11px;color:var(--muted);margin-top:2px}
-.prog-best-val{font-size:20px;font-weight:900;color:var(--acc);text-align:left}
-.prog-best-label{font-size:10px;color:var(--muted);text-align:left}
-.prog-history{display:none;padding:0 16px 14px}
+.prog-card-best{text-align:left;flex-shrink:0;min-width:60px}
+.prog-best-val{font-size:18px;font-weight:900;color:var(--acc)}
+.prog-best-label{font-size:10px;color:var(--muted)}
+.prog-expand-icon{color:var(--muted);font-size:12px;transition:transform .3s;flex-shrink:0}
+.prog-card.open .prog-expand-icon{transform:rotate(180deg)}
+.prog-history{display:none;padding:0 16px 14px;border-top:1px solid var(--border);margin-top:0}
 .prog-card.open .prog-history{display:block}
-.hist-row{display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.hist-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .hist-row:last-child{border-bottom:none}
-.hist-date{font-size:11px;color:var(--muted);width:70px;flex-shrink:0;padding-top:3px}
-.hist-sets{flex:1;display:flex;flex-wrap:wrap;gap:5px}
-.hist-set-pill{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;position:relative}
-.hist-delete-session{width:30px;height:30px;border-radius:8px;border:1px solid rgba(231,76,60,.2);background:rgba(231,76,60,.08);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-.hist-delete-session svg{width:14px;height:14px}
+.hist-date{font-size:11px;color:var(--muted);width:65px;flex-shrink:0}
+.hist-sets{flex:1;display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.hist-set-pill{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;position:relative;white-space:nowrap;flex-shrink:0}
+.hist-delete-session{width:28px;height:28px;border-radius:7px;border:1px solid rgba(231,76,60,.2);background:rgba(231,76,60,.08);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.hist-delete-session svg{width:13px;height:13px}
 .hist-set-pill .pill-delete{display:none;position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-size:9px;font-weight:900;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:pointer;z-index:2}
 .hist-set-pill.edit-mode .pill-delete{display:flex}
 .hist-set-pill.edit-mode{border-color:rgba(231,76,60,.3);background:rgba(231,76,60,.06)}
@@ -303,16 +325,26 @@ input[type=file]{display:none}
       <div class="ptab active" onclick="switchProgTab('history',this)">السجل</div>
       <div class="ptab" onclick="switchProgTab('charts',this)">الرسوم البيانية</div>
     </div>
-    <div class="weight-input-wrap" id="weight-wrap">
-      <div class="weight-input-card">
-        <div class="weight-input-label"><span>⚖️</span> وزنك اليوم</div>
-        <input class="weight-input" type="number" inputmode="decimal" placeholder="كج" id="weight-input">
-        <div class="weight-unit">كج</div>
-        <button class="weight-save-btn" onclick="saveWeight()">حفظ</button>
+    <div class="weight-card-wrap" id="weight-wrap">
+      <div class="weight-card">
+        <div class="weight-card-top">
+          <div class="weight-card-icon">⚖️</div>
+          <div class="weight-card-info">
+            <div class="weight-card-title">وزن الجسم</div>
+            <div class="weight-card-sub">سجّل وزنك اليومي لتتبع تقدمك</div>
+          </div>
+          <div class="weight-card-current" id="weight-current"></div>
+        </div>
+        <div class="weight-card-input-row">
+          <input class="weight-input" type="number" inputmode="decimal" placeholder="أدخل وزنك بالكيلو" id="weight-input">
+          <button class="weight-save-btn" onclick="saveWeight()">حفظ</button>
+        </div>
+        <div class="weight-history-row" id="weight-history-row"></div>
+        <div class="weight-trend" id="weight-trend"></div>
       </div>
-      <div class="weight-history-peek" id="weight-peek"></div>
     </div>
     <div class="prog-search" id="prog-search-wrap"><input class="search-input" type="text" placeholder="ابحث عن تمرين..." id="prog-search" oninput="renderProgress()"></div>
+    <div class="muscle-filters" id="muscle-filters-wrap"><div class="muscle-filters-inner" id="muscle-filters"></div></div>
     <div class="prog-list" id="prog-list"></div>
     <div class="charts-container" id="charts-container" style="display:none"></div>
   </div>
@@ -1245,13 +1277,15 @@ function swapExercise(oldEx, newEx, exIdx){
 // ============================================
 var currentProgTab = 'history';
 
+var activeFilter = '';
+
 function switchProgTab(tab,btn){
   currentProgTab=tab;
   document.querySelectorAll('.ptab').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
-  var hE=document.getElementById('prog-list'),cE=document.getElementById('charts-container'),sE=document.getElementById('prog-search-wrap'),wE=document.getElementById('weight-wrap');
-  if(tab==='history'){hE.style.display='flex';cE.style.display='none';sE.style.display='block';wE.style.display='block';renderProgress();}
-  else{hE.style.display='none';cE.style.display='flex';sE.style.display='none';wE.style.display='none';renderCharts();}
+  var hE=document.getElementById('prog-list'),cE=document.getElementById('charts-container'),sE=document.getElementById('prog-search-wrap'),wE=document.getElementById('weight-wrap'),fE=document.getElementById('muscle-filters-wrap');
+  if(tab==='history'){hE.style.display='flex';cE.style.display='none';sE.style.display='block';wE.style.display='block';fE.style.display='block';renderProgress();}
+  else{hE.style.display='none';cE.style.display='flex';sE.style.display='none';wE.style.display='none';fE.style.display='none';renderCharts();}
 }
 
 function saveWeight(){
@@ -1265,30 +1299,97 @@ function saveWeight(){
   else settings.weightLog.push({date: d, weight: w});
   saveAll();
   input.value = '';
-  updateWeightPeek();
+  updateWeightCard();
   showToast('✅ تم حفظ الوزن: '+w+' كج');
 }
 
-function updateWeightPeek(){
-  var peek = document.getElementById('weight-peek');
-  if(!settings.weightLog || !settings.weightLog.length){peek.textContent='';return;}
-  var recent = settings.weightLog.slice(-3).reverse();
-  peek.textContent = recent.map(function(e){return fmtDateShort(e.date)+': '+e.weight+'كج';}).join(' • ');
+function updateWeightCard(){
+  var currentEl = document.getElementById('weight-current');
+  var histRow = document.getElementById('weight-history-row');
+  var trendEl = document.getElementById('weight-trend');
+  var inputEl = document.getElementById('weight-input');
 
-  // Pre-fill today's weight if exists
+  if(!settings.weightLog || !settings.weightLog.length){
+    currentEl.innerHTML = '';
+    histRow.innerHTML = '';
+    trendEl.textContent = '';
+    return;
+  }
+
+  // Show current weight
+  var latest = settings.weightLog[settings.weightLog.length - 1];
+  currentEl.innerHTML = '<div class="weight-card-val">'+latest.weight+'</div><div class="weight-card-unit">كج</div>';
+
+  // Pre-fill placeholder if today's weight exists
   var todayW = settings.weightLog.find(function(e){return e.date === today();});
-  if(todayW) document.getElementById('weight-input').placeholder = todayW.weight + ' كج (محفوظ)';
+  if(todayW) inputEl.placeholder = todayW.weight + ' كج (محفوظ اليوم)';
+  else inputEl.placeholder = 'أدخل وزنك بالكيلو';
+
+  // Show recent history chips
+  var recent = settings.weightLog.slice(-5).reverse();
+  histRow.innerHTML = recent.map(function(e){
+    return '<span class="weight-history-chip">'+fmtDateShort(e.date)+' — '+e.weight+' كج</span>';
+  }).join('');
+
+  // Show trend
+  if(settings.weightLog.length >= 2){
+    var first = settings.weightLog[0].weight;
+    var last = latest.weight;
+    var diff = (last - first).toFixed(1);
+    var arrow = diff > 0 ? '📈 +' : diff < 0 ? '📉 ' : '➡️ ';
+    trendEl.textContent = 'من '+first+' كج إلى '+last+' كج ('+arrow+diff+' كج)';
+  } else {
+    trendEl.textContent = '';
+  }
+}
+
+function buildMuscleFilters(){
+  var filtersEl = document.getElementById('muscle-filters');
+  var filters = [
+    {key:'',label:'الكل'},
+    {key:'chest',label:'صدر'},
+    {key:'back',label:'ظهر'},
+    {key:'shoulder',label:'أكتاف'},
+    {key:'bicep',label:'بايسبس'},
+    {key:'tricep',label:'ترايسبس'},
+    {key:'quad',label:'كوادز'},
+    {key:'hamstring',label:'هامسترينج'},
+    {key:'glute',label:'جلوتس'},
+    {key:'core',label:'كور'},
+    {key:'calf',label:'ساق'}
+  ];
+  filtersEl.innerHTML = filters.map(function(f){
+    return '<button class="muscle-filter'+(activeFilter===f.key?' active':'')+'" onclick="setMuscleFilter(\''+f.key+'\')">'+f.label+'</button>';
+  }).join('');
+}
+
+function setMuscleFilter(key){
+  activeFilter = key;
+  buildMuscleFilters();
+  renderProgress();
 }
 
 function renderProgress(){
-  updateWeightPeek();
+  updateWeightCard();
+  buildMuscleFilters();
   var q=(document.getElementById('prog-search')||{value:''}).value.toLowerCase();
   var list=document.getElementById('prog-list');var allExs=allExercisesMap();list.innerHTML='';
   var ids=Object.keys(logs).filter(function(id){return logs[id]&&logs[id].length;});
+
+  // Text search filter
   var filtered=ids.filter(function(id){
     var ex = allExs[id] || {name:id,muscle:''};
     return !q||ex.name.toLowerCase().indexOf(q)!==-1||ex.muscle.indexOf(q)!==-1;
   });
+
+  // Muscle group filter
+  if(activeFilter){
+    filtered = filtered.filter(function(id){
+      var group = getExGroup(id);
+      return group === activeFilter;
+    });
+  }
+
   if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>';return;}
   filtered.forEach(function(id){
     var ex=allExs[id]||{name:id,muscle:'',target:''};
@@ -1296,19 +1397,38 @@ function renderProgress(){
     sessions.forEach(function(s){var b=bestSet(s.sets);if(b&&(!overallBest||(b.w*b.r)>(overallBest.w*overallBest.r)))overallBest=b;});
     var isEd=editModeCards[id]||false;
     var card=document.createElement('div');card.className='prog-card';
-    card.innerHTML='<div class="prog-card-header" onclick="this.closest(\'.prog-card\').classList.toggle(\'open\')"><div style="flex:1"><div class="prog-ex-name">'+ex.name+'</div><div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+'</div></div><button class="prog-edit-toggle '+(isEd?'active':'')+'" onclick="event.stopPropagation();toggleEditMode(\''+id+'\')">'+(isEd?'✓ تم':'✏️ تعديل')+'</button><div style="text-align:left;margin-right:8px"><div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div><div class="prog-best-label">'+(overallBest?'× '+overallBest.r+' تكرار':'')+'</div></div></div>'+
-    '<div class="prog-history">'+sessions.slice().reverse().map(function(s,ri){
-      var oi=sessions.length-1-ri;
-      var delBtn=isEd?'<div class="hist-delete-session" onclick="confirmDeleteSession(\''+id+'\','+oi+',\''+ex.name+'\',\''+s.date+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14"/></svg></div>':'';
-      var pills=s.sets.map(function(st,si){
-        var pc='hist-set-pill'+(isEd?' edit-mode':'');
-        var dx=isEd?'<span class="pill-delete" onclick="event.stopPropagation();confirmDeleteSet(\''+id+'\','+oi+','+si+',\''+ex.name+'\','+st.w+','+st.r+')">✕</span>':'';
-        return'<span class="'+pc+'">'+st.w+'كج × '+st.r+dx+'</span>';
-      }).join('');
-      return'<div class="hist-row">'+delBtn+'<div class="hist-date">'+fmtDate(s.date)+'</div><div class="hist-sets">'+pills+'</div></div>';
-    }).join('')+'</div>';
+    card.innerHTML=
+      '<div class="prog-card-header" onclick="toggleProgCard(this)">'+
+        '<div class="prog-card-header-info">'+
+          '<div class="prog-ex-name">'+ex.name+'</div>'+
+          '<div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+'</div>'+
+        '</div>'+
+        '<button class="prog-edit-toggle '+(isEd?'active':'')+'" onclick="event.stopPropagation();toggleEditMode(\''+id+'\')">'+(isEd?'✓ تم':'✏️')+'</button>'+
+        '<div class="prog-card-best">'+
+          '<div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div>'+
+          '<div class="prog-best-label">'+(overallBest?'× '+overallBest.r:'')+'</div>'+
+        '</div>'+
+        '<div class="prog-expand-icon">▾</div>'+
+      '</div>'+
+      '<div class="prog-history">'+sessions.slice().reverse().map(function(s,ri){
+        var oi=sessions.length-1-ri;
+        var delBtn=isEd?'<div class="hist-delete-session" onclick="event.stopPropagation();confirmDeleteSession(\''+id+'\','+oi+',\''+ex.name+'\',\''+s.date+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14"/></svg></div>':'';
+        var pills=s.sets.map(function(st,si){
+          var pc='hist-set-pill'+(isEd?' edit-mode':'');
+          var dx=isEd?'<span class="pill-delete" onclick="event.stopPropagation();confirmDeleteSet(\''+id+'\','+oi+','+si+',\''+ex.name+'\','+st.w+','+st.r+')">✕</span>':'';
+          return '<span class="'+pc+'">'+st.w+'كج × '+st.r+dx+'</span>';
+        }).join('');
+        return '<div class="hist-row">'+delBtn+'<div class="hist-date">'+fmtDate(s.date)+'</div><div class="hist-sets">'+pills+'</div></div>';
+      }).join('')+'</div>';
     list.appendChild(card);
   });
+}
+
+function toggleProgCard(header){
+  var card = header.closest('.prog-card');
+  // Close all other open cards
+  document.querySelectorAll('.prog-card.open').forEach(function(c){if(c!==card)c.classList.remove('open');});
+  card.classList.toggle('open');
 }
 
 function toggleEditMode(id){editModeCards[id]=!editModeCards[id];renderProgress();}
