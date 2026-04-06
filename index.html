@@ -88,6 +88,8 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .ch-leg{background:rgba(241,196,15,.2);color:#f1c40f}
 .ch-core{background:rgba(26,188,156,.2);color:#1abc9c}
 .ch-glute{background:rgba(231,76,60,.2);color:#e07060}
+.ch-traps{background:rgba(142,68,173,.2);color:#a569bd}
+.ch-forearm{background:rgba(211,84,0,.2);color:#d35400}
 
 /* WORKOUT FULL SCREEN */
 #workout-overlay{position:fixed;inset:0;background:var(--bg);z-index:300;display:none;flex-direction:column}
@@ -281,6 +283,52 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .plan-btn{flex:1;padding:12px 8px;border-radius:10px;background:var(--s1);border:2px solid var(--border);color:var(--muted);font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer;text-align:center;transition:all .2s}
 .plan-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(245,166,35,.08)}
 
+/* Customize Day Overlay */
+#customize-overlay{position:fixed;inset:0;background:var(--bg);z-index:350;display:none;flex-direction:column}
+#customize-overlay.active{display:flex}
+.cust-header{padding:calc(var(--top) + 8px) 16px 10px;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.cust-close{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text)}
+.cust-close svg{width:18px;height:18px}
+.cust-header-info{flex:1}
+.cust-header-title{font-size:16px;font-weight:900}
+.cust-header-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.cust-save-btn{padding:8px 16px;border-radius:8px;background:var(--acc);border:none;color:#000;font-family:'Cairo',sans-serif;font-size:13px;font-weight:900;cursor:pointer}
+.cust-body{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--bot) + 80px)}
+.cust-section{margin-bottom:20px}
+.cust-section-title{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cust-muscle-grid{display:flex;flex-wrap:wrap;gap:8px}
+.cust-muscle-chip{padding:10px 16px;border-radius:12px;font-size:12px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:6px}
+.cust-muscle-chip.active{border-color:var(--acc);color:var(--acc);background:rgba(245,166,35,.08)}
+.cust-muscle-chip .chip-count{font-size:10px;padding:2px 6px;border-radius:6px;background:rgba(245,166,35,.15);color:var(--acc);font-weight:600}
+.cust-ex-group{margin-bottom:16px}
+.cust-ex-group-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;padding:6px 10px;background:var(--s1);border-radius:8px;display:flex;align-items:center;gap:6px}
+.cust-ex-group-title .cust-grp-chip{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600}
+.cust-ex-list{display:flex;flex-direction:column;gap:6px}
+.cust-ex-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s}
+.cust-ex-item:active{transform:scale(.98)}
+.cust-ex-item.selected{border-color:var(--green);background:rgba(46,204,113,.06)}
+.cust-ex-check{width:24px;height:24px;border-radius:7px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;color:transparent}
+.cust-ex-item.selected .cust-ex-check{background:var(--green);border-color:var(--green);color:#fff}
+.cust-ex-check svg{width:14px;height:14px}
+.cust-ex-info{flex:1;min-width:0}
+.cust-ex-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cust-ex-detail{font-size:11px;color:var(--muted);margin-top:1px}
+.cust-selected-count{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(var(--bot) + 12px);background:rgba(10,10,15,.97);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;z-index:351}
+.cust-count-text{flex:1;font-size:13px;font-weight:700}
+.cust-count-text span{color:var(--acc)}
+.cust-count-save{padding:12px 24px;border-radius:10px;background:var(--green);border:none;color:#fff;font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer}
+
+/* Settings customize day cards */
+.setting-day-card{background:var(--s1);border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.setting-day-badge{width:36px;height:36px;border-radius:10px;background:rgba(245,166,35,.15);color:var(--acc);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.setting-day-info{flex:1;min-width:0}
+.setting-day-focus{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.setting-day-exercises{font-size:10px;color:var(--muted);margin-top:2px}
+.setting-day-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.setting-day-edit{padding:6px 14px;border-radius:8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);color:var(--acc);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+.setting-day-reset{padding:6px 10px;border-radius:8px;background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);color:var(--red);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+.cust-select-all{padding:6px 12px;border-radius:8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);color:var(--acc);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;margin-right:auto}
+
 /* Confirm modal */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
 .confirm-overlay.show{display:flex}
@@ -396,6 +444,22 @@ input[type=file]{display:none}
   <button class="replace-cancel" onclick="closeReplaceMode()">إلغاء</button>
 </div>
 
+<!-- Customize Day Overlay -->
+<div id="customize-overlay">
+  <div class="cust-header">
+    <div class="cust-close" onclick="closeCustomize()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+    <div class="cust-header-info">
+      <div class="cust-header-title" id="cust-title">تخصيص اليوم</div>
+      <div class="cust-header-sub" id="cust-sub">اختر العضلات والتمارين</div>
+    </div>
+  </div>
+  <div class="cust-body" id="cust-body"></div>
+  <div class="cust-selected-count" id="cust-bottom">
+    <div class="cust-count-text" id="cust-count">تم اختيار <span>0</span> تمارين</div>
+    <button class="cust-count-save" onclick="saveCustomDay()">💾 حفظ</button>
+  </div>
+</div>
+
 <div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirm(event)">
   <div class="confirm-box">
     <div class="confirm-icon" id="confirm-icon">🗑️</div>
@@ -422,15 +486,31 @@ var EXERCISE_DB = {
       {id:'incline_db_press',name:'Incline Dumbbell Press',muscle:'الصدر العلوي',target:'3 × 12'},
       {id:'incline_barbell',name:'Incline Barbell Press',muscle:'الصدر العلوي',target:'4 × 10'},
       {id:'decline_db_press',name:'Decline Dumbbell Press',muscle:'الصدر السفلي',target:'3 × 12'},
+      {id:'decline_barbell',name:'Decline Barbell Press',muscle:'الصدر السفلي',target:'4 × 10'},
       {id:'incline_machine_press',name:'Incline Machine Press',muscle:'الصدر العلوي',target:'4 × 12'},
       {id:'machine_chest_press',name:'Machine Chest Press',muscle:'صدر وسط',target:'3 × 12'},
+      {id:'smith_bench',name:'Smith Machine Bench Press',muscle:'صدر وسط',target:'4 × 10'},
+      {id:'smith_incline',name:'Smith Machine Incline Press',muscle:'الصدر العلوي',target:'4 × 10'},
       {id:'cable_crossover',name:'Cable Crossover',muscle:'الصدر الداخلي',target:'3 × 15'},
       {id:'machine_fly',name:'Machine Chest Fly',muscle:'الصدر كامل',target:'3 × 15'},
       {id:'low_cable_fly',name:'Low Cable Fly',muscle:'الصدر العلوي',target:'3 × 15'},
+      {id:'high_cable_fly',name:'High Cable Fly',muscle:'الصدر السفلي',target:'3 × 15'},
       {id:'db_fly',name:'Dumbbell Fly',muscle:'الصدر كامل',target:'3 × 12'},
+      {id:'incline_db_fly',name:'Incline Dumbbell Fly',muscle:'الصدر العلوي',target:'3 × 12'},
+      {id:'decline_db_fly',name:'Decline Dumbbell Fly',muscle:'الصدر السفلي',target:'3 × 12'},
+      {id:'cable_chest_press',name:'Cable Chest Press',muscle:'صدر وسط',target:'3 × 12'},
+      {id:'landmine_press',name:'Landmine Press',muscle:'الصدر العلوي',target:'3 × 10'},
+      {id:'chest_dip',name:'Chest Dips',muscle:'الصدر السفلي + ترايسبس',target:'3 × 12'},
       {id:'std_pushup',name:'Push-Up',muscle:'صدر + ترايسبس',target:'3 × 15'},
       {id:'incline_pushup',name:'Incline Push-Up',muscle:'صدر علوي + ترايسبس',target:'3 × 15'},
-      {id:'db_pullover',name:'Dumbbell Pullover',muscle:'صدر سفلي + عريضة',target:'3 × 12'}
+      {id:'decline_pushup',name:'Decline Push-Up',muscle:'صدر علوي',target:'3 × 15'},
+      {id:'wide_pushup',name:'Wide Push-Up',muscle:'صدر كامل',target:'3 × 15'},
+      {id:'db_pullover',name:'Dumbbell Pullover',muscle:'صدر سفلي + عريضة',target:'3 × 12'},
+      {id:'svend_press',name:'Svend Press',muscle:'الصدر الداخلي',target:'3 × 15'},
+      {id:'floor_press_db',name:'Dumbbell Floor Press',muscle:'صدر وسط + ترايسبس',target:'3 × 12'},
+      {id:'floor_press_bb',name:'Barbell Floor Press',muscle:'صدر وسط + ترايسبس',target:'4 × 8'},
+      {id:'hex_press',name:'Hex Press',muscle:'الصدر الداخلي',target:'3 × 12'},
+      {id:'plate_press',name:'Plate Squeeze Press',muscle:'الصدر الداخلي',target:'3 × 15'}
     ]
   },
   back: {
@@ -438,17 +518,36 @@ var EXERCISE_DB = {
     exercises: [
       {id:'lat_pulldown_wide',name:'Lat Pulldown (Wide)',muscle:'العضلة العريضة',target:'4 × 10'},
       {id:'lat_narrow',name:'Lat Pulldown (Narrow)',muscle:'العضلة العريضة',target:'3 × 12'},
+      {id:'lat_vbar',name:'Lat Pulldown (V-Bar)',muscle:'العضلة العريضة',target:'3 × 12'},
+      {id:'lat_reverse',name:'Lat Pulldown (Reverse Grip)',muscle:'العضلة العريضة السفلى',target:'3 × 12'},
+      {id:'lat_single',name:'Single Arm Lat Pulldown',muscle:'العضلة العريضة',target:'3 × 12'},
+      {id:'machine_lat',name:'Machine Lat Pulldown',muscle:'العضلة العريضة',target:'3 × 12'},
       {id:'seated_cable_row',name:'Seated Cable Row',muscle:'الظهر الوسط',target:'3 × 12'},
+      {id:'cable_row_wide',name:'Seated Cable Row (Wide)',muscle:'الظهر العلوي',target:'3 × 12'},
       {id:'machine_row',name:'Machine Row',muscle:'الظهر',target:'3 × 12'},
       {id:'t_bar_row',name:'T-Bar Row',muscle:'الظهر الوسط',target:'4 × 10'},
       {id:'single_arm_row',name:'Single Arm Dumbbell Row',muscle:'الظهر الجانبي',target:'3 × 12'},
       {id:'chest_supported_row',name:'Chest Supported Row',muscle:'الظهر الوسط',target:'4 × 12'},
+      {id:'barbell_row',name:'Barbell Row',muscle:'الظهر الوسط',target:'4 × 10'},
+      {id:'pendlay_row',name:'Pendlay Row',muscle:'الظهر الوسط',target:'4 × 8'},
+      {id:'meadows_row',name:'Meadows Row',muscle:'العضلة العريضة',target:'3 × 10'},
+      {id:'seal_row',name:'Seal Row',muscle:'الظهر الوسط',target:'3 × 12'},
+      {id:'helms_row',name:'Helms Row',muscle:'الظهر الوسط',target:'3 × 12'},
       {id:'straight_arm_pull',name:'Straight Arm Pulldown',muscle:'العضلة العريضة',target:'3 × 15'},
       {id:'face_pull',name:'Face Pull (Cable)',muscle:'الكتف الخلفي',target:'3 × 15'},
       {id:'face_pull_hl',name:'Face Pull (High to Low)',muscle:'الظهر العلوي',target:'3 × 15'},
+      {id:'pullup',name:'Pull-Up',muscle:'العضلة العريضة',target:'3 × 8'},
+      {id:'chinup',name:'Chin-Up',muscle:'العريضة + بايسبس',target:'3 × 8'},
       {id:'assisted_pullup',name:'Assisted Pull-Up',muscle:'العضلة العريضة',target:'3 × 10'},
-      {id:'cable_row_wide',name:'Seated Cable Row (Wide)',muscle:'الظهر العلوي',target:'3 × 12'},
-      {id:'barbell_row',name:'Barbell Row',muscle:'الظهر الوسط',target:'4 × 10'}
+      {id:'neutral_pullup',name:'Neutral Grip Pull-Up',muscle:'العضلة العريضة',target:'3 × 8'},
+      {id:'inverted_row',name:'Inverted Row',muscle:'الظهر الوسط',target:'3 × 12'},
+      {id:'deadlift',name:'Conventional Deadlift',muscle:'الظهر كامل + أرجل',target:'4 × 6'},
+      {id:'sumo_deadlift',name:'Sumo Deadlift',muscle:'الظهر + جلوتس',target:'4 × 6'},
+      {id:'rack_pull',name:'Rack Pull',muscle:'الظهر العلوي + ترابيزيوس',target:'4 × 8'},
+      {id:'hyperextension',name:'Hyperextension',muscle:'الظهر السفلي',target:'3 × 15'},
+      {id:'reverse_hyper',name:'Reverse Hyperextension',muscle:'الظهر السفلي + جلوتس',target:'3 × 15'},
+      {id:'cable_pullover',name:'Cable Pullover',muscle:'العضلة العريضة',target:'3 × 12'},
+      {id:'db_row_bilateral',name:'Dumbbell Row (Both Arms)',muscle:'الظهر الوسط',target:'3 × 12'}
     ]
   },
   shoulder: {
@@ -457,13 +556,45 @@ var EXERCISE_DB = {
       {id:'db_shoulder_press',name:'Dumbbell Shoulder Press',muscle:'الكتف الأمامي والجانبي',target:'4 × 10'},
       {id:'machine_shoulder_press',name:'Machine Shoulder Press',muscle:'الكتف الأمامي والجانبي',target:'4 × 12'},
       {id:'barbell_ohp',name:'Barbell Overhead Press',muscle:'الكتف الأمامي',target:'4 × 8'},
+      {id:'smith_ohp',name:'Smith Machine Shoulder Press',muscle:'الكتف الأمامي',target:'4 × 10'},
+      {id:'seated_db_press',name:'Seated Dumbbell Press',muscle:'الكتف الأمامي والجانبي',target:'4 × 10'},
+      {id:'push_press',name:'Push Press',muscle:'الكتف كامل',target:'4 × 6'},
+      {id:'landmine_sh_press',name:'Landmine Shoulder Press',muscle:'الكتف الأمامي',target:'3 × 10'},
       {id:'lateral_raise',name:'Lateral Raise',muscle:'الكتف الجانبي',target:'3 × 15'},
       {id:'cable_lateral',name:'Cable Lateral Raise',muscle:'الكتف الجانبي',target:'3 × 15'},
-      {id:'front_raise',name:'Front Raise',muscle:'الكتف الأمامي',target:'3 × 12'},
+      {id:'machine_lateral',name:'Machine Lateral Raise',muscle:'الكتف الجانبي',target:'3 × 15'},
+      {id:'seated_lateral',name:'Seated Lateral Raise',muscle:'الكتف الجانبي',target:'3 × 12'},
+      {id:'leaning_lateral',name:'Leaning Cable Lateral Raise',muscle:'الكتف الجانبي',target:'3 × 12'},
+      {id:'front_raise',name:'Front Raise (Dumbbell)',muscle:'الكتف الأمامي',target:'3 × 12'},
+      {id:'cable_front_raise',name:'Front Raise (Cable)',muscle:'الكتف الأمامي',target:'3 × 12'},
+      {id:'plate_front_raise',name:'Front Raise (Plate)',muscle:'الكتف الأمامي',target:'3 × 12'},
       {id:'rev_pec_deck',name:'Reverse Pec Deck',muscle:'الكتف الخلفي',target:'3 × 15'},
+      {id:'rear_delt_fly',name:'Rear Delt Fly (Dumbbell)',muscle:'الكتف الخلفي',target:'3 × 15'},
+      {id:'cable_rear_delt',name:'Cable Rear Delt Fly',muscle:'الكتف الخلفي',target:'3 × 15'},
+      {id:'face_pull_ext',name:'Face Pull + External Rotation',muscle:'الكتف الخلفي',target:'3 × 15'},
       {id:'arnold_press',name:'Arnold Press',muscle:'الكتف كامل',target:'3 × 10'},
       {id:'upright_row',name:'Upright Row',muscle:'الكتف + ترابيزيوس',target:'3 × 12'},
-      {id:'barbell_shrug',name:'Barbell Shrug',muscle:'ترابيزيوس',target:'3 × 15'}
+      {id:'cable_upright_row',name:'Cable Upright Row',muscle:'الكتف + ترابيزيوس',target:'3 × 12'},
+      {id:'lu_raise',name:'Lu Raise',muscle:'الكتف الأمامي والجانبي',target:'3 × 10'},
+      {id:'prone_y_raise',name:'Prone Y Raise',muscle:'الكتف الخلفي',target:'3 × 12'},
+      {id:'db_around_world',name:'Dumbbell Around the World',muscle:'الكتف كامل',target:'3 × 10'},
+      {id:'pike_pushup',name:'Pike Push-Up',muscle:'الكتف الأمامي',target:'3 × 12'},
+      {id:'handstand_pushup',name:'Handstand Push-Up',muscle:'الكتف كامل',target:'3 × 6'}
+    ]
+  },
+  traps: {
+    label: 'ترابيزيوس', chipClass: 'ch-traps',
+    exercises: [
+      {id:'barbell_shrug',name:'Barbell Shrug',muscle:'ترابيزيوس',target:'3 × 15'},
+      {id:'db_shrug',name:'Dumbbell Shrug',muscle:'ترابيزيوس',target:'3 × 15'},
+      {id:'smith_shrug',name:'Smith Machine Shrug',muscle:'ترابيزيوس',target:'3 × 15'},
+      {id:'cable_shrug',name:'Cable Shrug',muscle:'ترابيزيوس',target:'3 × 15'},
+      {id:'trap_bar_shrug',name:'Trap Bar Shrug',muscle:'ترابيزيوس',target:'3 × 12'},
+      {id:'behind_back_shrug',name:'Behind Back Barbell Shrug',muscle:'ترابيزيوس',target:'3 × 15'},
+      {id:'overhead_shrug',name:'Overhead Barbell Shrug',muscle:'ترابيزيوس العلوي',target:'3 × 12'},
+      {id:'farmer_carry',name:'Farmer\'s Carry',muscle:'ترابيزيوس + ساعد',target:'3 × 30 م'},
+      {id:'trap_raise',name:'Prone Trap Raise',muscle:'ترابيزيوس السفلي',target:'3 × 12'},
+      {id:'power_shrug',name:'Power Shrug',muscle:'ترابيزيوس',target:'4 × 8'}
     ]
   },
   tricep: {
@@ -471,12 +602,24 @@ var EXERCISE_DB = {
     exercises: [
       {id:'cable_pushdown',name:'Cable Pushdown (Bar)',muscle:'ترايسبس',target:'3 × 12'},
       {id:'rope_pushdown',name:'Cable Pushdown (Rope)',muscle:'ترايسبس',target:'3 × 12'},
+      {id:'vbar_pushdown',name:'Cable Pushdown (V-Bar)',muscle:'ترايسبس',target:'3 × 12'},
       {id:'overhead_db_ext',name:'Overhead Dumbbell Extension',muscle:'الرأس الطويل',target:'3 × 12'},
+      {id:'overhead_bb_ext',name:'Overhead Barbell Extension',muscle:'الرأس الطويل',target:'3 × 10'},
+      {id:'overhead_cable_ext',name:'Overhead Cable Extension',muscle:'الرأس الطويل',target:'3 × 12'},
       {id:'skull_crusher',name:'Skull Crushers',muscle:'ترايسبس',target:'3 × 12'},
+      {id:'ez_skull_crusher',name:'EZ Bar Skull Crushers',muscle:'ترايسبس',target:'3 × 12'},
       {id:'tricep_dips_machine',name:'Tricep Dips (Machine)',muscle:'ترايسبس',target:'3 × 12'},
+      {id:'tricep_dips_bw',name:'Tricep Dips (Bodyweight)',muscle:'ترايسبس',target:'3 × 10'},
+      {id:'bench_dips',name:'Bench Dips',muscle:'ترايسبس',target:'3 × 12'},
       {id:'single_pushdown_rope',name:'Single Arm Pushdown',muscle:'ترايسبس جانبي',target:'3 × 12'},
+      {id:'kickback_db',name:'Dumbbell Kickback',muscle:'ترايسبس',target:'3 × 12'},
+      {id:'kickback_cable',name:'Cable Kickback',muscle:'ترايسبس',target:'3 × 12'},
       {id:'close_grip_bench',name:'Close Grip Bench Press',muscle:'ترايسبس + صدر داخلي',target:'3 × 12'},
-      {id:'diamond_pushup',name:'Diamond Push-Up',muscle:'ترايسبس',target:'3 × 15'}
+      {id:'close_grip_smith',name:'Close Grip Smith Press',muscle:'ترايسبس + صدر',target:'3 × 12'},
+      {id:'jm_press',name:'JM Press',muscle:'ترايسبس',target:'3 × 10'},
+      {id:'french_press',name:'French Press (Cable)',muscle:'الرأس الطويل',target:'3 × 12'},
+      {id:'diamond_pushup',name:'Diamond Push-Up',muscle:'ترايسبس',target:'3 × 15'},
+      {id:'tate_press',name:'Tate Press',muscle:'ترايسبس',target:'3 × 12'}
     ]
   },
   bicep: {
@@ -487,10 +630,39 @@ var EXERCISE_DB = {
       {id:'hammer_curl',name:'Hammer Curl',muscle:'بايسبس + ساعد',target:'3 × 12'},
       {id:'ez_curl',name:'EZ Bar Curl',muscle:'بايسبس',target:'3 × 12'},
       {id:'cable_curl',name:'Cable Curl',muscle:'بايسبس',target:'3 × 15'},
+      {id:'cable_curl_rope',name:'Cable Curl (Rope)',muscle:'بايسبس',target:'3 × 12'},
       {id:'incline_db_curl',name:'Incline Dumbbell Curl',muscle:'بايسبس رأس طويل',target:'3 × 12'},
       {id:'concentration_curl',name:'Concentration Curl',muscle:'بايسبس',target:'3 × 12'},
       {id:'preacher_curl',name:'Preacher Curl',muscle:'بايسبس',target:'3 × 12'},
-      {id:'spider_curl',name:'Spider Curl',muscle:'بايسبس',target:'3 × 12'}
+      {id:'preacher_curl_db',name:'Dumbbell Preacher Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'machine_preacher',name:'Machine Preacher Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'spider_curl',name:'Spider Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'drag_curl',name:'Drag Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'reverse_curl',name:'Reverse Curl',muscle:'بايسبس + ساعد',target:'3 × 12'},
+      {id:'reverse_curl_ez',name:'Reverse Curl (EZ Bar)',muscle:'بايسبس + ساعد',target:'3 × 12'},
+      {id:'zottman_curl',name:'Zottman Curl',muscle:'بايسبس + ساعد',target:'3 × 10'},
+      {id:'cross_body_curl',name:'Cross Body Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'bayesian_curl',name:'Bayesian Cable Curl',muscle:'بايسبس رأس طويل',target:'3 × 12'},
+      {id:'curl_21s',name:'21s Curl',muscle:'بايسبس',target:'3 × 21'},
+      {id:'machine_curl',name:'Machine Bicep Curl',muscle:'بايسبس',target:'3 × 12'},
+      {id:'single_cable_curl',name:'Single Arm Cable Curl',muscle:'بايسبس',target:'3 × 12'}
+    ]
+  },
+  forearm: {
+    label: 'ساعد', chipClass: 'ch-forearm',
+    exercises: [
+      {id:'wrist_curl_bb',name:'Barbell Wrist Curl',muscle:'ساعد داخلي',target:'3 × 15'},
+      {id:'wrist_curl_db',name:'Dumbbell Wrist Curl',muscle:'ساعد داخلي',target:'3 × 15'},
+      {id:'reverse_wrist_curl',name:'Reverse Wrist Curl',muscle:'ساعد خارجي',target:'3 × 15'},
+      {id:'behind_back_wrist',name:'Behind Back Wrist Curl',muscle:'ساعد داخلي',target:'3 × 15'},
+      {id:'farmer_walk',name:'Farmer\'s Walk',muscle:'ساعد + قبضة',target:'3 × 30 م'},
+      {id:'plate_pinch',name:'Plate Pinch Hold',muscle:'قبضة',target:'3 × 30 ث'},
+      {id:'wrist_roller',name:'Wrist Roller',muscle:'ساعد كامل',target:'3 × 5'},
+      {id:'dead_hang',name:'Dead Hang',muscle:'قبضة + ساعد',target:'3 × 30 ث'},
+      {id:'fat_grip_curl',name:'Fat Grip Curl',muscle:'ساعد + بايسبس',target:'3 × 10'},
+      {id:'towel_pullup',name:'Towel Pull-Up',muscle:'قبضة + ظهر',target:'3 × 6'},
+      {id:'hand_gripper',name:'Hand Gripper',muscle:'قبضة',target:'3 × 15'},
+      {id:'finger_curl',name:'Finger Curl',muscle:'ساعد + أصابع',target:'3 × 15'}
     ]
   },
   quad: {
@@ -498,12 +670,26 @@ var EXERCISE_DB = {
     exercises: [
       {id:'leg_press',name:'Leg Press',muscle:'كوادز + جلوتس',target:'4 × 12'},
       {id:'back_squat',name:'Barbell Back Squat',muscle:'كوادز + جلوتس',target:'4 × 10'},
+      {id:'front_squat',name:'Front Squat',muscle:'كوادز',target:'4 × 8'},
       {id:'goblet_squat',name:'Goblet Squat',muscle:'كوادز + جلوتس',target:'3 × 15'},
-      {id:'leg_ext',name:'Leg Extension',muscle:'كوادز',target:'3 × 15'},
-      {id:'walking_lunges',name:'Walking Lunges',muscle:'كوادز + جلوتس',target:'3 × 12'},
-      {id:'bulgarian_split',name:'Bulgarian Split Squat',muscle:'كوادز + جلوتس',target:'3 × 10'},
       {id:'hack_squat',name:'Hack Squat',muscle:'كوادز',target:'4 × 10'},
-      {id:'front_squat',name:'Front Squat',muscle:'كوادز',target:'4 × 8'}
+      {id:'smith_squat',name:'Smith Machine Squat',muscle:'كوادز + جلوتس',target:'4 × 10'},
+      {id:'pendulum_squat',name:'Pendulum Squat',muscle:'كوادز',target:'3 × 12'},
+      {id:'belt_squat',name:'Belt Squat',muscle:'كوادز + جلوتس',target:'3 × 12'},
+      {id:'leg_ext',name:'Leg Extension',muscle:'كوادز',target:'3 × 15'},
+      {id:'single_leg_ext',name:'Single Leg Extension',muscle:'كوادز',target:'3 × 12'},
+      {id:'walking_lunges',name:'Walking Lunges',muscle:'كوادز + جلوتس',target:'3 × 12'},
+      {id:'reverse_lunge',name:'Reverse Lunge',muscle:'كوادز + جلوتس',target:'3 × 12'},
+      {id:'lateral_lunge',name:'Lateral Lunge',muscle:'كوادز + فخذ داخلي',target:'3 × 10'},
+      {id:'bulgarian_split',name:'Bulgarian Split Squat',muscle:'كوادز + جلوتس',target:'3 × 10'},
+      {id:'step_up',name:'Step-Up',muscle:'كوادز + جلوتس',target:'3 × 12'},
+      {id:'box_squat',name:'Box Squat',muscle:'كوادز + جلوتس',target:'4 × 8'},
+      {id:'sissy_squat',name:'Sissy Squat',muscle:'كوادز',target:'3 × 12'},
+      {id:'wall_sit',name:'Wall Sit',muscle:'كوادز',target:'3 × 45 ث'},
+      {id:'split_squat',name:'Split Squat',muscle:'كوادز + جلوتس',target:'3 × 12'},
+      {id:'zercher_squat',name:'Zercher Squat',muscle:'كوادز + كور',target:'3 × 8'},
+      {id:'leg_press_single',name:'Single Leg Press',muscle:'كوادز',target:'3 × 10'},
+      {id:'v_squat',name:'V-Squat Machine',muscle:'كوادز',target:'4 × 10'}
     ]
   },
   hamstring: {
@@ -511,39 +697,93 @@ var EXERCISE_DB = {
     exercises: [
       {id:'leg_curl_lying',name:'Leg Curl (Lying)',muscle:'هامسترينج',target:'3 × 12'},
       {id:'seated_leg_curl',name:'Seated Leg Curl',muscle:'هامسترينج',target:'3 × 15'},
+      {id:'standing_leg_curl',name:'Standing Leg Curl',muscle:'هامسترينج',target:'3 × 12'},
+      {id:'single_leg_curl',name:'Single Leg Curl',muscle:'هامسترينج',target:'3 × 12'},
       {id:'rdl',name:'Romanian Deadlift',muscle:'هامسترينج + جلوتس',target:'4 × 10'},
       {id:'rdl_light',name:'Romanian Deadlift (Light)',muscle:'هامسترينج',target:'3 × 12'},
+      {id:'rdl_db',name:'Dumbbell Romanian Deadlift',muscle:'هامسترينج + جلوتس',target:'3 × 12'},
+      {id:'single_leg_rdl',name:'Single Leg Romanian Deadlift',muscle:'هامسترينج + توازن',target:'3 × 10'},
       {id:'stiff_leg_dl',name:'Stiff Leg Deadlift',muscle:'هامسترينج',target:'3 × 12'},
-      {id:'good_morning',name:'Good Mornings',muscle:'هامسترينج + ظهر سفلي',target:'3 × 12'}
+      {id:'good_morning',name:'Good Mornings',muscle:'هامسترينج + ظهر سفلي',target:'3 × 12'},
+      {id:'nordic_curl',name:'Nordic Hamstring Curl',muscle:'هامسترينج',target:'3 × 6'},
+      {id:'glute_ham_raise',name:'Glute-Ham Raise',muscle:'هامسترينج + جلوتس',target:'3 × 10'},
+      {id:'swiss_ball_curl',name:'Swiss Ball Leg Curl',muscle:'هامسترينج',target:'3 × 12'},
+      {id:'slider_curl',name:'Slider Leg Curl',muscle:'هامسترينج',target:'3 × 10'},
+      {id:'cable_leg_curl',name:'Cable Leg Curl',muscle:'هامسترينج',target:'3 × 12'},
+      {id:'kb_swing',name:'Kettlebell Swing',muscle:'هامسترينج + جلوتس',target:'3 × 15'}
     ]
   },
   glute: {
     label: 'جلوتس', chipClass: 'ch-glute',
     exercises: [
       {id:'hip_thrust',name:'Hip Thrust (Barbell)',muscle:'جلوتس',target:'4 × 12'},
+      {id:'hip_thrust_smith',name:'Hip Thrust (Smith Machine)',muscle:'جلوتس',target:'4 × 12'},
+      {id:'hip_thrust_db',name:'Hip Thrust (Dumbbell)',muscle:'جلوتس',target:'3 × 12'},
+      {id:'hip_thrust_single',name:'Single Leg Hip Thrust',muscle:'جلوتس',target:'3 × 10'},
+      {id:'glute_bridge',name:'Glute Bridge',muscle:'جلوتس',target:'3 × 15'},
+      {id:'glute_bridge_bb',name:'Barbell Glute Bridge',muscle:'جلوتس',target:'3 × 12'},
       {id:'glute_kickback',name:'Glute Kickback (Cable)',muscle:'جلوتس',target:'3 × 12'},
-      {id:'cable_pull_through',name:'Cable Pull Through',muscle:'جلوتس + هامسترينج',target:'3 × 15'}
+      {id:'glute_kickback_machine',name:'Glute Kickback (Machine)',muscle:'جلوتس',target:'3 × 12'},
+      {id:'cable_pull_through',name:'Cable Pull Through',muscle:'جلوتس + هامسترينج',target:'3 × 15'},
+      {id:'sumo_dl',name:'Sumo Deadlift',muscle:'جلوتس + فخذ داخلي',target:'4 × 8'},
+      {id:'frog_pump',name:'Frog Pump',muscle:'جلوتس',target:'3 × 20'},
+      {id:'step_up_glute',name:'Step-Up (Glute Focus)',muscle:'جلوتس',target:'3 × 12'},
+      {id:'curtsy_lunge',name:'Curtsy Lunge',muscle:'جلوتس',target:'3 × 12'},
+      {id:'hip_abduction',name:'Hip Abduction Machine',muscle:'جلوتس جانبي',target:'3 × 15'},
+      {id:'cable_hip_abduction',name:'Cable Hip Abduction',muscle:'جلوتس جانبي',target:'3 × 12'},
+      {id:'clamshell',name:'Clamshell',muscle:'جلوتس جانبي',target:'3 × 15'},
+      {id:'donkey_kick',name:'Donkey Kick',muscle:'جلوتس',target:'3 × 15'},
+      {id:'fire_hydrant',name:'Fire Hydrant',muscle:'جلوتس جانبي',target:'3 × 15'},
+      {id:'banded_walk',name:'Banded Lateral Walk',muscle:'جلوتس جانبي',target:'3 × 15'}
     ]
   },
   calf: {
     label: 'ساق', chipClass: 'ch-leg',
     exercises: [
       {id:'calf_raise_stand',name:'Standing Calf Raise',muscle:'ساق',target:'4 × 20'},
+      {id:'calf_raise_machine',name:'Machine Standing Calf Raise',muscle:'ساق',target:'4 × 15'},
+      {id:'smith_calf_raise',name:'Smith Machine Calf Raise',muscle:'ساق',target:'4 × 15'},
       {id:'seated_calf',name:'Seated Calf Raise',muscle:'ساق (Soleus)',target:'4 × 20'},
-      {id:'donkey_calf',name:'Donkey Calf Raise',muscle:'ساق',target:'3 × 20'}
+      {id:'donkey_calf',name:'Donkey Calf Raise',muscle:'ساق',target:'3 × 20'},
+      {id:'leg_press_calf',name:'Leg Press Calf Raise',muscle:'ساق',target:'4 × 15'},
+      {id:'single_leg_calf',name:'Single Leg Calf Raise',muscle:'ساق',target:'3 × 15'},
+      {id:'tibialis_raise',name:'Tibialis Raise',muscle:'عضلة الساق الأمامية',target:'3 × 15'},
+      {id:'db_calf_raise',name:'Dumbbell Calf Raise',muscle:'ساق',target:'3 × 20'},
+      {id:'jump_rope',name:'Jump Rope',muscle:'ساق + تحمل',target:'3 × 60 ث'}
     ]
   },
   core: {
     label: 'كور', chipClass: 'ch-core',
     exercises: [
       {id:'plank',name:'Plank',muscle:'كور',target:'3 × 30 ث'},
-      {id:'crunches',name:'Crunches',muscle:'كور علوي',target:'3 × 20'},
-      {id:'leg_raises_lying',name:'Leg Raises (Lying)',muscle:'كور سفلي',target:'3 × 15'},
-      {id:'cable_crunch',name:'Cable Crunch',muscle:'كور علوي',target:'3 × 20'},
       {id:'side_plank',name:'Side Plank',muscle:'كور جانبي',target:'3 × 25 ث'},
+      {id:'plank_shoulder_tap',name:'Plank Shoulder Tap',muscle:'كور + توازن',target:'3 × 20'},
+      {id:'crunches',name:'Crunches',muscle:'كور علوي',target:'3 × 20'},
+      {id:'bicycle_crunch',name:'Bicycle Crunch',muscle:'كور جانبي',target:'3 × 20'},
+      {id:'reverse_crunch',name:'Reverse Crunch',muscle:'كور سفلي',target:'3 × 15'},
+      {id:'cable_crunch',name:'Cable Crunch',muscle:'كور علوي',target:'3 × 20'},
+      {id:'leg_raises_lying',name:'Leg Raises (Lying)',muscle:'كور سفلي',target:'3 × 15'},
+      {id:'hanging_leg_raise',name:'Hanging Leg Raise',muscle:'كور سفلي',target:'3 × 12'},
+      {id:'hanging_knee_raise',name:'Hanging Knee Raise',muscle:'كور سفلي',target:'3 × 15'},
+      {id:'captain_chair',name:'Captain\'s Chair Leg Raise',muscle:'كور سفلي',target:'3 × 12'},
+      {id:'ab_wheel',name:'Ab Wheel Rollout',muscle:'كور كامل',target:'3 × 10'},
       {id:'dead_bug',name:'Dead Bug',muscle:'كور عميق',target:'3 × 10'},
       {id:'russian_twist',name:'Russian Twist',muscle:'كور جانبي',target:'3 × 20'},
-      {id:'hanging_leg_raise',name:'Hanging Leg Raise',muscle:'كور سفلي',target:'3 × 12'}
+      {id:'russian_twist_weighted',name:'Weighted Russian Twist',muscle:'كور جانبي',target:'3 × 15'},
+      {id:'woodchop_cable',name:'Cable Woodchop',muscle:'كور جانبي',target:'3 × 12'},
+      {id:'pallof_press',name:'Pallof Press',muscle:'كور مضاد للدوران',target:'3 × 10'},
+      {id:'v_up',name:'V-Up',muscle:'كور كامل',target:'3 × 15'},
+      {id:'toe_touch',name:'Toe Touch',muscle:'كور علوي',target:'3 × 20'},
+      {id:'flutter_kick',name:'Flutter Kicks',muscle:'كور سفلي',target:'3 × 30'},
+      {id:'mountain_climber',name:'Mountain Climbers',muscle:'كور + تحمل',target:'3 × 30'},
+      {id:'dragon_flag',name:'Dragon Flag',muscle:'كور كامل',target:'3 × 6'},
+      {id:'hollow_hold',name:'Hollow Body Hold',muscle:'كور كامل',target:'3 × 30 ث'},
+      {id:'sit_up',name:'Sit-Up',muscle:'كور علوي',target:'3 × 20'},
+      {id:'decline_situp',name:'Decline Sit-Up',muscle:'كور علوي',target:'3 × 15'},
+      {id:'ab_crunch_machine',name:'Ab Crunch Machine',muscle:'كور علوي',target:'3 × 15'},
+      {id:'hip_raise',name:'Hip Raise',muscle:'كور سفلي',target:'3 × 15'},
+      {id:'bird_dog',name:'Bird Dog',muscle:'كور + توازن',target:'3 × 10'},
+      {id:'bear_crawl',name:'Bear Crawl',muscle:'كور + كامل الجسم',target:'3 × 20 م'}
     ]
   }
 };
@@ -566,112 +806,64 @@ function getPlan(days){
     3: [
       {name:'Push — صدر + أكتاف + ترايسبس', focus:'صدر + أكتاف + ترايسبس',
        chips:['ch-chest','ch-shoulder','ch-tricep'], labels:['صدر','أكتاف','ترايسبس'],
-       template:[
-         {g:'chest',i:0},{g:'chest',i:2},{g:'shoulder',i:0},{g:'shoulder',i:3},
-         {g:'tricep',i:0},{g:'tricep',i:2}
-       ]},
+       ids:['bench_barbell','incline_db_press','db_shoulder_press','lateral_raise','cable_pushdown','overhead_db_ext']},
       {name:'Pull — ظهر + بايسبس', focus:'ظهر + بايسبس',
        chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
-       template:[
-         {g:'back',i:0},{g:'back',i:2},{g:'back',i:8},{g:'bicep',i:0},{g:'bicep',i:2}
-       ]},
+       ids:['lat_pulldown_wide','seated_cable_row','face_pull','barbell_curl','hammer_curl']},
       {name:'Legs — أرجل + كور', focus:'أرجل + كور',
        chips:['ch-leg','ch-glute','ch-core'], labels:['أرجل','جلوتس','كور'],
-       template:[
-         {g:'quad',i:0},{g:'quad',i:3},{g:'hamstring',i:0},{g:'glute',i:0},
-         {g:'calf',i:0},{g:'core',i:0}
-       ]}
+       ids:['leg_press','leg_ext','leg_curl_lying','hip_thrust','calf_raise_stand','plank']}
     ],
     4: [
       {name:'Upper Push — صدر + أكتاف + ترايسبس', focus:'صدر + أكتاف + ترايسبس',
        chips:['ch-chest','ch-shoulder','ch-tricep'], labels:['صدر','أكتاف','ترايسبس'],
-       template:[
-         {g:'chest',i:0},{g:'chest',i:2},{g:'shoulder',i:0},{g:'shoulder',i:3},
-         {g:'tricep',i:0},{g:'tricep',i:2}
-       ]},
+       ids:['bench_barbell','incline_db_press','db_shoulder_press','lateral_raise','cable_pushdown','overhead_db_ext']},
       {name:'Lower Quad — كوادز + كور', focus:'كوادز + هامسترينج + كور',
        chips:['ch-leg','ch-core'], labels:['أرجل','كور'],
-       template:[
-         {g:'quad',i:0},{g:'quad',i:3},{g:'hamstring',i:0},{g:'calf',i:0},{g:'core',i:1}
-       ]},
+       ids:['leg_press','leg_ext','leg_curl_lying','calf_raise_stand','crunches']},
       {name:'Upper Pull — ظهر + بايسبس', focus:'ظهر + بايسبس',
        chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
-       template:[
-         {g:'back',i:0},{g:'back',i:2},{g:'back',i:8},{g:'bicep',i:0},{g:'bicep',i:2}
-       ]},
+       ids:['lat_pulldown_wide','seated_cable_row','face_pull','barbell_curl','hammer_curl']},
       {name:'Lower Posterior — جلوتس + هامسترينج', focus:'جلوتس + هامسترينج + ساق',
        chips:['ch-glute','ch-leg'], labels:['جلوتس','أرجل'],
-       template:[
-         {g:'hamstring',i:2},{g:'glute',i:0},{g:'quad',i:4},{g:'calf',i:1},{g:'core',i:0}
-       ]}
+       ids:['rdl','hip_thrust','walking_lunges','seated_calf','plank']}
     ],
     5: [
       {name:'Chest — صدر', focus:'صدر',
        chips:['ch-chest'], labels:['صدر'],
-       template:[
-         {g:'chest',i:0},{g:'chest',i:2},{g:'chest',i:4},{g:'chest',i:8},{g:'chest',i:9}
-       ]},
+       ids:['bench_barbell','incline_db_press','decline_db_press','machine_fly','low_cable_fly']},
       {name:'Back — ظهر', focus:'ظهر',
        chips:['ch-back'], labels:['ظهر'],
-       template:[
-         {g:'back',i:0},{g:'back',i:2},{g:'back',i:4},{g:'back',i:6},{g:'back',i:8}
-       ]},
+       ids:['lat_pulldown_wide','seated_cable_row','t_bar_row','chest_supported_row','face_pull']},
       {name:'Shoulders + Core — أكتاف + كور', focus:'أكتاف + كور',
        chips:['ch-shoulder','ch-core'], labels:['أكتاف','كور'],
-       template:[
-         {g:'shoulder',i:0},{g:'shoulder',i:3},{g:'shoulder',i:5},{g:'shoulder',i:6},
-         {g:'core',i:1},{g:'core',i:2}
-       ]},
+       ids:['db_shoulder_press','lateral_raise','front_raise','rev_pec_deck','crunches','leg_raises_lying']},
       {name:'Legs — أرجل', focus:'أرجل',
        chips:['ch-leg','ch-glute'], labels:['أرجل','جلوتس'],
-       template:[
-         {g:'quad',i:1},{g:'quad',i:3},{g:'hamstring',i:2},{g:'glute',i:0},
-         {g:'calf',i:0},{g:'core',i:0}
-       ]},
+       ids:['back_squat','leg_ext','rdl','hip_thrust','calf_raise_stand','plank']},
       {name:'Arms — أذرع', focus:'بايسبس + ترايسبس',
        chips:['ch-bicep','ch-tricep'], labels:['بايسبس','ترايسبس'],
-       template:[
-         {g:'bicep',i:0},{g:'bicep',i:2},{g:'bicep',i:5},
-         {g:'tricep',i:0},{g:'tricep',i:3},{g:'tricep',i:2}
-       ]}
+       ids:['barbell_curl','hammer_curl','incline_db_curl','cable_pushdown','skull_crusher','overhead_db_ext']}
     ],
     6: [
       {name:'Push A — صدر + ترايسبس', focus:'صدر + ترايسبس',
        chips:['ch-chest','ch-tricep'], labels:['صدر','ترايسبس'],
-       template:[
-         {g:'chest',i:0},{g:'chest',i:2},{g:'chest',i:8},
-         {g:'tricep',i:0},{g:'tricep',i:2}
-       ]},
+       ids:['bench_barbell','incline_db_press','machine_fly','cable_pushdown','overhead_db_ext']},
       {name:'Pull A — ظهر + بايسبس', focus:'ظهر + بايسبس',
        chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
-       template:[
-         {g:'back',i:0},{g:'back',i:2},{g:'back',i:3},
-         {g:'bicep',i:0},{g:'bicep',i:2}
-       ]},
+       ids:['lat_pulldown_wide','seated_cable_row','machine_row','barbell_curl','hammer_curl']},
       {name:'Legs A — أرجل + كور', focus:'أرجل + كور',
        chips:['ch-leg','ch-core'], labels:['أرجل','كور'],
-       template:[
-         {g:'quad',i:0},{g:'quad',i:3},{g:'hamstring',i:0},
-         {g:'hamstring',i:3},{g:'core',i:0}
-       ]},
+       ids:['leg_press','leg_ext','leg_curl_lying','rdl_light','plank']},
       {name:'Push B — أكتاف + صدر', focus:'أكتاف + صدر',
        chips:['ch-shoulder','ch-chest'], labels:['أكتاف','صدر'],
-       template:[
-         {g:'shoulder',i:0},{g:'shoulder',i:3},{g:'shoulder',i:5},
-         {g:'chest',i:4},{g:'tricep',i:3}
-       ]},
+       ids:['db_shoulder_press','lateral_raise','front_raise','decline_db_press','skull_crusher']},
       {name:'Pull B — ظهر + بايسبس', focus:'ظهر + بايسبس',
        chips:['ch-back','ch-bicep'], labels:['ظهر','بايسبس'],
-       template:[
-         {g:'back',i:4},{g:'back',i:6},{g:'back',i:8},
-         {g:'bicep',i:3},{g:'bicep',i:5}
-       ]},
+       ids:['t_bar_row','chest_supported_row','face_pull','ez_curl','incline_db_curl']},
       {name:'Legs B — جلوتس + ساق + أذرع', focus:'جلوتس + ساق + أذرع',
        chips:['ch-glute','ch-leg','ch-bicep','ch-tricep'], labels:['جلوتس','ساق','أذرع'],
-       template:[
-         {g:'glute',i:0},{g:'quad',i:2},{g:'calf',i:0},
-         {g:'bicep',i:4},{g:'tricep',i:4}
-       ]}
+       ids:['hip_thrust','goblet_squat','calf_raise_stand','cable_curl','tricep_dips_machine']}
     ]
   };
   return plans[days] || plans[6];
@@ -680,11 +872,36 @@ function getPlan(days){
 function buildPlanDays(planDays){
   var plan = getPlan(planDays);
   var custom = settings.customPlan && settings.customPlan[planDays];
+  var customDays = settings.customDays && settings.customDays[planDays];
   return plan.map(function(day, di){
-    var exercises = day.template.map(function(t){
-      var grp = EXERCISE_DB[t.g];
-      var idx = Math.min(t.i, grp.exercises.length - 1);
-      return JSON.parse(JSON.stringify(grp.exercises[idx]));
+    // Check if this day has a full custom configuration
+    if(customDays && customDays[di]){
+      var cd = customDays[di];
+      var exercises = cd.exercises.map(function(exId){
+        return JSON.parse(JSON.stringify(getExById(exId)));
+      });
+      // Build chips and labels from selected muscles
+      var chips = [];
+      var labels = [];
+      var seenGroups = {};
+      cd.muscles.forEach(function(g){
+        if(!seenGroups[g] && EXERCISE_DB[g]){
+          seenGroups[g] = true;
+          chips.push(EXERCISE_DB[g].chipClass);
+          labels.push(EXERCISE_DB[g].label);
+        }
+      });
+      var focus = labels.join(' + ');
+      return {
+        name: 'يوم '+(di+1)+' — '+focus,
+        focus: focus,
+        chips: chips,
+        labels: labels,
+        exercises: exercises
+      };
+    }
+    var exercises = (day.ids || []).map(function(exId){
+      return JSON.parse(JSON.stringify(getExById(exId)));
     });
     // Apply custom modifications
     if(custom && custom[di]){
@@ -781,6 +998,7 @@ async function initStorage(){
   if(settings.currentDayIdx === undefined) settings.currentDayIdx = 0;
   if(!settings.completedDays) settings.completedDays = [];
   if(!settings.customPlan) settings.customPlan = {};
+  if(!settings.customDays) settings.customDays = {};
   if(!settings.weightLog) settings.weightLog = [];
   if(!settings.gymSessions) settings.gymSessions = [];
 
@@ -1350,13 +1568,15 @@ function buildMuscleFilters(){
     {key:'chest',label:'صدر'},
     {key:'back',label:'ظهر'},
     {key:'shoulder',label:'أكتاف'},
+    {key:'traps',label:'ترابيزيوس'},
     {key:'bicep',label:'بايسبس'},
     {key:'tricep',label:'ترايسبس'},
+    {key:'forearm',label:'ساعد'},
     {key:'quad',label:'كوادز'},
     {key:'hamstring',label:'هامسترينج'},
     {key:'glute',label:'جلوتس'},
-    {key:'core',label:'كور'},
-    {key:'calf',label:'ساق'}
+    {key:'calf',label:'ساق'},
+    {key:'core',label:'كور'}
   ];
   filtersEl.innerHTML = filters.map(function(f){
     return '<button class="muscle-filter'+(activeFilter===f.key?' active':'')+'" onclick="setMuscleFilter(\''+f.key+'\')">'+f.label+'</button>';
@@ -1499,8 +1719,28 @@ function renderSettings(){
       '<div class="setting-row" style="margin-top:8px"><div><div class="setting-label">التقدم الحالي</div><div class="setting-sublabel">يوم '+(getCurrentDayIdx()+1)+' من '+planDays+'</div></div><button class="setting-btn danger" onclick="resetProgress()">إعادة تعيين</button></div>'+
     '</div>';
 
-  // Plan details
+  // Customize days section
   var days = buildPlanDays(planDays);
+  var custHtml = '<div class="setting-card"><div class="setting-card-title"><span>🎯</span> تخصيص العضلات والتمارين</div>';
+  custHtml += '<div class="setting-sublabel" style="margin-bottom:12px">اختر العضلات المستهدفة والتمارين لكل يوم</div>';
+  days.forEach(function(d, di){
+    var isCustom = settings.customDays && settings.customDays[planDays] && settings.customDays[planDays][di];
+    var chips = d.chips.map(function(ch,i){return '<span class="chip '+ch+'" style="font-size:9px;padding:2px 6px">'+d.labels[i]+'</span>';}).join('');
+    custHtml += '<div class="setting-day-card">';
+    custHtml += '<div class="setting-day-badge">'+(di+1)+'</div>';
+    custHtml += '<div class="setting-day-info">';
+    custHtml += '<div class="setting-day-focus">'+d.focus+'</div>';
+    custHtml += '<div class="setting-day-exercises">'+d.exercises.length+' تمارين'+(isCustom?' • مخصص ✨':'')+'</div>';
+    custHtml += '<div class="setting-day-chips">'+chips+'</div>';
+    custHtml += '</div>';
+    if(isCustom) custHtml += '<button class="setting-day-reset" onclick="resetCustomDay('+di+')">↩</button>';
+    custHtml += '<button class="setting-day-edit" onclick="openCustomize('+di+')">تعديل</button>';
+    custHtml += '</div>';
+  });
+  custHtml += '</div>';
+  list.innerHTML += custHtml;
+
+  // Plan details
   var planHtml = '<div class="setting-card"><div class="setting-card-title"><span>📋</span> تفاصيل الخطة</div>';
   days.forEach(function(d, di){
     planHtml += '<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--acc);margin-bottom:6px">يوم '+(di+1)+' — '+d.focus+'</div>';
@@ -1548,6 +1788,196 @@ function resetProgress(){
   renderSettings();
   renderHome();
   showToast('🔄 تم إعادة تعيين التقدم');
+}
+
+// ============================================
+// CUSTOMIZE DAY
+// ============================================
+var custState = null; // {dayIdx, selectedMuscles: Set, selectedExercises: Set}
+
+function openCustomize(dayIdx){
+  var planDays = settings.planDays || 6;
+  var days = buildPlanDays(planDays);
+  var day = days[dayIdx];
+
+  // Initialize state from existing custom day or current plan
+  var customDays = settings.customDays && settings.customDays[planDays];
+  var existing = customDays && customDays[dayIdx];
+
+  var selectedMuscles = {};
+  var selectedExercises = {};
+
+  if(existing){
+    existing.muscles.forEach(function(m){ selectedMuscles[m] = true; });
+    existing.exercises.forEach(function(e){ selectedExercises[e] = true; });
+  } else {
+    // Infer from current day exercises
+    day.exercises.forEach(function(ex){
+      var g = getExGroup(ex.id);
+      if(g) selectedMuscles[g] = true;
+      selectedExercises[ex.id] = true;
+    });
+  }
+
+  custState = {
+    dayIdx: dayIdx,
+    selectedMuscles: selectedMuscles,
+    selectedExercises: selectedExercises
+  };
+
+  document.getElementById('cust-title').textContent = 'تخصيص يوم ' + (dayIdx + 1);
+  document.getElementById('cust-sub').textContent = 'اختر العضلات والتمارين';
+
+  renderCustomizeBody();
+  document.getElementById('customize-overlay').classList.add('active');
+}
+
+function closeCustomize(){
+  document.getElementById('customize-overlay').classList.remove('active');
+  custState = null;
+}
+
+function renderCustomizeBody(){
+  if(!custState) return;
+  var body = document.getElementById('cust-body');
+  var html = '';
+
+  // Muscle group selection
+  html += '<div class="cust-section">';
+  html += '<div class="cust-section-title">💪 العضلات المستهدفة</div>';
+  html += '<div class="cust-muscle-grid">';
+  Object.keys(EXERCISE_DB).forEach(function(g){
+    var grp = EXERCISE_DB[g];
+    var isActive = custState.selectedMuscles[g];
+    var count = 0;
+    if(isActive){
+      grp.exercises.forEach(function(ex){ if(custState.selectedExercises[ex.id]) count++; });
+    }
+    html += '<div class="cust-muscle-chip'+(isActive?' active':'')+'" onclick="toggleCustMuscle(\''+g+'\')">';
+    html += grp.label;
+    if(isActive && count > 0) html += ' <span class="chip-count">'+count+'</span>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Exercise selection for active muscles
+  var activeGroups = Object.keys(custState.selectedMuscles).filter(function(g){ return custState.selectedMuscles[g]; });
+
+  if(activeGroups.length > 0){
+    html += '<div class="cust-section">';
+    html += '<div class="cust-section-title">📋 اختر التمارين</div>';
+
+    activeGroups.forEach(function(g){
+      var grp = EXERCISE_DB[g];
+      html += '<div class="cust-ex-group">';
+      html += '<div class="cust-ex-group-title"><span class="cust-grp-chip '+grp.chipClass+'">'+grp.label+'</span>';
+      html += '<button class="cust-select-all" onclick="toggleAllExInGroup(\''+g+'\')">تحديد/إلغاء الكل</button>';
+      html += '</div>';
+      html += '<div class="cust-ex-list">';
+
+      grp.exercises.forEach(function(ex){
+        var isSelected = custState.selectedExercises[ex.id];
+        html += '<div class="cust-ex-item'+(isSelected?' selected':'')+'" onclick="toggleCustExercise(\''+ex.id+'\')">';
+        html += '<div class="cust-ex-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>';
+        html += '<div class="cust-ex-info"><div class="cust-ex-name">'+ex.name+'</div><div class="cust-ex-detail">'+ex.muscle+' • '+ex.target+'</div></div>';
+        html += '</div>';
+      });
+
+      html += '</div></div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="empty" style="padding:30px"><div class="empty-icon">👆</div><p>اختر عضلة واحدة على الأقل لعرض التمارين</p></div>';
+  }
+
+  body.innerHTML = html;
+  updateCustCount();
+}
+
+function toggleCustMuscle(group){
+  if(!custState) return;
+  if(custState.selectedMuscles[group]){
+    delete custState.selectedMuscles[group];
+    // Remove exercises from this group
+    EXERCISE_DB[group].exercises.forEach(function(ex){
+      delete custState.selectedExercises[ex.id];
+    });
+  } else {
+    custState.selectedMuscles[group] = true;
+  }
+  renderCustomizeBody();
+}
+
+function toggleCustExercise(exId){
+  if(!custState) return;
+  if(custState.selectedExercises[exId]){
+    delete custState.selectedExercises[exId];
+  } else {
+    custState.selectedExercises[exId] = true;
+  }
+  // Update the item visually without full re-render for performance
+  renderCustomizeBody();
+}
+
+function toggleAllExInGroup(group){
+  if(!custState) return;
+  var grp = EXERCISE_DB[group];
+  // Check if all are selected
+  var allSelected = grp.exercises.every(function(ex){ return custState.selectedExercises[ex.id]; });
+  grp.exercises.forEach(function(ex){
+    if(allSelected) delete custState.selectedExercises[ex.id];
+    else custState.selectedExercises[ex.id] = true;
+  });
+  renderCustomizeBody();
+}
+
+function updateCustCount(){
+  var count = Object.keys(custState.selectedExercises).length;
+  document.getElementById('cust-count').innerHTML = 'تم اختيار <span>'+count+'</span> تمارين';
+}
+
+function saveCustomDay(){
+  if(!custState) return;
+  var planDays = settings.planDays || 6;
+  var selectedExIds = Object.keys(custState.selectedExercises);
+  var selectedMuscles = Object.keys(custState.selectedMuscles).filter(function(g){ return custState.selectedMuscles[g]; });
+
+  if(selectedExIds.length === 0){
+    showToast('⚠️ اختر تمرين واحد على الأقل');
+    return;
+  }
+
+  // Sort exercises by muscle group order
+  var orderedExIds = [];
+  selectedMuscles.forEach(function(g){
+    EXERCISE_DB[g].exercises.forEach(function(ex){
+      if(custState.selectedExercises[ex.id]) orderedExIds.push(ex.id);
+    });
+  });
+
+  if(!settings.customDays) settings.customDays = {};
+  if(!settings.customDays[planDays]) settings.customDays[planDays] = {};
+  settings.customDays[planDays][custState.dayIdx] = {
+    muscles: selectedMuscles,
+    exercises: orderedExIds
+  };
+
+  saveAll();
+  closeCustomize();
+  renderSettings();
+  renderHome();
+  showToast('✅ تم حفظ تخصيص يوم ' + (custState.dayIdx + 1));
+}
+
+function resetCustomDay(dayIdx){
+  var planDays = settings.planDays || 6;
+  if(settings.customDays && settings.customDays[planDays]){
+    delete settings.customDays[planDays][dayIdx];
+  }
+  saveAll();
+  renderSettings();
+  renderHome();
+  showToast('🔄 تم إعادة تعيين يوم ' + (dayIdx + 1));
 }
 
 // ============================================
@@ -1616,6 +2046,7 @@ function importData(){
           if(data.settings.currentDayIdx !== undefined) settings.currentDayIdx = data.settings.currentDayIdx;
           if(data.settings.completedDays) settings.completedDays = data.settings.completedDays;
           if(data.settings.customPlan) settings.customPlan = data.settings.customPlan;
+          if(data.settings.customDays) settings.customDays = data.settings.customDays;
         }
         saveAll();
         renderHome();
@@ -1664,7 +2095,7 @@ function execDelete(){
   var d=pendingDelete;
   if(d.type==='clearAll'){
     logs={};
-    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},weightLog:[],gymSessions:[]};
+    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},weightLog:[],gymSessions:[]};
     saveAll();document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
     renderHome();renderSettings();showToast('🗑️ تم مسح الكل');return;
   }
