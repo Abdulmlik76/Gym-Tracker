@@ -406,14 +406,26 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .replace-picker-ex-name{font-size:12px;font-weight:700;flex:1}
 .replace-picker-ex-day{font-size:10px;color:var(--muted)}
 
-/* Schedule selector */
-.sched-grid{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.sched-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s1);border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s}
-.sched-item.active{border-color:var(--acc);background:rgba(245,166,35,.06)}
-.sched-item:active{transform:scale(.98)}
-.sched-name{font-size:12px;font-weight:700;flex:1}
-.sched-desc{font-size:10px;color:var(--muted)}
-.sched-days-tag{font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(245,166,35,.1);color:var(--acc);font-weight:700;flex-shrink:0}
+/* Schedule selector dropdown */
+.sched-select{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;-webkit-appearance:none;appearance:none;cursor:pointer;margin-top:8px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6b8a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
+.sched-select:focus{border-color:var(--acc);outline:none}
+.sched-select option{background:var(--card);color:var(--text);padding:8px}
+.sched-desc-text{font-size:11px;color:var(--muted);margin-top:4px;padding:4px 0}
+
+/* Swappable day order cards */
+.day-order-wrap{margin-top:12px}
+.day-order-title{font-size:11px;color:var(--acc);font-weight:700;margin-bottom:8px;letter-spacing:.3px}
+.day-order-list{display:flex;flex-direction:column;gap:6px}
+.day-order-card{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--s1);border:1.5px solid var(--border);border-radius:10px;transition:all .15s}
+.day-order-card.dragging{opacity:.5;border-color:var(--acc);background:rgba(245,166,35,.06)}
+.day-order-num{width:28px;height:28px;border-radius:8px;background:rgba(245,166,35,.15);color:var(--acc);font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.day-order-info{flex:1;min-width:0}
+.day-order-focus{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-order-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.day-order-btns{display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+.day-order-btn{width:28px;height:22px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-family:'Cairo',sans-serif}
+.day-order-btn:active{background:rgba(245,166,35,.15);color:var(--acc);border-color:var(--acc);transform:scale(.9)}
+.day-order-btn.disabled{opacity:.2;pointer-events:none}
 
 /* Workout notes & setup */
 .wo-notes-wrap{margin-top:12px;margin-bottom:12px}
@@ -1266,6 +1278,7 @@ async function initStorage(){
   if(!settings.gymSessions) settings.gymSessions = [];
   if(!settings.exSetup) settings.exSetup = {};
   if(!settings.scheduleType) settings.scheduleType = '';
+  if(!settings.dayOrder) settings.dayOrder = {};
 
   restoreUserExercises();
   await saveAll();
@@ -1299,14 +1312,16 @@ function renderHome(){
 
   var planDays = settings.planDays || 6;
   var curDay = getCurrentDayIdx();
+  var dayOrder = getDayOrder(planDays);
   document.getElementById('hero-cycle').textContent='خطة '+planDays+' أيام • يوم '+(curDay+1)+' من '+planDays;
 
   var days = buildPlanDays(planDays);
-  var day = days[curDay];
+  var curOrigIdx = dayOrder[curDay] !== undefined ? dayOrder[curDay] : curDay;
+  var day = days[curOrigIdx];
 
   // Today card
   var tcw = document.getElementById('today-card-wrap');
-  tcw.innerHTML='<div class="today-card" onclick="startWorkout('+curDay+')">'+
+  tcw.innerHTML='<div class="today-card" onclick="startWorkout('+curOrigIdx+')">'+
     '<div class="today-card-top">'+
       '<div class="today-badge">'+(curDay+1)+'</div>'+
       '<div class="today-info"><div class="today-label">التمرين القادم</div><div class="today-focus">'+day.focus+'</div></div>'+
@@ -1320,25 +1335,26 @@ function renderHome(){
   var sw=document.getElementById('streak-wrap');
   sw.innerHTML=streak>0?'<div class="streak-bar"><div class="streak-fire">🔥</div><div class="streak-text">سلسلة التمرين المتواصلة</div><div class="streak-num">'+streak+' يوم</div></div>':'';
 
-  // Plan overview
+  // Plan overview (in user's preferred order)
   document.getElementById('plan-title').textContent='خطة التمرين ('+planDays+' أيام)';
   var c=document.getElementById('days-container');c.innerHTML='';
-  days.forEach(function(d,idx){
-    var isCurrent = idx === curDay;
-    var isCompleted = isDayCompleted(idx);
+  dayOrder.forEach(function(origIdx, pos){
+    var d = days[origIdx];
+    var isCurrent = pos === curDay;
+    var isCompleted = isDayCompleted(pos);
     var tile=document.createElement('div');
     tile.className='day-tile'+(isCurrent?' current-day':'')+(isCompleted?' completed-day':'');
     tile.innerHTML=
       '<div class="day-tile-top">'+
-        '<div class="day-badge '+(isCurrent?'badge-current':(isCompleted?'badge-done':'badge-pending'))+'">'+(idx+1)+'</div>'+
+        '<div class="day-badge '+(isCurrent?'badge-current':(isCompleted?'badge-done':'badge-pending'))+'">'+(pos+1)+'</div>'+
         '<div class="day-info">'+
-          '<div class="day-name">'+(isCurrent?'التالي ★':isCompleted?'مكتمل':'يوم '+(idx+1))+'</div>'+
+          '<div class="day-name">'+(isCurrent?'التالي ★':isCompleted?'مكتمل':'يوم '+(pos+1))+'</div>'+
           '<div class="day-focus">'+d.focus+'</div>'+
         '</div>'+
         (isCompleted?'<div class="day-done-badge">✓ مكتمل</div>':'')+
       '</div>'+
       '<div class="muscle-chips">'+d.chips.map(function(ch,i){return'<span class="chip '+ch+'">'+d.labels[i]+'</span>';}).join('')+'</div>';
-    (function(di){tile.onclick=function(){startWorkout(di);};})(idx);
+    (function(oi){tile.onclick=function(){startWorkout(oi);};})(origIdx);
     c.appendChild(tile);
   });
 }
@@ -1663,23 +1679,25 @@ function woFinish(){
     settings.gymSessions.push({date: woState.date, dayIdx: woState.dayIdx, duration: elapsed});
   }
 
-  // Mark day as completed and advance
+  // Mark day as completed and advance (using ordered position)
   var dayIdx = woState.dayIdx;
+  var planDays = settings.planDays || 6;
+  var dayOrder = getDayOrder(planDays);
+  var curPos = dayOrder.indexOf(dayIdx);
+  if(curPos === -1) curPos = dayIdx;
+
   if(!settings.completedDays) settings.completedDays = [];
-  var alreadyCompleted = settings.completedDays.indexOf(dayIdx) !== -1;
+  var alreadyCompleted = settings.completedDays.indexOf(curPos) !== -1;
   if(!alreadyCompleted){
-    settings.completedDays.push(dayIdx);
+    settings.completedDays.push(curPos);
 
-    // Advance to next day only if this day wasn't already done
-    var planDays = settings.planDays || 6;
-    var nextDay = (dayIdx + 1) % planDays;
+    var nextPos = (curPos + 1) % planDays;
 
-    // If all days completed, reset cycle
     if(settings.completedDays.length >= planDays){
       settings.completedDays = [];
       settings.currentDayIdx = 0;
     } else {
-      settings.currentDayIdx = nextDay;
+      settings.currentDayIdx = nextPos;
     }
   }
 
@@ -2112,23 +2130,41 @@ function renderCharts(){
 var SCHEDULE_TYPES = {
   3: [
     {id:'ppl3', name:'Push / Pull / Legs', nameAr:'دفع / سحب / أرجل', desc:'كل يوم مجموعة عضلية'},
-    {id:'full3', name:'Full Body × 3', nameAr:'جسم كامل × 3', desc:'تمرين كل العضلات 3 مرات'},
-    {id:'upper_lower3', name:'Upper / Lower / Full', nameAr:'علوي / سفلي / كامل', desc:'تقسيم مرن'}
+    {id:'full3', name:'Full Body × 3', nameAr:'جسم كامل × 3', desc:'تمرين كل العضلات 3 مرات بالأسبوع'},
+    {id:'upper_lower3', name:'Upper / Lower / Full', nameAr:'علوي / سفلي / كامل', desc:'تقسيم مرن ثلاثي'},
+    {id:'strength3', name:'Strength Focus', nameAr:'قوة (بنش / سكوات / ديدلفت)', desc:'3 أيام تركيز رفعات أساسية'},
+    {id:'push_pull_full3', name:'Push / Pull / Full', nameAr:'دفع / سحب / كامل', desc:'يومين تقسيم + يوم كامل'},
+    {id:'torso_limbs3', name:'Torso / Limbs / Full', nameAr:'جذع / أطراف / كامل', desc:'تقسيم حسب المنطقة'}
   ],
   4: [
     {id:'upper_lower4', name:'Upper / Lower × 2', nameAr:'علوي / سفلي × 2', desc:'كل جزء مرتين بالأسبوع'},
-    {id:'ppl_upper4', name:'PPL + Upper', nameAr:'دفع / سحب / أرجل + علوي', desc:'PPL مع يوم إضافي'},
-    {id:'bro4', name:'Bro Split 4', nameAr:'بروسبلت 4 أيام', desc:'صدر / ظهر / أكتاف+ذراع / أرجل'}
+    {id:'ppl_upper4', name:'PPL + Upper', nameAr:'دفع / سحب / أرجل + علوي', desc:'PPL مع يوم علوي إضافي'},
+    {id:'ppl_lower4', name:'PPL + Legs', nameAr:'دفع / سحب / أرجل + سفلي', desc:'PPL مع يوم سفلي إضافي'},
+    {id:'bro4', name:'Bro Split 4', nameAr:'بروسبلت 4 أيام', desc:'صدر / ظهر / أكتاف+ذراع / أرجل'},
+    {id:'power_hyp4', name:'Power / Hypertrophy', nameAr:'قوة / ضخامة', desc:'يومين قوة + يومين ضخامة'},
+    {id:'full4', name:'Full Body × 4', nameAr:'جسم كامل × 4', desc:'4 أيام تمرين كامل الجسم'},
+    {id:'push_pull4', name:'Push / Pull × 2', nameAr:'دفع / سحب × 2', desc:'دفع وسحب مرتين بالأسبوع'},
+    {id:'strength_acc4', name:'Strength + Accessories', nameAr:'قوة + مساعدة', desc:'رفعات ثقيلة + تمارين عزل'}
   ],
   5: [
     {id:'bro5', name:'Bro Split 5', nameAr:'بروسبلت 5 أيام', desc:'كل عضلة بيوم مستقل'},
-    {id:'pplul5', name:'PPL + Upper/Lower', nameAr:'دفع/سحب/أرجل + علوي/سفلي', desc:'تردد عالي'},
-    {id:'arnold5', name:'Arnold Split', nameAr:'تقسيم أرنولد', desc:'صدر+ظهر / أكتاف+ذراع / أرجل'}
+    {id:'pplul5', name:'PPL + Upper/Lower', nameAr:'دفع/سحب/أرجل + علوي/سفلي', desc:'تردد عالي 5 أيام'},
+    {id:'arnold5', name:'Arnold Split', nameAr:'تقسيم أرنولد', desc:'صدر+ظهر / أكتاف+ذراع / أرجل ×'},
+    {id:'upper_lower_ppl5', name:'UL + PPL', nameAr:'علوي/سفلي + دفع/سحب/أرجل', desc:'مزيج UL و PPL'},
+    {id:'chest_back_sho_arms_legs5', name:'Classic 5-Day', nameAr:'كلاسيك 5 أيام', desc:'صدر / ظهر / أكتاف / ذراع / أرجل'},
+    {id:'push_pull_legs_upper_lower5', name:'PPL + UL Hybrid', nameAr:'هجين PPL + UL', desc:'أفضل تردد لكل عضلة'},
+    {id:'strength5', name:'Powerbuilding 5', nameAr:'باوربلدنج 5 أيام', desc:'3 أيام قوة + 2 ضخامة'},
+    {id:'phat5', name:'PHAT', nameAr:'PHAT (قوة + ضخامة)', desc:'Power Hypertrophy Adaptive Training'}
   ],
   6: [
     {id:'ppl6', name:'PPL × 2', nameAr:'دفع / سحب / أرجل × 2', desc:'كل مجموعة مرتين بالأسبوع'},
-    {id:'arnold6', name:'Arnold Split × 2', nameAr:'أرنولد × 2', desc:'حجم عالي 6 أيام'},
-    {id:'bro6', name:'Bro Split 6', nameAr:'بروسبلت 6 أيام', desc:'عضلة واحدة كل يوم'}
+    {id:'arnold6', name:'Arnold Split × 2', nameAr:'أرنولد × 2', desc:'صدر+ظهر / أكتاف+ذراع / أرجل × 2'},
+    {id:'bro6', name:'Bro Split 6', nameAr:'بروسبلت 6 أيام', desc:'عضلة واحدة كل يوم'},
+    {id:'upper_lower6', name:'Upper / Lower × 3', nameAr:'علوي / سفلي × 3', desc:'كل جزء 3 مرات بالأسبوع'},
+    {id:'push_pull6', name:'Push / Pull × 3', nameAr:'دفع / سحب × 3', desc:'دفع وسحب 3 مرات بالأسبوع'},
+    {id:'chest_back_sho_bi_tri_legs6', name:'Classic 6-Day', nameAr:'كلاسيك 6 أيام', desc:'صدر/ظهر/أكتاف/باي/تراي/أرجل'},
+    {id:'powerbuilding6', name:'Powerbuilding 6', nameAr:'باوربلدنج 6 أيام', desc:'3 قوة + 3 ضخامة'},
+    {id:'jeff_nippard6', name:'Science-Based', nameAr:'علمي (تردد عالي)', desc:'كل عضلة 2-3× بالأسبوع'}
   ]
 };
 
@@ -2144,35 +2180,49 @@ function renderSettings(){
       '<div class="plan-option">'+
         [3,4,5,6].map(function(n){return '<button class="plan-btn '+(planDays===n?'active':'')+'" onclick="setPlanDays('+n+')">'+n+' أيام</button>';}).join('')+
       '</div>'+
-      // Schedule type selector
+      // Schedule type selector (dropdown)
       '<div class="setting-row" style="margin-top:12px"><div><div class="setting-label">نوع الجدول</div><div class="setting-sublabel">اختر أسلوب التمرين المفضل</div></div></div>'+
-      '<div class="sched-grid">'+(SCHEDULE_TYPES[planDays]||[]).map(function(s){
-        return '<div class="sched-item'+(schedType===s.id?' active':'')+'" onclick="setScheduleType(\''+s.id+'\')">'+
-          '<div><div class="sched-name">'+s.nameAr+'</div><div class="sched-desc">'+s.desc+'</div></div>'+
-          '<div class="sched-days-tag">'+s.name+'</div></div>';
-      }).join('')+'</div>'+
+      '<select class="sched-select" onchange="setScheduleType(this.value)">'+
+        '<option value=""'+(schedType===''?' selected':'')+'>— اختر نوع الجدول —</option>'+
+        (SCHEDULE_TYPES[planDays]||[]).map(function(s){
+          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+s.nameAr+' ('+s.name+')</option>';
+        }).join('')+
+      '</select>'+
+      (function(){
+        var sel = (SCHEDULE_TYPES[planDays]||[]).find(function(s){return s.id === schedType;});
+        return sel ? '<div class="sched-desc-text">'+sel.desc+'</div>' : '';
+      })()+
       '<div class="setting-row" style="margin-top:8px"><div><div class="setting-label">التقدم الحالي</div><div class="setting-sublabel">يوم '+(getCurrentDayIdx()+1)+' من '+planDays+'</div></div><button class="setting-btn danger" onclick="resetProgress()">إعادة تعيين</button></div>'+
     '</div>';
 
-  // Customize days section
+  // Customize days section with reorder
   var days = buildPlanDays(planDays);
-  var custHtml = '<div class="setting-card"><div class="setting-card-title"><span>🎯</span> تخصيص العضلات والتمارين</div>';
-  custHtml += '<div class="setting-sublabel" style="margin-bottom:12px">اختر العضلات المستهدفة والتمارين لكل يوم</div>';
-  days.forEach(function(d, di){
+  var dayOrder = getDayOrder(planDays);
+  var orderedDays = dayOrder.map(function(oi){return {day:days[oi], origIdx:oi};});
+
+  var custHtml = '<div class="setting-card"><div class="setting-card-title"><span>🎯</span> ترتيب الأيام والتمارين</div>';
+  custHtml += '<div class="setting-sublabel" style="margin-bottom:6px">اسحب أو استخدم الأسهم لتغيير ترتيب الأيام، واضغط "تعديل" لتخصيص التمارين</div>';
+  custHtml += '<div class="day-order-list" id="day-order-list">';
+  orderedDays.forEach(function(item, pos){
+    var d = item.day;
+    var di = item.origIdx;
     var isCustom = settings.customDays && settings.customDays[planDays] && settings.customDays[planDays][di];
     var chips = d.chips.map(function(ch,i){return '<span class="chip '+ch+'" style="font-size:9px;padding:2px 6px">'+d.labels[i]+'</span>';}).join('');
-    custHtml += '<div class="setting-day-card">';
-    custHtml += '<div class="setting-day-badge">'+(di+1)+'</div>';
-    custHtml += '<div class="setting-day-info">';
-    custHtml += '<div class="setting-day-focus">'+d.focus+'</div>';
-    custHtml += '<div class="setting-day-exercises">'+d.exercises.length+' تمارين'+(isCustom?' • مخصص ✨':'')+'</div>';
-    custHtml += '<div class="setting-day-chips">'+chips+'</div>';
+    custHtml += '<div class="day-order-card" data-pos="'+pos+'" draggable="true" ondragstart="dayDragStart(event,'+pos+')" ondragover="dayDragOver(event)" ondrop="dayDrop(event,'+pos+')" ondragend="dayDragEnd(event)">';
+    custHtml += '<div class="day-order-btns">';
+    custHtml += '<button class="day-order-btn'+(pos===0?' disabled':'')+'" onclick="swapDayOrder('+pos+','+(pos-1)+')">▲</button>';
+    custHtml += '<button class="day-order-btn'+(pos===orderedDays.length-1?' disabled':'')+'" onclick="swapDayOrder('+pos+','+(pos+1)+')">▼</button>';
+    custHtml += '</div>';
+    custHtml += '<div class="day-order-num">'+(pos+1)+'</div>';
+    custHtml += '<div class="day-order-info">';
+    custHtml += '<div class="day-order-focus">'+d.focus+'</div>';
+    custHtml += '<div class="day-order-chips">'+chips+'</div>';
     custHtml += '</div>';
     if(isCustom) custHtml += '<button class="setting-day-reset" onclick="resetCustomDay('+di+')">↩</button>';
     custHtml += '<button class="setting-day-edit" onclick="openCustomize('+di+')">تعديل</button>';
     custHtml += '</div>';
   });
-  custHtml += '</div>';
+  custHtml += '</div></div>';
   list.innerHTML += custHtml;
 
   // Exercise Manager
@@ -2209,6 +2259,7 @@ function setPlanDays(n){
   settings.completedDays = [];
   settings.currentDayIdx = 0;
   settings.scheduleType = '';
+  if(settings.dayOrder) delete settings.dayOrder[n];
   saveAll();
   renderSettings();
   renderHome();
@@ -2219,7 +2270,60 @@ function setScheduleType(typeId){
   settings.scheduleType = typeId;
   saveAll();
   renderSettings();
+  renderHome();
   showToast('✅ تم اختيار نوع الجدول');
+}
+
+function getDayOrder(planDays){
+  if(settings.dayOrder && settings.dayOrder[planDays] && settings.dayOrder[planDays].length === planDays){
+    return settings.dayOrder[planDays];
+  }
+  var arr = [];
+  for(var i = 0; i < planDays; i++) arr.push(i);
+  return arr;
+}
+
+function swapDayOrder(posA, posB){
+  var planDays = settings.planDays || 6;
+  if(!settings.dayOrder) settings.dayOrder = {};
+  var order = getDayOrder(planDays).slice();
+  if(posB < 0 || posB >= order.length) return;
+  var tmp = order[posA];
+  order[posA] = order[posB];
+  order[posB] = tmp;
+  settings.dayOrder[planDays] = order;
+  saveAll();
+  renderSettings();
+  renderHome();
+}
+
+var dayDragIdx = null;
+function dayDragStart(e, pos){
+  dayDragIdx = pos;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function dayDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+function dayDrop(e, targetPos){
+  e.preventDefault();
+  if(dayDragIdx === null || dayDragIdx === targetPos) return;
+  var planDays = settings.planDays || 6;
+  if(!settings.dayOrder) settings.dayOrder = {};
+  var order = getDayOrder(planDays).slice();
+  var dragged = order.splice(dayDragIdx, 1)[0];
+  order.splice(targetPos, 0, dragged);
+  settings.dayOrder[planDays] = order;
+  dayDragIdx = null;
+  saveAll();
+  renderSettings();
+  renderHome();
+}
+function dayDragEnd(e){
+  e.target.classList.remove('dragging');
+  dayDragIdx = null;
 }
 
 function resetProgress(){
@@ -2802,7 +2906,7 @@ function execDelete(){
   var d=pendingDelete;
   if(d.type==='clearAll'){
     logs={};
-    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},userExercises:[],weightLog:[],gymSessions:[],exSetup:{},scheduleType:''};
+    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},userExercises:[],weightLog:[],gymSessions:[],exSetup:{},scheduleType:'',dayOrder:{}};
     saveAll();document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
     renderHome();renderSettings();showToast('🗑️ تم مسح الكل');return;
   }
