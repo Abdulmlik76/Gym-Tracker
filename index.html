@@ -549,9 +549,54 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 input[type=file]{display:none}
 @supports(padding:max(0px)){nav{padding-bottom:max(var(--bot),20px)}.view{padding-bottom:calc(max(var(--bot),20px)+70px)}}
+/* AUTH */
+#auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#auth-overlay.active{display:flex}
+.auth-logo{font-size:52px;margin-bottom:8px}
+.auth-title{font-size:26px;font-weight:900;margin-bottom:4px}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:32px;text-align:center}
+.auth-card{width:100%;max-width:380px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--s1);border-radius:12px;padding:4px}
+.auth-tab{flex:1;padding:10px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.auth-tab.active{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.auth-field{margin-bottom:14px}
+.auth-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:5px;letter-spacing:.3px}
+.auth-input{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--text);font-family:'Cairo',sans-serif;font-size:15px;font-weight:600;box-sizing:border-box}
+.auth-input:focus{border-color:var(--acc);outline:none}
+.auth-input::placeholder{color:var(--muted);font-weight:400}
+.auth-btn{width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--acc),#e09010);color:#000;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;border:none;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.auth-btn:active{opacity:.85}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-err{font-size:12px;color:#ff6b6b;text-align:center;margin-top:10px;min-height:18px}
+.auth-skip{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
+<!-- Auth Overlay -->
+<div id="auth-overlay">
+  <div class="auth-logo">💪</div>
+  <div class="auth-title">Gym Tracker</div>
+  <div class="auth-sub">سجّل دخولك لمزامنة بياناتك على جميع أجهزتك</div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">تسجيل الدخول</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup',this)">حساب جديد</button>
+    </div>
+    <div id="auth-login-form">
+      <div class="auth-field"><div class="auth-label">البريد الإلكتروني</div><input class="auth-input" type="email" id="auth-email-l" placeholder="example@email.com" dir="ltr"></div>
+      <div class="auth-field"><div class="auth-label">كلمة المرور</div><input class="auth-input" type="password" id="auth-pass-l" placeholder="••••••••" dir="ltr"></div>
+      <button class="auth-btn" id="auth-login-btn" onclick="handleLogin()">دخول</button>
+    </div>
+    <div id="auth-signup-form" style="display:none">
+      <div class="auth-field"><div class="auth-label">البريد الإلكتروني</div><input class="auth-input" type="email" id="auth-email-s" placeholder="example@email.com" dir="ltr"></div>
+      <div class="auth-field"><div class="auth-label">كلمة المرور (6 أحرف على الأقل)</div><input class="auth-input" type="password" id="auth-pass-s" placeholder="••••••••" dir="ltr"></div>
+      <button class="auth-btn" id="auth-signup-btn" onclick="handleSignup()">إنشاء حساب</button>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+    <div class="auth-skip" onclick="skipAuth()">المتابعة بدون تسجيل (محلي فقط)</div>
+  </div>
+</div>
+
 <div id="loading-screen"><div class="loader-icon">💪</div><div class="loader-text">جاري تحميل بياناتك...</div></div>
 <div id="app">
   <div id="home" class="view active">
@@ -1347,7 +1392,7 @@ function getDeviceId(){
 function sbHeaders(){
   return {
     'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + SB_KEY,
+    'Authorization': 'Bearer ' + (authToken || SB_KEY),
     'Content-Type': 'application/json'
   };
 }
@@ -1359,6 +1404,7 @@ async function syncToSupabase(){
       data: {logs: logs, settings: settings},
       updated_at: new Date().toISOString()
     };
+    if(authUser) payload.user_id = authUser.id;
     await fetch(SB_URL + '/rest/v1/' + SB_TABLE + '?on_conflict=device_id', {
       method: 'POST',
       headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates'}),
@@ -1370,17 +1416,151 @@ async function syncToSupabase(){
 async function loadFromSupabase(){
   try {
     var deviceId = getDeviceId();
-    var r = await fetch(SB_URL + '/rest/v1/' + SB_TABLE + '?device_id=eq.' + deviceId + '&select=data', {
-      headers: sbHeaders()
-    });
-    if(!r.ok) return false;
-    var json = await r.json();
-    if(json && json.length && json[0].data){
-      logs = json[0].data.logs || {};
-      settings = json[0].data.settings || {};
+    // If logged in, try loading by user_id first (picks up data from any device)
+    if(authUser){
+      var r = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?user_id=eq.'+authUser.id+'&select=data&order=updated_at.desc&limit=1', {headers:sbHeaders()});
+      if(r.ok){
+        var json = await r.json();
+        if(json && json.length && json[0].data){
+          logs = json[0].data.logs || {};
+          settings = json[0].data.settings || {};
+          return true;
+        }
+      }
+    }
+    // Fallback: load by device_id
+    var r2 = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?device_id=eq.'+deviceId+'&select=data', {headers:sbHeaders()});
+    if(!r2.ok) return false;
+    var json2 = await r2.json();
+    if(json2 && json2.length && json2[0].data){
+      logs = json2[0].data.logs || {};
+      settings = json2[0].data.settings || {};
       return true;
     }
   } catch(e) {}
+  return false;
+}
+
+// ============================================
+// AUTH
+// ============================================
+var authToken = null;
+var authUser = null;
+
+function getStoredAuth(){
+  try { return JSON.parse(localStorage.getItem('gym_auth') || 'null'); } catch(e){ return null; }
+}
+
+function setAuthState(user, token){
+  authToken = token;
+  authUser = user;
+  localStorage.setItem('gym_auth', JSON.stringify({user:user, token:token}));
+}
+
+function clearAuthState(){
+  authToken = null;
+  authUser = null;
+  localStorage.removeItem('gym_auth');
+}
+
+async function validateStoredToken(token){
+  try {
+    var r = await fetch(SB_URL+'/auth/v1/user', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+    if(!r.ok) return null;
+    return await r.json();
+  } catch(e){ return null; }
+}
+
+async function handleLogin(){
+  var email = document.getElementById('auth-email-l').value.trim();
+  var pass = document.getElementById('auth-pass-l').value;
+  if(!email||!pass){setAuthErr('أدخل الإيميل وكلمة المرور');return;}
+  setAuthLoading(true);
+  try {
+    var r = await fetch(SB_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,password:pass})
+    });
+    var data = await r.json();
+    if(data.error || !data.access_token){setAuthErr(data.error_description||data.message||'خطأ في تسجيل الدخول');setAuthLoading(false);return;}
+    setAuthState({id:data.user.id,email:data.user.email}, data.access_token);
+    await onAuthSuccess(false);
+  } catch(e){ setAuthErr('تعذّر الاتصال بالخادم'); }
+  setAuthLoading(false);
+}
+
+async function handleSignup(){
+  var email = document.getElementById('auth-email-s').value.trim();
+  var pass = document.getElementById('auth-pass-s').value;
+  if(!email||!pass){setAuthErr('أدخل الإيميل وكلمة المرور');return;}
+  if(pass.length<6){setAuthErr('كلمة المرور يجب أن تكون 6 أحرف على الأقل');return;}
+  setAuthLoading(true);
+  try {
+    var r = await fetch(SB_URL+'/auth/v1/signup',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,password:pass})
+    });
+    var data = await r.json();
+    if(data.error){setAuthErr(data.msg||data.message||'خطأ في إنشاء الحساب');setAuthLoading(false);return;}
+    // Auto-login after signup
+    if(data.access_token){
+      setAuthState({id:data.user.id,email:data.user.email}, data.access_token);
+      await onAuthSuccess(true);
+    } else {
+      setAuthErr('تم إنشاء الحساب! تحقق من إيميلك لتأكيد الحساب ثم سجّل دخولك.');
+    }
+  } catch(e){ setAuthErr('تعذّر الاتصال بالخادم'); }
+  setAuthLoading(false);
+}
+
+async function onAuthSuccess(isNew){
+  // Try to attach user_id to the existing device row (migrate local data)
+  var deviceId = getDeviceId();
+  try {
+    await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?device_id=eq.'+deviceId,{
+      method:'PATCH',
+      headers:Object.assign({},sbHeaders(),{'Content-Type':'application/json'}),
+      body:JSON.stringify({user_id:authUser.id})
+    });
+  } catch(e){}
+  document.getElementById('auth-overlay').classList.remove('active');
+  await initStorage();
+}
+
+function skipAuth(){
+  document.getElementById('auth-overlay').classList.remove('active');
+  initStorage();
+}
+
+function logout(){
+  clearAuthState();
+  document.getElementById('auth-overlay').classList.add('active');
+  showTab('auth-login-form');
+  setAuthErr('');
+}
+
+function switchAuthTab(tab, btn){
+  document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('auth-login-form').style.display = tab==='login'?'block':'none';
+  document.getElementById('auth-signup-form').style.display = tab==='signup'?'block':'none';
+  setAuthErr('');
+}
+
+function setAuthErr(msg){ document.getElementById('auth-err').textContent = msg; }
+function setAuthLoading(on){
+  ['auth-login-btn','auth-signup-btn'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=on;});
+}
+
+async function initAuth(){
+  var stored = getStoredAuth();
+  if(stored && stored.token){
+    var user = await validateStoredToken(stored.token);
+    if(user){ setAuthState({id:user.id,email:user.email}, stored.token); return true; }
+    else { clearAuthState(); }
+  }
   return false;
 }
 
@@ -2681,6 +2861,13 @@ function renderSettings(){
       '<div class="setting-row"><div><div class="setting-label">استيراد البيانات</div><div class="setting-sublabel">استعادة بيانات من ملف محفوظ</div></div><button class="setting-btn" onclick="importData()">📤 استيراد</button></div>'+
     '</div>';
 
+  // Account
+  var accountRows = authUser
+    ? '<div class="setting-row"><div><div class="setting-label">الحساب</div><div class="setting-sublabel">'+authUser.email+'</div></div><button class="setting-btn danger" onclick="logout()">تسجيل الخروج</button></div>'
+    : '<div class="setting-row"><div><div class="setting-label">الحساب</div><div class="setting-sublabel">غير مسجّل — بياناتك محلية فقط</div></div><button class="setting-btn" onclick="logout()">تسجيل الدخول</button></div>';
+  list.innerHTML +=
+    '<div class="setting-card"><div class="setting-card-title"><span>👤</span> الحساب</div>'+accountRows+'</div>';
+
   // Data management
   list.innerHTML +=
     '<div class="setting-card"><div class="setting-card-title"><span>💾</span> البيانات</div>'+
@@ -3735,7 +3922,15 @@ function switchView(id,btn){
 // ============================================
 // INIT
 // ============================================
-initStorage();
+(async function(){
+  var hasSession = await initAuth();
+  if(hasSession){
+    initStorage();
+  } else {
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('auth-overlay').classList.add('active');
+  }
+})();
 </script>
 </body>
 </html>
