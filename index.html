@@ -1328,6 +1328,62 @@ var gymTimerId = null, gymStartTime = null;
 var woState = null; // current workout state
 var localStorageOk = false, storageAvailable = false;
 
+// ============================================
+// SUPABASE SYNC
+// ============================================
+var SB_URL = 'https://bbbwoorwmhmtgsdrphri.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiYndvb3J3bWhtdGdzZHJwaHJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NzU0NTMsImV4cCI6MjA5MjQ1MTQ1M30.Z1uBLb-QpA5HCBIfYKmKbIspfRnjgr90PYH-BomgsaQ';
+var SB_TABLE = 'gym_users';
+
+function getDeviceId(){
+  var id = localStorage.getItem('gym_device_id');
+  if(!id){
+    id = 'dev_' + Math.random().toString(36).substr(2,9) + '_' + Date.now().toString(36);
+    localStorage.setItem('gym_device_id', id);
+  }
+  return id;
+}
+
+function sbHeaders(){
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Content-Type': 'application/json'
+  };
+}
+
+async function syncToSupabase(){
+  try {
+    var payload = {
+      device_id: getDeviceId(),
+      data: {logs: logs, settings: settings},
+      updated_at: new Date().toISOString()
+    };
+    await fetch(SB_URL + '/rest/v1/' + SB_TABLE, {
+      method: 'POST',
+      headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates'}),
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { /* silent — offline or quota */ }
+}
+
+async function loadFromSupabase(){
+  try {
+    var deviceId = getDeviceId();
+    var r = await fetch(SB_URL + '/rest/v1/' + SB_TABLE + '?device_id=eq.' + deviceId + '&select=data', {
+      headers: sbHeaders()
+    });
+    if(!r.ok) return false;
+    var json = await r.json();
+    if(json && json.length && json[0].data){
+      logs = json[0].data.logs || {};
+      settings = json[0].data.settings || {};
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
 function today(){return new Date().toISOString().split('T')[0];}
 function fmtDate(d){var p=d.split('-');var months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return parseInt(p[2])+' '+months[parseInt(p[1])-1];}
 function fmtDateShort(d){var p=d.split('-');return parseInt(p[2])+'/'+(parseInt(p[1]));}
@@ -1375,7 +1431,10 @@ async function initStorage(){
   if(window.storage){try{await window.storage.set('gym_probe','ok');var p=await window.storage.get('gym_probe');if(p&&p.value==='ok')storageAvailable=true;}catch(e){}}
 
   var loaded=false;
-  if(storageAvailable){
+  // Try Supabase first (central DB — most up to date across devices)
+  loaded = await loadFromSupabase();
+
+  if(!loaded&&storageAvailable){
     try{var r=await window.storage.get('gym_data_v4');if(r&&r.value){var d=JSON.parse(r.value);logs=d.logs||{};settings=d.settings||{};loaded=true;}}catch(e){}
   }
   if(!loaded&&localStorageOk){
@@ -1423,12 +1482,11 @@ async function saveAll(){
   var data=JSON.stringify({logs:logs,settings:settings});
   if(localStorageOk){try{localStorage.setItem('gym_data_v4',data);}catch(e){}}
   if(storageAvailable){try{await window.storage.set('gym_data_v4',data);}catch(e){}}
+  syncToSupabase(); // fire-and-forget, non-blocking
 }
 
 function getStorageLabel(){
-  if(storageAvailable)return '☁️ دائم (Cloud)';
-  if(localStorageOk)return '💾 دائم (محلي)';
-  return '⚠️ مؤقت (ذاكرة فقط)';
+  return '🔗 متزامن مع Supabase';
 }
 
 // ============================================
