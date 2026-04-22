@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GYM">
 <meta name="theme-color" content="#0a0a0f">
-<title>GYM — عبدالملك</title>
+<title>GYM Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
@@ -427,6 +427,45 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .day-order-btn:active{background:rgba(245,166,35,.15);color:var(--acc);border-color:var(--acc);transform:scale(.9)}
 .day-order-btn.disabled{opacity:.2;pointer-events:none}
 
+/* Onboarding */
+#onboarding-overlay{position:fixed;inset:0;background:var(--bg);z-index:9000;display:none;flex-direction:column;overflow:hidden}
+#onboarding-overlay.active{display:flex}
+.ob-content{flex:1;overflow-y:auto;padding:20px;padding-top:calc(var(--top) + 20px);display:flex;flex-direction:column;align-items:center}
+.ob-logo{font-size:56px;margin-bottom:8px}
+.ob-title{font-size:22px;font-weight:900;text-align:center;margin-bottom:4px}
+.ob-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;max-width:300px}
+.ob-step{width:100%;max-width:380px}
+.ob-step-title{font-size:14px;font-weight:700;color:var(--acc);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.ob-field{margin-bottom:16px}
+.ob-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.ob-input{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--text);font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;-webkit-appearance:none;text-align:right}
+.ob-input:focus{border-color:var(--acc);outline:none;background:rgba(245,166,35,.04)}
+.ob-input::placeholder{color:var(--muted);font-weight:400;font-size:13px}
+.ob-select{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6b8a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
+.ob-select:focus{border-color:var(--acc);outline:none}
+.ob-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ob-chip{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;flex:1;text-align:center;min-width:calc(50% - 4px)}
+.ob-chip.active{border-color:var(--acc);color:var(--acc);background:rgba(245,166,35,.08)}
+.ob-chip:active{transform:scale(.96)}
+.ob-nav{padding:16px 20px calc(var(--bot) + 16px);display:flex;gap:10px;flex-shrink:0;background:var(--s1);border-top:1px solid var(--border)}
+.ob-next{flex:1;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--acc),#e0941a);color:#000;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;cursor:pointer;border:none;text-align:center;box-shadow:0 4px 16px rgba(245,166,35,.3)}
+.ob-next:active{transform:scale(.97);opacity:.9}
+.ob-next:disabled{opacity:.4;pointer-events:none}
+.ob-back{padding:16px 20px;border-radius:14px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0}
+.ob-progress{display:flex;gap:4px;justify-content:center;margin-bottom:20px}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
+.ob-dot.active{background:var(--acc);width:20px;border-radius:4px}
+.ob-dot.done{background:var(--green)}
+.ob-rec-badge{display:inline-block;font-size:9px;padding:2px 8px;border-radius:6px;background:rgba(46,204,113,.15);color:var(--green);font-weight:700;margin-right:6px}
+
+/* Profile card in settings */
+.profile-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.profile-tag{font-size:10px;padding:4px 10px;border-radius:6px;font-weight:700}
+.profile-tag.goal{background:rgba(245,166,35,.1);color:var(--acc)}
+.profile-tag.exp{background:rgba(78,205,196,.1);color:var(--acc3)}
+.profile-tag.days{background:rgba(155,89,182,.1);color:#9b59b6}
+.profile-tag.weight{background:rgba(46,204,113,.1);color:var(--green)}
+
 /* Workout notes & setup */
 .wo-notes-wrap{margin-top:12px;margin-bottom:12px}
 .wo-notes-label{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:4px;letter-spacing:.3px}
@@ -471,7 +510,7 @@ input[type=file]{display:none}
   <div id="home" class="view active">
     <div class="home-hero">
       <div class="greeting" id="greeting"></div>
-      <div class="hero-name">عبدالملك <span>💪</span></div>
+      <div class="hero-name"><span id="hero-name-text">بطل</span> <span>💪</span></div>
       <div class="hero-date" id="hero-date"></div>
       <div class="hero-cycle" id="hero-cycle"></div>
     </div>
@@ -634,6 +673,12 @@ input[type=file]{display:none}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Onboarding Overlay -->
+<div id="onboarding-overlay">
+  <div class="ob-content" id="ob-content"></div>
+  <div class="ob-nav" id="ob-nav"></div>
+</div>
 
 <script>
 // ============================================
@@ -1279,12 +1324,20 @@ async function initStorage(){
   if(!settings.exSetup) settings.exSetup = {};
   if(!settings.scheduleType) settings.scheduleType = '';
   if(!settings.dayOrder) settings.dayOrder = {};
+  if(!settings.userName) settings.userName = '';
+  if(!settings.profile) settings.profile = {};
 
   restoreUserExercises();
   await saveAll();
   document.getElementById('loading-screen').classList.add('hide');
   setTimeout(function(){document.getElementById('loading-screen').style.display='none';},400);
-  renderHome();
+
+  // Show onboarding on first launch
+  if(!settings.onboardingDone){
+    showOnboarding();
+  } else {
+    renderHome();
+  }
 }
 
 async function saveAll(){
@@ -1306,7 +1359,9 @@ var DAYS_AR=['الأحد','الاثنين','الثلاثاء','الأربعاء'
 
 function renderHome(){
   var h=new Date().getHours();
-  document.getElementById('greeting').textContent=h<12?'صباح الخير،':h<17?'مساء النهار،':h<21?'مساء الخير،':'مساء النور،';
+  document.getElementById('greeting').textContent=h<12?'صباح الخير،':'مساء النور،';
+  var userName = settings.userName || 'بطل';
+  document.getElementById('hero-name-text').textContent = userName;
   var now=new Date();
   document.getElementById('hero-date').textContent=DAYS_AR[now.getDay()]+' • '+now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear();
 
@@ -2172,25 +2227,80 @@ function renderSettings(){
   var list=document.getElementById('settings-list');
   var planDays = settings.planDays || 6;
   var schedType = settings.scheduleType || '';
+  var profile = settings.profile || {};
+  var topSched = settings.profile && settings.profile.goal ? getTopScheduleForDays(planDays) : null;
+  var rec = settings.profile && settings.profile.goal ? getRecommendation() : null;
+  var recDays = rec ? rec.days : null;
 
-  list.innerHTML =
-    // Plan selection
+  // Profile / Personalized Journey card
+  var profileHtml = '<div class="setting-card"><div class="setting-card-title"><span>👤</span> رحلتك الشخصية</div>';
+  profileHtml += '<div class="setting-row"><div><div class="setting-label">الاسم</div></div>';
+  profileHtml += '<input class="setting-select" type="text" value="'+(settings.userName||'').replace(/"/g,'&quot;')+'" placeholder="اسمك" onchange="settings.userName=this.value;saveAll();renderHome()" style="min-width:120px;text-align:right"></div>';
+
+  profileHtml += '<div class="setting-row"><div><div class="setting-label">الهدف</div></div>';
+  profileHtml += '<select class="setting-select" onchange="updateProfile(\'goal\',this.value)" style="min-width:140px">';
+  profileHtml += '<option value="">— اختر —</option>';
+  Object.keys(GOAL_LABELS).forEach(function(k){
+    profileHtml += '<option value="'+k+'"'+(profile.goal===k?' selected':'')+'>'+GOAL_LABELS[k]+'</option>';
+  });
+  profileHtml += '</select></div>';
+
+  profileHtml += '<div class="setting-row"><div><div class="setting-label">مستوى الخبرة</div></div>';
+  profileHtml += '<select class="setting-select" onchange="updateProfile(\'experience\',this.value)" style="min-width:120px">';
+  profileHtml += '<option value="">— اختر —</option>';
+  Object.keys(EXP_LABELS).forEach(function(k){
+    profileHtml += '<option value="'+k+'"'+(profile.experience===k?' selected':'')+'>'+EXP_LABELS[k].split('(')[0].trim()+'</option>';
+  });
+  profileHtml += '</select></div>';
+
+  profileHtml += '<div class="setting-row"><div><div class="setting-label">العمر</div></div>';
+  profileHtml += '<input class="setting-select" type="number" inputmode="numeric" value="'+(profile.age||'')+'" placeholder="العمر" onchange="updateProfile(\'age\',this.value)" style="min-width:70px;text-align:center"></div>';
+
+  profileHtml += '<div class="setting-row"><div><div class="setting-label">الوزن المستهدف (كج)</div></div>';
+  profileHtml += '<input class="setting-select" type="number" inputmode="decimal" value="'+(profile.targetWeight||'')+'" placeholder="كج" onchange="updateProfile(\'targetWeight\',this.value)" style="min-width:70px;text-align:center"></div>';
+
+  if(profile.goal && profile.experience){
+    profileHtml += '<div class="profile-summary">';
+    profileHtml += '<span class="profile-tag goal">🎯 '+GOAL_LABELS[profile.goal]+'</span>';
+    profileHtml += '<span class="profile-tag exp">📈 '+(EXP_LABELS[profile.experience]||'').split('(')[0].trim()+'</span>';
+    if(profile.age) profileHtml += '<span class="profile-tag days">🎂 '+profile.age+' سنة</span>';
+    if(profile.targetWeight) profileHtml += '<span class="profile-tag weight">🎯 '+profile.targetWeight+' كج</span>';
+    profileHtml += '</div>';
+  }
+
+  profileHtml += '<div class="setting-row" style="margin-top:4px"><div><div class="setting-sublabel">تغيير البيانات سيحدث التوصيات تلقائياً</div></div>';
+  profileHtml += '<button class="setting-btn" onclick="showOnboarding()">🔄 إعادة الإعداد</button></div>';
+  profileHtml += '</div>';
+
+  list.innerHTML = profileHtml;
+
+  // Plan selection with recommended badge
+  list.innerHTML +=
     '<div class="setting-card"><div class="setting-card-title"><span>🏋️</span> خطة التمرين</div>'+
       '<div class="setting-row"><div><div class="setting-label">عدد أيام التمرين</div><div class="setting-sublabel">اختر الخطة المناسبة لجدولك</div></div></div>'+
       '<div class="plan-option">'+
-        [3,4,5,6].map(function(n){return '<button class="plan-btn '+(planDays===n?'active':'')+'" onclick="setPlanDays('+n+')">'+n+' أيام</button>';}).join('')+
+        [3,4,5,6].map(function(n){
+          var isRec = recDays === n;
+          return '<button class="plan-btn '+(planDays===n?'active':'')+'" onclick="setPlanDays('+n+')">'+(isRec?'⭐ ':'')+n+' أيام</button>';
+        }).join('')+
       '</div>'+
-      // Schedule type selector (dropdown)
+      // Schedule type selector (dropdown with recommended labels)
       '<div class="setting-row" style="margin-top:12px"><div><div class="setting-label">نوع الجدول</div><div class="setting-sublabel">اختر أسلوب التمرين المفضل</div></div></div>'+
       '<select class="sched-select" onchange="setScheduleType(this.value)">'+
         '<option value=""'+(schedType===''?' selected':'')+'>— اختر نوع الجدول —</option>'+
         (SCHEDULE_TYPES[planDays]||[]).map(function(s){
-          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+s.nameAr+' ('+s.name+')</option>';
+          var isRec = topSched === s.id;
+          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+(isRec?'⭐ ':'')+s.nameAr+' ('+s.name+')'+(isRec?' — موصى به':'')+'</option>';
         }).join('')+
       '</select>'+
       (function(){
         var sel = (SCHEDULE_TYPES[planDays]||[]).find(function(s){return s.id === schedType;});
-        return sel ? '<div class="sched-desc-text">'+sel.desc+'</div>' : '';
+        var desc = sel ? '<div class="sched-desc-text">'+sel.desc+'</div>' : '';
+        if(topSched && schedType !== topSched && rec){
+          var recType = (SCHEDULE_TYPES[planDays]||[]).find(function(s){return s.id === topSched;});
+          if(recType) desc += '<div class="sched-desc-text" style="color:var(--green)">⭐ نوصي بـ: '+recType.nameAr+' — '+rec.reason+'</div>';
+        }
+        return desc;
       })()+
       '<div class="setting-row" style="margin-top:8px"><div><div class="setting-label">التقدم الحالي</div><div class="setting-sublabel">يوم '+(getCurrentDayIdx()+1)+' من '+planDays+'</div></div><button class="setting-btn danger" onclick="resetProgress()">إعادة تعيين</button></div>'+
     '</div>';
@@ -2272,6 +2382,13 @@ function setScheduleType(typeId){
   renderSettings();
   renderHome();
   showToast('✅ تم اختيار نوع الجدول');
+}
+
+function updateProfile(key, value){
+  if(!settings.profile) settings.profile = {};
+  settings.profile[key] = value;
+  saveAll();
+  renderSettings();
 }
 
 function getDayOrder(planDays){
@@ -2906,7 +3023,7 @@ function execDelete(){
   var d=pendingDelete;
   if(d.type==='clearAll'){
     logs={};
-    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},userExercises:[],weightLog:[],gymSessions:[],exSetup:{},scheduleType:'',dayOrder:{}};
+    settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},userExercises:[],weightLog:[],gymSessions:[],exSetup:{},scheduleType:'',dayOrder:{},userName:'',profile:{},onboardingDone:false};
     saveAll();document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
     renderHome();renderSettings();showToast('🗑️ تم مسح الكل');return;
   }
@@ -2922,6 +3039,356 @@ function execDelete(){
   document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
   renderProgress();
   if(exDetailState.exId) renderExDetailBody();
+}
+
+// ============================================
+// RECOMMENDATION ENGINE
+// ============================================
+var GOAL_LABELS = {
+  lose_fat: 'خسارة دهون',
+  build_muscle: 'بناء عضلات',
+  recomp: 'خسارة دهون + بناء عضلات',
+  strength: 'زيادة قوة',
+  maintain: 'المحافظة على اللياقة',
+  endurance: 'تحمل ولياقة'
+};
+var EXP_LABELS = {
+  beginner: 'مبتدئ (أقل من 6 أشهر)',
+  intermediate: 'متوسط (6 أشهر - 2 سنة)',
+  advanced: 'متقدم (أكثر من 2 سنة)'
+};
+
+function getRecommendation(){
+  var profile = settings.profile || {};
+  var goal = profile.goal || 'build_muscle';
+  var exp = profile.experience || 'beginner';
+  var availDays = profile.availableDays || 4;
+  var age = parseInt(profile.age) || 25;
+  var rec = {days: availDays, schedules: {}, reason: ''};
+
+  // Rule-based day recommendation
+  if(exp === 'beginner'){
+    if(availDays <= 3) rec.days = 3;
+    else rec.days = Math.min(availDays, 4);
+  } else if(exp === 'intermediate'){
+    rec.days = Math.min(availDays, 5);
+    if(availDays <= 3) rec.days = 3;
+  } else {
+    rec.days = availDays;
+  }
+  if(age > 45) rec.days = Math.min(rec.days, 4);
+  rec.days = Math.max(3, Math.min(6, rec.days));
+
+  // Schedule recommendations per day count — scored 0-100
+  var s = {};
+  // 3-day recommendations
+  s['ppl3'] = 50;
+  s['full3'] = 50;
+  s['upper_lower3'] = 40;
+  s['strength3'] = 30;
+  s['push_pull_full3'] = 40;
+  s['torso_limbs3'] = 30;
+  // 4-day
+  s['upper_lower4'] = 60;
+  s['ppl_upper4'] = 40;
+  s['ppl_lower4'] = 40;
+  s['bro4'] = 30;
+  s['power_hyp4'] = 40;
+  s['full4'] = 50;
+  s['push_pull4'] = 40;
+  s['strength_acc4'] = 35;
+  // 5-day
+  s['bro5'] = 30;
+  s['pplul5'] = 60;
+  s['arnold5'] = 50;
+  s['upper_lower_ppl5'] = 55;
+  s['chest_back_sho_arms_legs5'] = 35;
+  s['push_pull_legs_upper_lower5'] = 55;
+  s['strength5'] = 40;
+  s['phat5'] = 45;
+  // 6-day
+  s['ppl6'] = 65;
+  s['arnold6'] = 50;
+  s['bro6'] = 25;
+  s['upper_lower6'] = 55;
+  s['push_pull6'] = 45;
+  s['chest_back_sho_bi_tri_legs6'] = 30;
+  s['powerbuilding6'] = 40;
+  s['jeff_nippard6'] = 55;
+
+  // Goal-based adjustments
+  if(goal === 'lose_fat' || goal === 'recomp'){
+    // High frequency splits are better for recomp
+    s['full3'] += 25; s['full4'] += 20;
+    s['upper_lower4'] += 25; s['upper_lower6'] += 20;
+    s['ppl6'] += 15; s['pplul5'] += 20;
+    s['jeff_nippard6'] += 20;
+    // Bro splits are suboptimal for fat loss
+    s['bro4'] -= 15; s['bro5'] -= 15; s['bro6'] -= 20;
+    rec.reason = 'تردد عالي (كل عضلة 2×/أسبوع) أفضل لخسارة الدهون مع بناء العضلات';
+  } else if(goal === 'build_muscle'){
+    s['ppl6'] += 20; s['arnold6'] += 15; s['arnold5'] += 10;
+    s['upper_lower4'] += 15; s['pplul5'] += 15;
+    s['jeff_nippard6'] += 15;
+    rec.reason = 'حجم تدريبي عالي مع تردد مرتين بالأسبوع لكل عضلة';
+  } else if(goal === 'strength'){
+    s['strength3'] += 30; s['strength5'] += 25;
+    s['power_hyp4'] += 25; s['strength_acc4'] += 20;
+    s['powerbuilding6'] += 20; s['phat5'] += 15;
+    s['upper_lower4'] += 10;
+    // Bro splits bad for strength
+    s['bro4'] -= 10; s['bro5'] -= 15; s['bro6'] -= 20;
+    rec.reason = 'تركيز على الرفعات المركبة مع تقدم تدريجي';
+  } else if(goal === 'endurance'){
+    s['full3'] += 25; s['full4'] += 20;
+    s['upper_lower4'] += 15; s['upper_lower3'] += 15;
+    rec.reason = 'تمارين كامل الجسم بتكرارات عالية لبناء التحمل';
+  }
+
+  // Experience-based adjustments
+  if(exp === 'beginner'){
+    s['full3'] += 20; s['full4'] += 15;
+    s['upper_lower4'] += 15; s['upper_lower3'] += 10;
+    // Complex splits too much for beginners
+    s['ppl6'] -= 10; s['arnold6'] -= 15; s['arnold5'] -= 10;
+    s['bro5'] -= 10; s['bro6'] -= 15;
+    s['phat5'] -= 15; s['powerbuilding6'] -= 10;
+  } else if(exp === 'advanced'){
+    s['ppl6'] += 15; s['arnold6'] += 10;
+    s['phat5'] += 10; s['powerbuilding6'] += 10;
+    s['jeff_nippard6'] += 10;
+    s['full3'] -= 10; s['full4'] -= 5;
+  }
+
+  // Age adjustments
+  if(age > 40){
+    s['full3'] += 10; s['upper_lower4'] += 10;
+    s['ppl6'] -= 5; s['bro6'] -= 10;
+  }
+
+  rec.schedules = s;
+  return rec;
+}
+
+function getTopScheduleForDays(dayCount){
+  var rec = getRecommendation();
+  var types = SCHEDULE_TYPES[dayCount] || [];
+  var best = null, bestScore = -999;
+  types.forEach(function(t){
+    var score = rec.schedules[t.id] || 0;
+    if(score > bestScore){bestScore = score; best = t.id;}
+  });
+  return best;
+}
+
+function isRecommendedSchedule(typeId){
+  if(!settings.profile) return false;
+  var rec = getRecommendation();
+  var planDays = settings.planDays || 6;
+  var top = getTopScheduleForDays(planDays);
+  return typeId === top;
+}
+
+// ============================================
+// ONBOARDING
+// ============================================
+var obStep = 0;
+var obData = {};
+
+function showOnboarding(){
+  obStep = 0;
+  obData = {
+    name: '',
+    age: '',
+    currentWeight: '',
+    targetWeight: '',
+    goal: '',
+    experience: '',
+    availableDays: 4,
+    gender: ''
+  };
+  document.getElementById('onboarding-overlay').classList.add('active');
+  renderObStep();
+}
+
+function renderObStep(){
+  var content = document.getElementById('ob-content');
+  var nav = document.getElementById('ob-nav');
+  var totalSteps = 4;
+  var html = '';
+
+  // Progress dots
+  html += '<div class="ob-progress">';
+  for(var i = 0; i < totalSteps; i++){
+    html += '<div class="ob-dot'+(i < obStep ? ' done' : '')+(i === obStep ? ' active' : '')+'"></div>';
+  }
+  html += '</div>';
+
+  if(obStep === 0){
+    html += '<div class="ob-logo">💪</div>';
+    html += '<div class="ob-title">مرحباً بك في GYM</div>';
+    html += '<div class="ob-sub">خلنا نعرف عنك شوي عشان نصمم لك أفضل برنامج تمرين</div>';
+    html += '<div class="ob-step">';
+    html += '<div class="ob-step-title">👤 البيانات الشخصية</div>';
+    html += '<div class="ob-field"><div class="ob-label">اسمك</div>';
+    html += '<input class="ob-input" type="text" placeholder="مثال: عبدالملك" id="ob-name" value="'+obData.name+'" oninput="obData.name=this.value"></div>';
+    html += '<div class="ob-field"><div class="ob-label">العمر</div>';
+    html += '<input class="ob-input" type="number" inputmode="numeric" placeholder="مثال: 25" id="ob-age" value="'+obData.age+'" oninput="obData.age=this.value"></div>';
+    html += '<div class="ob-field"><div class="ob-label">الجنس</div>';
+    html += '<div class="ob-chips">';
+    html += '<div class="ob-chip'+(obData.gender==='male'?' active':'')+'" onclick="obData.gender=\'male\';renderObStep()">ذكر</div>';
+    html += '<div class="ob-chip'+(obData.gender==='female'?' active':'')+'" onclick="obData.gender=\'female\';renderObStep()">أنثى</div>';
+    html += '</div></div>';
+    html += '</div>';
+  } else if(obStep === 1){
+    html += '<div class="ob-logo">⚖️</div>';
+    html += '<div class="ob-title">الوزن والهدف</div>';
+    html += '<div class="ob-sub">بيانات الوزن تساعدنا نختار لك أفضل نظام تمرين</div>';
+    html += '<div class="ob-step">';
+    html += '<div class="ob-step-title">📊 بيانات الجسم</div>';
+    html += '<div class="ob-field"><div class="ob-label">الوزن الحالي (كج)</div>';
+    html += '<input class="ob-input" type="number" inputmode="decimal" placeholder="مثال: 80" id="ob-weight" value="'+obData.currentWeight+'" oninput="obData.currentWeight=this.value"></div>';
+    html += '<div class="ob-field"><div class="ob-label">الوزن المستهدف (كج)</div>';
+    html += '<input class="ob-input" type="number" inputmode="decimal" placeholder="مثال: 75" id="ob-target" value="'+obData.targetWeight+'" oninput="obData.targetWeight=this.value"></div>';
+    html += '<div class="ob-field"><div class="ob-label">هدفك الرئيسي</div>';
+    html += '<div class="ob-chips">';
+    var goals = [
+      {id:'lose_fat',label:'خسارة دهون',icon:'🔥'},
+      {id:'build_muscle',label:'بناء عضلات',icon:'💪'},
+      {id:'recomp',label:'الاثنين معاً',icon:'⚡'},
+      {id:'strength',label:'زيادة قوة',icon:'🏋️'},
+      {id:'maintain',label:'محافظة',icon:'✅'},
+      {id:'endurance',label:'تحمل ولياقة',icon:'🏃'}
+    ];
+    goals.forEach(function(g){
+      html += '<div class="ob-chip'+(obData.goal===g.id?' active':'')+'" onclick="obData.goal=\''+g.id+'\';renderObStep()">'+g.icon+' '+g.label+'</div>';
+    });
+    html += '</div></div>';
+    html += '</div>';
+  } else if(obStep === 2){
+    html += '<div class="ob-logo">🎯</div>';
+    html += '<div class="ob-title">خبرتك وجدولك</div>';
+    html += '<div class="ob-sub">عشان نعطيك التمارين والحجم المناسب لمستواك</div>';
+    html += '<div class="ob-step">';
+    html += '<div class="ob-step-title">📈 مستوى الخبرة</div>';
+    html += '<div class="ob-field"><div class="ob-chips">';
+    var exps = [
+      {id:'beginner',label:'مبتدئ',sub:'أقل من 6 أشهر'},
+      {id:'intermediate',label:'متوسط',sub:'6 أشهر - 2 سنة'},
+      {id:'advanced',label:'متقدم',sub:'أكثر من 2 سنة'}
+    ];
+    exps.forEach(function(e){
+      html += '<div class="ob-chip'+(obData.experience===e.id?' active':'')+'" onclick="obData.experience=\''+e.id+'\';renderObStep()" style="flex-direction:column;gap:2px"><div>'+e.label+'</div><div style="font-size:10px;color:var(--muted);font-weight:400">'+e.sub+'</div></div>';
+    });
+    html += '</div></div>';
+    html += '<div class="ob-step-title" style="margin-top:16px">📅 كم يوم تقدر تتمرن بالأسبوع؟</div>';
+    html += '<div class="ob-field"><div class="ob-chips">';
+    [3,4,5,6].forEach(function(n){
+      html += '<div class="ob-chip'+(obData.availableDays===n?' active':'')+'" onclick="obData.availableDays='+n+';renderObStep()">'+n+' أيام</div>';
+    });
+    html += '</div></div>';
+    html += '</div>';
+  } else if(obStep === 3){
+    // Apply data temporarily to get recommendation
+    settings.profile = {
+      goal: obData.goal || 'build_muscle',
+      experience: obData.experience || 'beginner',
+      availableDays: obData.availableDays || 4,
+      age: obData.age || '25',
+      gender: obData.gender || 'male',
+      currentWeight: obData.currentWeight || '',
+      targetWeight: obData.targetWeight || ''
+    };
+    var rec = getRecommendation();
+    var recDays = rec.days;
+    var topSched = getTopScheduleForDays(recDays);
+    var topType = (SCHEDULE_TYPES[recDays]||[]).find(function(t){return t.id === topSched;});
+
+    html += '<div class="ob-logo">🎉</div>';
+    html += '<div class="ob-title">برنامجك جاهز!</div>';
+    html += '<div class="ob-sub">بناءً على بياناتك، هذا أفضل برنامج لك</div>';
+    html += '<div class="ob-step">';
+    html += '<div style="background:linear-gradient(135deg,rgba(245,166,35,.12),rgba(245,166,35,.04));border:1.5px solid rgba(245,166,35,.25);border-radius:16px;padding:18px;margin-bottom:16px;text-align:center">';
+    html += '<div style="font-size:10px;color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">⭐ مُوصى به لك</div>';
+    html += '<div style="font-size:20px;font-weight:900;margin-bottom:4px">'+recDays+' أيام بالأسبوع</div>';
+    if(topType) html += '<div style="font-size:14px;font-weight:700;color:var(--acc);margin-bottom:4px">'+topType.nameAr+'</div>';
+    if(topType) html += '<div style="font-size:11px;color:var(--muted)">'+topType.desc+'</div>';
+    html += '</div>';
+
+    if(rec.reason){
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">';
+      html += '<div style="font-size:10px;color:var(--acc3);font-weight:700;margin-bottom:4px">💡 لماذا هذا البرنامج؟</div>';
+      html += '<div style="font-size:12px;color:var(--muted);line-height:1.6">'+rec.reason+'</div>';
+      html += '</div>';
+    }
+
+    var goalLabel = GOAL_LABELS[obData.goal] || '';
+    var expLabel = EXP_LABELS[obData.experience] || '';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">';
+    if(goalLabel) html += '<span class="profile-tag goal">🎯 '+goalLabel+'</span>';
+    if(expLabel) html += '<span class="profile-tag exp">📈 '+expLabel.split('(')[0].trim()+'</span>';
+    html += '<span class="profile-tag days">📅 '+obData.availableDays+' أيام</span>';
+    if(obData.currentWeight) html += '<span class="profile-tag weight">⚖️ '+obData.currentWeight+' كج</span>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  content.innerHTML = html;
+
+  // Navigation buttons
+  var navHtml = '';
+  if(obStep > 0) navHtml += '<button class="ob-back" onclick="obStep--;renderObStep()">→ رجوع</button>';
+  if(obStep < 3){
+    navHtml += '<button class="ob-next" onclick="obNextStep()">التالي ←</button>';
+  } else {
+    navHtml += '<button class="ob-next" onclick="finishOnboarding()">يلا نبدأ! 🚀</button>';
+  }
+  nav.innerHTML = navHtml;
+}
+
+function obNextStep(){
+  if(obStep === 0 && !obData.name.trim()){
+    showToast('⚠️ أدخل اسمك');return;
+  }
+  obStep++;
+  renderObStep();
+}
+
+function finishOnboarding(){
+  // Save profile
+  settings.userName = obData.name.trim() || 'بطل';
+  settings.profile = {
+    goal: obData.goal || 'build_muscle',
+    experience: obData.experience || 'beginner',
+    availableDays: obData.availableDays || 4,
+    age: obData.age || '',
+    gender: obData.gender || '',
+    currentWeight: obData.currentWeight || '',
+    targetWeight: obData.targetWeight || ''
+  };
+  settings.onboardingDone = true;
+
+  // Apply recommendation
+  var rec = getRecommendation();
+  settings.planDays = rec.days;
+  settings.currentDayIdx = 0;
+  settings.completedDays = [];
+  var topSched = getTopScheduleForDays(rec.days);
+  if(topSched) settings.scheduleType = topSched;
+
+  // Save initial weight
+  if(obData.currentWeight){
+    if(!settings.weightLog) settings.weightLog = [];
+    var d = today();
+    var existing = settings.weightLog.findIndex(function(e){return e.date === d;});
+    if(existing >= 0) settings.weightLog[existing].weight = parseFloat(obData.currentWeight);
+    else settings.weightLog.push({date: d, weight: parseFloat(obData.currentWeight)});
+  }
+
+  saveAll();
+  document.getElementById('onboarding-overlay').classList.remove('active');
+  renderHome();
+  showToast('🎉 مرحباً ' + settings.userName + '!');
 }
 
 // ============================================
