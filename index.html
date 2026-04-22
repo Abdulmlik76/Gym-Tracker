@@ -1359,7 +1359,7 @@ async function syncToSupabase(){
       data: {logs: logs, settings: settings},
       updated_at: new Date().toISOString()
     };
-    await fetch(SB_URL + '/rest/v1/' + SB_TABLE, {
+    await fetch(SB_URL + '/rest/v1/' + SB_TABLE + '?on_conflict=device_id', {
       method: 'POST',
       headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates'}),
       body: JSON.stringify(payload)
