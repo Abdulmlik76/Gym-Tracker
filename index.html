@@ -471,6 +471,48 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 .profile-tag.days{background:rgba(155,89,182,.1);color:#9b59b6}
 .profile-tag.weight{background:rgba(46,204,113,.1);color:var(--green)}
 
+/* Time-based set layout */
+.wo-set-inputs.time-mode{grid-template-columns:1fr 1fr;}
+.wo-set-input.bw-mode{font-size:11px;color:var(--acc);font-weight:700;background:rgba(245,166,35,.06);border-color:rgba(245,166,35,.2)}
+.wo-bw-hint{font-size:10px;color:var(--acc);text-align:center;margin-top:2px;opacity:.7}
+.wo-sets-header .wo-sh-t{flex:1;text-align:center}
+
+/* Cardio floating button on home */
+.cardio-quick-btn{display:flex;align-items:center;gap:8px;margin:0 20px 10px;padding:12px 16px;background:linear-gradient(135deg,rgba(78,205,196,.1),rgba(78,205,196,.04));border:1.5px solid rgba(78,205,196,.25);border-radius:14px;cursor:pointer;transition:all .15s;font-family:'Cairo',sans-serif}
+.cardio-quick-btn:active{transform:scale(.98);opacity:.8}
+.cardio-quick-icon{font-size:22px}
+.cardio-quick-info{flex:1}
+.cardio-quick-label{font-size:10px;color:var(--acc3);font-weight:700;letter-spacing:.5px}
+.cardio-quick-sub{font-size:13px;font-weight:900;margin-top:1px}
+.cardio-quick-arrow{color:var(--acc3);font-size:16px}
+
+/* Cardio overlay */
+#cardio-overlay{position:fixed;inset:0;background:var(--bg);z-index:300;display:none;flex-direction:column}
+#cardio-overlay.active{display:flex}
+.cardio-header{padding:calc(var(--top) + 8px) 16px 10px;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.cardio-close{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text)}
+.cardio-close svg{width:18px;height:18px}
+.cardio-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column}
+.cardio-type-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.cardio-type-btn{padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;flex:1;text-align:center;min-width:calc(33% - 6px)}
+.cardio-type-btn.active{border-color:var(--acc3);color:var(--acc3);background:rgba(78,205,196,.08)}
+.cardio-type-btn:active{transform:scale(.97)}
+.cardio-field{margin-bottom:14px}
+.cardio-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:5px;letter-spacing:.3px}
+.cardio-input{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;text-align:center;-webkit-appearance:none}
+.cardio-input:focus{border-color:var(--acc3);outline:none;background:rgba(78,205,196,.04)}
+.cardio-input::placeholder{color:var(--muted);font-size:12px;font-weight:400}
+.cardio-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.cardio-save-btn{width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--acc3),#3ab5ac);color:#000;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;border:none;cursor:pointer;margin-top:auto;box-shadow:0 4px 16px rgba(78,205,196,.3)}
+.cardio-save-btn:active{transform:scale(.97);opacity:.9}
+.cardio-hist-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px;margin-top:6px}
+.cardio-hist-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.cardio-hist-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cardio-hist-type{font-size:13px;font-weight:700;flex:1}
+.cardio-hist-date{font-size:11px;color:var(--muted)}
+.cardio-hist-stats{display:flex;flex-wrap:wrap;gap:6px}
+.cardio-stat{font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.1);color:var(--acc3);font-weight:600}
+
 /* Workout notes & setup */
 .wo-notes-wrap{margin-top:12px;margin-bottom:12px}
 .wo-notes-label{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:4px;letter-spacing:.3px}
@@ -521,6 +563,14 @@ input[type=file]{display:none}
     </div>
     <div id="today-card-wrap"></div>
     <div id="streak-wrap"></div>
+    <div class="cardio-quick-btn" onclick="openCardio()">
+      <div class="cardio-quick-icon">🏃</div>
+      <div class="cardio-quick-info">
+        <div class="cardio-quick-label">كارديو</div>
+        <div class="cardio-quick-sub" id="cardio-quick-sub">سجّل تمرين كارديو</div>
+      </div>
+      <div class="cardio-quick-arrow">←</div>
+    </div>
     <div class="plan-overview-title" id="plan-title"></div>
     <div class="days-scroll" id="days-container"></div>
   </div>
@@ -529,6 +579,7 @@ input[type=file]{display:none}
     <div class="prog-tabs">
       <div class="ptab active" onclick="switchProgTab('history',this)">السجل</div>
       <div class="ptab" onclick="switchProgTab('charts',this)">الرسوم البيانية</div>
+      <div class="ptab" onclick="switchProgTab('cardio',this)">الكارديو 🏃</div>
     </div>
     <div class="weight-card-wrap" id="weight-wrap">
       <div class="weight-card">
@@ -552,6 +603,7 @@ input[type=file]{display:none}
     <div class="muscle-filters" id="muscle-filters-wrap"><div class="muscle-filters-inner" id="muscle-filters"></div></div>
     <div class="prog-list" id="prog-list"></div>
     <div class="charts-container" id="charts-container" style="display:none"></div>
+    <div id="cardio-prog-list" style="display:none;padding:0 16px 80px;flex-direction:column"></div>
   </div>
   <div id="settings-view" class="view">
     <div class="page-header"><h1>الإعدادات ⚙️</h1><p>خصّص جدولك وتمارينك</p></div>
@@ -678,6 +730,23 @@ input[type=file]{display:none}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Cardio Overlay -->
+<div id="cardio-overlay">
+  <div class="cardio-header">
+    <div class="cardio-close" onclick="closeCardio()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+    <div style="flex:1">
+      <div style="font-size:17px;font-weight:900">كارديو 🏃</div>
+      <div style="font-size:11px;color:var(--muted)">سجّل جلسة كارديو</div>
+    </div>
+  </div>
+  <div class="cardio-body" id="cardio-form-body">
+    <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">نوع التمرين</div>
+    <div class="cardio-type-grid" id="cardio-type-grid"></div>
+    <div id="cardio-fields"></div>
+    <button class="cardio-save-btn" onclick="saveCardioSession()">💾 حفظ الجلسة</button>
+  </div>
+</div>
 
 <!-- Onboarding Overlay -->
 <div id="onboarding-overlay">
@@ -1263,6 +1332,10 @@ function today(){return new Date().toISOString().split('T')[0];}
 function fmtDate(d){var p=d.split('-');var months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return parseInt(p[2])+' '+months[parseInt(p[1])-1];}
 function fmtDateShort(d){var p=d.split('-');return parseInt(p[2])+'/'+(parseInt(p[1]));}
 function bestSet(s){if(!s||!s.length)return null;return s.reduce(function(b,x){return(x.w*x.r)>(b.w*b.r)?x:b;},s[0]);}
+function fmtWeight(w){return (!w || w === 0) ? 'وزن الجسم' : w+'كج';}
+function fmtSetPill(s){var wt = fmtWeight(s.w); var rep = s.t ? s.t+'ث' : '×'+s.r; return wt+' '+rep;}
+function isTimeBased(ex){return ex && ex.target && ex.target.indexOf('ث') !== -1;}
+function bestSetScore(s){if(!s)return 0; if(s.t) return (s.w||1)*s.t; return s.w*s.r;}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
 function getLastSession(exId){var sessions=logs[exId]||[];if(!sessions.length)return null;return sessions[sessions.length-1];}
 
@@ -1331,6 +1404,7 @@ async function initStorage(){
   if(!settings.dayOrder) settings.dayOrder = {};
   if(!settings.userName) settings.userName = '';
   if(!settings.profile) settings.profile = {};
+  if(!settings.cardioLogs) settings.cardioLogs = [];
 
   restoreUserExercises();
   await saveAll();
@@ -1395,6 +1469,8 @@ function renderHome(){
   var sw=document.getElementById('streak-wrap');
   sw.innerHTML=streak>0?'<div class="streak-bar"><div class="streak-fire">🔥</div><div class="streak-text">سلسلة التمرين المتواصلة</div><div class="streak-num">'+streak+' يوم</div></div>':'';
 
+  updateCardioQuickBtn();
+
   // Plan overview (in user's preferred order)
   document.getElementById('plan-title').textContent='خطة التمرين ('+planDays+' أيام)';
   var c=document.getElementById('days-container');c.innerHTML='';
@@ -1439,9 +1515,9 @@ function startWorkout(dayIdx){
   day.exercises.forEach(function(ex){
     var todayLog = (logs[ex.id]||[]).find(function(s){return s.date === woState.date;});
     if(todayLog){
-      woState.sets[ex.id] = todayLog.sets.map(function(s){return{w:s.w,r:s.r,done:s.done};});
+      woState.sets[ex.id] = todayLog.sets.map(function(s){return{w:s.w,r:s.r,t:s.t||0,done:s.done};});
     } else {
-      woState.sets[ex.id] = [{w:'',r:'',done:false},{w:'',r:'',done:false},{w:'',r:'',done:false}];
+      woState.sets[ex.id] = [{w:'',r:'',t:'',done:false},{w:'',r:'',t:'',done:false},{w:'',r:'',t:'',done:false}];
     }
   });
   // Initialize notes/setup for this workout
@@ -1499,7 +1575,8 @@ function renderWorkoutStep(){
     if(last && last.date !== woState.date){
       html += '<div class="wo-last-title">آخر جلسة — '+fmtDate(last.date)+'</div>';
       html += '<div class="wo-last-pills">'+last.sets.map(function(s,i){
-        return '<span class="wo-last-pill" onclick="woFillSet(\''+ex.id+'\','+i+','+s.w+','+s.r+')">'+s.w+'كج × '+s.r+'</span>';
+        var pillLabel = fmtWeight(s.w)+' '+(s.t ? s.t+'ث' : '× '+s.r);
+        return '<span class="wo-last-pill" onclick="woFillSet(\''+ex.id+'\','+i+','+(s.w||0)+','+(s.r||0)+','+(s.t||0)+')">'+pillLabel+'</span>';
       }).join('')+'</div>';
       var todayLog = (logs[ex.id]||[]).find(function(s){return s.date === woState.date;});
       if(!todayLog) html += '<button class="wo-use-last" onclick="woUseLastSession(\''+ex.id+'\')">↩ استخدم نفس الأوزان</button>';
@@ -1509,16 +1586,27 @@ function renderWorkoutStep(){
   }
 
   // Sets header
-  html += '<div class="wo-sets-header"><span class="wo-sh-set">ست</span><span class="wo-sh-w">الوزن (كج)</span><span class="wo-sh-r">التكرار</span><span class="wo-sh-done"></span></div>';
+  var isTB = isTimeBased(ex);
+  html += '<div class="wo-sets-header"><span class="wo-sh-set">ست</span><span class="wo-sh-w">الوزن (كج)</span><span class="'+(isTB?'wo-sh-t':'wo-sh-r')+'">'+( isTB ? 'الوقت (ث)' : 'التكرار')+'</span><span class="wo-sh-done"></span></div>';
 
   // Sets
   html += '<div class="wo-sets" id="wo-sets">';
   sets.forEach(function(s,i){
+    var wVal = s.w !== undefined && s.w !== '' ? s.w : '';
+    var isBodyW = (wVal === 0 || wVal === '0' || wVal === '');
     html += '<div class="wo-set-row">';
     html += '<div class="wo-set-num">'+(i+1)+'</div>';
-    html += '<div class="wo-set-inputs">';
-    html += '<input class="wo-set-input" type="number" inputmode="decimal" placeholder="كج" value="'+(s.w||'')+'" id="wo-w-'+i+'" onchange="woUpdateSet('+i+')">';
-    html += '<input class="wo-set-input" type="number" inputmode="numeric" placeholder="تكرار" value="'+(s.r||'')+'" id="wo-r-'+i+'" onchange="woUpdateSet('+i+')">';
+    html += '<div class="wo-set-inputs'+(isTB?' time-mode':'')+'">';
+    // Weight input — tap toggles 0=bodyweight hint
+    html += '<div style="position:relative">';
+    html += '<input class="wo-set-input'+(isBodyW && wVal===0?' bw-mode':'')+'" type="number" inputmode="decimal" placeholder="كج / 0=جسم" value="'+(wVal||'')+'" id="wo-w-'+i+'" onchange="woUpdateSet('+i+')" oninput="woUpdateSet('+i+')">';
+    if(wVal===0) html += '<div class="wo-bw-hint">وزن الجسم</div>';
+    html += '</div>';
+    if(isTB){
+      html += '<input class="wo-set-input" type="number" inputmode="numeric" placeholder="ثانية" value="'+(s.t||'')+'" id="wo-t-'+i+'" onchange="woUpdateSet('+i+')">';
+    } else {
+      html += '<input class="wo-set-input" type="number" inputmode="numeric" placeholder="تكرار" value="'+(s.r||'')+'" id="wo-r-'+i+'" onchange="woUpdateSet('+i+')">';
+    }
     html += '</div>';
     html += '<button class="wo-set-done '+(s.done?'done':'')+'" onclick="woToggleDone('+i+')" id="wo-done-'+i+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></button>';
     html += '</div>';
@@ -1561,10 +1649,12 @@ function woUpdateSet(i){
   var ex = woState.day.exercises[woState.exIdx];
   var sets = woState.sets[ex.id];
   var wEl = document.getElementById('wo-w-'+i);
+  var tEl = document.getElementById('wo-t-'+i);
   var rEl = document.getElementById('wo-r-'+i);
   if(sets[i]){
-    sets[i].w = parseFloat(wEl.value) || 0;
-    sets[i].r = parseInt(rEl.value) || 0;
+    sets[i].w = parseFloat(wEl ? wEl.value : 0) || 0;
+    if(tEl) sets[i].t = parseInt(tEl.value) || 0;
+    if(rEl) sets[i].r = parseInt(rEl.value) || 0;
   }
 }
 
@@ -1576,8 +1666,10 @@ function woToggleDone(i){
 
   // Read current input values first
   var wEl = document.getElementById('wo-w-'+i);
+  var tEl = document.getElementById('wo-t-'+i);
   var rEl = document.getElementById('wo-r-'+i);
   if(wEl) sets[i].w = parseFloat(wEl.value) || 0;
+  if(tEl) sets[i].t = parseInt(tEl.value) || 0;
   if(rEl) sets[i].r = parseInt(rEl.value) || 0;
 
   sets[i].done = !sets[i].done;
@@ -1604,8 +1696,10 @@ function woSaveCurrentEx(){
   // Read all input values
   sets.forEach(function(s,i){
     var wEl = document.getElementById('wo-w-'+i);
+    var tEl = document.getElementById('wo-t-'+i);
     var rEl = document.getElementById('wo-r-'+i);
     if(wEl) s.w = parseFloat(wEl.value) || s.w || 0;
+    if(tEl) s.t = parseInt(tEl.value) || s.t || 0;
     if(rEl) s.r = parseInt(rEl.value) || s.r || 0;
   });
 
@@ -1615,7 +1709,7 @@ function woSaveCurrentEx(){
   var setupEl = document.getElementById('wo-setup');
   if(setupEl) woState.setup[ex.id] = setupEl.value;
 
-  var validSets = sets.filter(function(s){return s.w || s.r;});
+  var validSets = sets.filter(function(s){return s.w || s.r || s.t;});
   if(!validSets.length) return;
 
   if(!logs[ex.id]) logs[ex.id] = [];
@@ -1637,7 +1731,7 @@ function woSaveCurrentEx(){
 function woAddSet(){
   if(!woState) return;
   var ex = woState.day.exercises[woState.exIdx];
-  woState.sets[ex.id].push({w:'',r:'',done:false});
+  woState.sets[ex.id].push({w:'',r:'',t:'',done:false});
   renderWorkoutStep();
   setTimeout(function(){
     var sets = document.querySelectorAll('#wo-sets .wo-set-row');
@@ -1645,19 +1739,19 @@ function woAddSet(){
   },50);
 }
 
-function woFillSet(exId,i,w,r){
+function woFillSet(exId,i,w,r,t){
   if(!woState) return;
   var sets = woState.sets[exId];
-  if(sets[i]){sets[i].w=w;sets[i].r=r;}
-  var wEl=document.getElementById('wo-w-'+i);var rEl=document.getElementById('wo-r-'+i);
-  if(wEl)wEl.value=w;if(rEl)rEl.value=r;
+  if(sets[i]){sets[i].w=w;sets[i].r=r;if(t)sets[i].t=t;}
+  var wEl=document.getElementById('wo-w-'+i);var rEl=document.getElementById('wo-r-'+i);var tEl=document.getElementById('wo-t-'+i);
+  if(wEl)wEl.value=w;if(rEl)rEl.value=r;if(tEl&&t)tEl.value=t;
 }
 
 function woUseLastSession(exId){
   if(!woState) return;
   var last = getLastSession(exId);
   if(!last) return;
-  woState.sets[exId] = last.sets.map(function(s){return{w:s.w,r:s.r,done:false};});
+  woState.sets[exId] = last.sets.map(function(s){return{w:s.w,r:s.r,t:s.t||0,done:false};});
   renderWorkoutStep();
   showToast('✅ تم تحميل آخر جلسة');
 }
@@ -1674,6 +1768,138 @@ function woUpdateSetup(){
   var ex = woState.day.exercises[woState.exIdx];
   var el = document.getElementById('wo-setup');
   if(el) woState.setup[ex.id] = el.value;
+}
+
+// ============================================
+// CARDIO LOGGING
+// ============================================
+var CARDIO_TYPES = [
+  {id:'treadmill', label:'جهاز الجري 🏃', fields:['duration','speed','incline']},
+  {id:'bike', label:'دراجة 🚴', fields:['duration','speed']},
+  {id:'elliptical', label:'إليبتكال ⚡', fields:['duration','resistance']},
+  {id:'rowing', label:'تجديف 🚣', fields:['duration','distance']},
+  {id:'stairs', label:'السلالم 🪜', fields:['duration','level']},
+  {id:'jump_rope', label:'حبل القفز ⭕', fields:['duration','sets']},
+  {id:'swim', label:'سباحة 🏊', fields:['duration','distance']},
+  {id:'walk', label:'مشي 🚶', fields:['duration','distance']},
+  {id:'other', label:'أخرى 🏋️', fields:['duration']}
+];
+var CARDIO_FIELD_LABELS = {
+  duration: {label:'المدة (دقيقة)', placeholder:'مثال: 30', type:'number'},
+  speed: {label:'السرعة (كم/س)', placeholder:'مثال: 8', type:'decimal'},
+  incline: {label:'الميل (%)', placeholder:'مثال: 5', type:'decimal'},
+  resistance: {label:'المقاومة', placeholder:'مثال: 8', type:'number'},
+  distance: {label:'المسافة (كم)', placeholder:'مثال: 2.5', type:'decimal'},
+  level: {label:'المستوى', placeholder:'مثال: 10', type:'number'},
+  sets: {label:'الجولات', placeholder:'مثال: 5', type:'number'}
+};
+var cardioSelectedType = 'treadmill';
+
+function openCardio(){
+  cardioSelectedType = 'treadmill';
+  document.getElementById('cardio-overlay').classList.add('active');
+  renderCardioForm();
+}
+
+function closeCardio(){
+  document.getElementById('cardio-overlay').classList.remove('active');
+}
+
+function selectCardioType(id){
+  cardioSelectedType = id;
+  document.querySelectorAll('.cardio-type-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.ctype === id);
+  });
+  renderCardioFields();
+}
+
+function renderCardioForm(){
+  var grid = document.getElementById('cardio-type-grid');
+  grid.innerHTML = CARDIO_TYPES.map(function(ct){
+    return '<button class="cardio-type-btn'+(ct.id===cardioSelectedType?' active':'')+'" data-ctype="'+ct.id+'" onclick="selectCardioType(\''+ct.id+'\')">'+ct.label+'</button>';
+  }).join('');
+  renderCardioFields();
+}
+
+function renderCardioFields(){
+  var ct = CARDIO_TYPES.find(function(t){return t.id===cardioSelectedType;});
+  if(!ct) return;
+  var html = '';
+  ct.fields.forEach(function(f){
+    var fi = CARDIO_FIELD_LABELS[f];
+    html += '<div class="cardio-field">';
+    html += '<div class="cardio-label">'+fi.label+'</div>';
+    html += '<input class="cardio-input" type="number" inputmode="'+(fi.type==='decimal'?'decimal':'numeric')+'" placeholder="'+fi.placeholder+'" id="cf-'+f+'">';
+    html += '</div>';
+  });
+  document.getElementById('cardio-fields').innerHTML = html;
+}
+
+function saveCardioSession(){
+  var ct = CARDIO_TYPES.find(function(t){return t.id===cardioSelectedType;});
+  if(!ct){showToast('⚠️ اختر نوع التمرين');return;}
+  var entry = {date: today(), type: cardioSelectedType, typeLabel: ct.label, fields: {}};
+  var hasDuration = false;
+  ct.fields.forEach(function(f){
+    var el = document.getElementById('cf-'+f);
+    if(el && el.value){
+      entry.fields[f] = parseFloat(el.value);
+      if(f==='duration') hasDuration = true;
+    }
+  });
+  if(!hasDuration){showToast('⚠️ أدخل المدة على الأقل');return;}
+  if(!settings.cardioLogs) settings.cardioLogs = [];
+  settings.cardioLogs.unshift(entry);
+  saveAll();
+  closeCardio();
+  updateCardioQuickBtn();
+  showToast('✅ تم حفظ جلسة الكارديو!');
+}
+
+function updateCardioQuickBtn(){
+  var el = document.getElementById('cardio-quick-sub');
+  if(!el) return;
+  var logs = settings.cardioLogs || [];
+  var todayLogs = logs.filter(function(l){return l.date === today();});
+  if(todayLogs.length){
+    var totalMin = 0;
+    todayLogs.forEach(function(l){if(l.fields.duration)totalMin+=l.fields.duration;});
+    el.textContent = 'اليوم: '+todayLogs.length+' جلسة • '+totalMin+' دقيقة';
+  } else {
+    el.textContent = 'سجّل تمرين كارديو';
+  }
+}
+
+function renderCardioProgress(){
+  var container = document.getElementById('cardio-prog-list');
+  if(!container) return;
+  var logs = settings.cardioLogs || [];
+  if(!logs.length){
+    container.innerHTML = '<div class="empty" style="margin-top:40px"><div class="empty-icon">🏃</div><p>ما سجّلت أي كارديو بعد</p><button class="wo-add-set" style="margin-top:16px" onclick="openCardio()">+ سجّل الآن</button></div>';
+    return;
+  }
+  var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:14px;font-weight:700">'+logs.length+' جلسة كارديو مسجّلة</div><button class="wo-add-set" onclick="openCardio()">+ جديد</button></div>';
+  logs.forEach(function(entry, idx){
+    var fieldStrs = Object.keys(entry.fields).map(function(f){
+      var fi = CARDIO_FIELD_LABELS[f];
+      return (fi?fi.label:f)+': '+entry.fields[f];
+    });
+    html += '<div class="cardio-hist-item">';
+    html += '<div class="cardio-hist-header"><div class="cardio-hist-type">'+entry.typeLabel+'</div><div class="cardio-hist-date">'+fmtDate(entry.date)+'</div>';
+    html += '<div style="color:var(--red);cursor:pointer;font-size:13px" onclick="deleteCardioLog('+idx+')">🗑️</div>';
+    html += '</div>';
+    html += '<div class="cardio-hist-stats">'+fieldStrs.map(function(s){return '<span class="cardio-stat">'+s+'</span>';}).join('')+'</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function deleteCardioLog(idx){
+  if(!settings.cardioLogs) return;
+  settings.cardioLogs.splice(idx, 1);
+  saveAll();
+  renderCardioProgress();
+  showToast('🗑️ تم الحذف');
 }
 
 function getExSetup(exId){
@@ -1965,14 +2191,14 @@ function renderExDetailBody(){
   var overallBest = null;
   sessions.forEach(function(s){
     var b = bestSet(s.sets);
-    if(b && (!overallBest || (b.w*b.r) > (overallBest.w*overallBest.r))) overallBest = b;
+    if(b && (!overallBest || bestSetScore(b) > bestSetScore(overallBest))) overallBest = b;
   });
 
   if(overallBest){
     html += '<div class="exd-best-card">';
     html += '<div class="exd-best-icon">🏆</div>';
     html += '<div class="exd-best-info"><div class="exd-best-label">أفضل أداء</div>';
-    html += '<div class="exd-best-val">'+overallBest.w+'كج × '+overallBest.r+'</div>';
+    html += '<div class="exd-best-val">'+fmtSetPill(overallBest)+'</div>';
     html += '</div></div>';
   }
 
@@ -1997,7 +2223,7 @@ function renderExDetailBody(){
       html += '</div>';
       html += '<div class="exd-sets">';
       s.sets.forEach(function(st, si){
-        html += '<span class="exd-set-pill">'+st.w+'كج × '+st.r;
+        html += '<span class="exd-set-pill">'+fmtSetPill(st);
         if(exDetailState.editMode) html += ' <span style="color:var(--red);cursor:pointer;margin-right:4px" onclick="confirmDeleteSet(\''+exId+'\','+oi+','+si+',\'\','+st.w+','+st.r+')">✕</span>';
         html += '</span>';
       });
@@ -2037,9 +2263,12 @@ function switchProgTab(tab,btn){
   currentProgTab=tab;
   document.querySelectorAll('.ptab').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
-  var hE=document.getElementById('prog-list'),cE=document.getElementById('charts-container'),sE=document.getElementById('prog-search-wrap'),wE=document.getElementById('weight-wrap'),fE=document.getElementById('muscle-filters-wrap');
-  if(tab==='history'){hE.style.display='flex';cE.style.display='none';sE.style.display='block';wE.style.display='block';fE.style.display='block';renderProgress();}
-  else{hE.style.display='none';cE.style.display='flex';sE.style.display='none';wE.style.display='none';fE.style.display='none';renderCharts();}
+  var hE=document.getElementById('prog-list'),cE=document.getElementById('charts-container'),sE=document.getElementById('prog-search-wrap'),wE=document.getElementById('weight-wrap'),fE=document.getElementById('muscle-filters-wrap'),kE=document.getElementById('cardio-prog-list');
+  hE.style.display='none';cE.style.display='none';if(kE)kE.style.display='none';
+  sE.style.display='none';wE.style.display='none';fE.style.display='none';
+  if(tab==='history'){hE.style.display='flex';sE.style.display='block';wE.style.display='block';fE.style.display='block';renderProgress();}
+  else if(tab==='charts'){cE.style.display='flex';renderCharts();}
+  else if(tab==='cardio'){if(kE){kE.style.display='flex';renderCardioProgress();}}
 }
 
 function saveWeight(){
@@ -2150,7 +2379,7 @@ function renderProgress(){
   filtered.forEach(function(id){
     var ex=allExs[id]||{name:id,muscle:'',target:''};
     var sessions=logs[id],overallBest=null;
-    sessions.forEach(function(s){var b=bestSet(s.sets);if(b&&(!overallBest||(b.w*b.r)>(overallBest.w*overallBest.r)))overallBest=b;});
+    sessions.forEach(function(s){var b=bestSet(s.sets);if(b&&(!overallBest||bestSetScore(b)>bestSetScore(overallBest)))overallBest=b;});
     var lastSession = sessions[sessions.length-1];
     var card=document.createElement('div');card.className='prog-card';
     card.innerHTML=
@@ -2160,8 +2389,8 @@ function renderProgress(){
           '<div class="prog-sessions">'+sessions.length+' جلسة • '+ex.muscle+(lastSession?' • '+fmtDate(lastSession.date):'')+'</div>'+
         '</div>'+
         '<div class="prog-card-best">'+
-          '<div class="prog-best-val">'+(overallBest?overallBest.w+'كج':'—')+'</div>'+
-          '<div class="prog-best-label">'+(overallBest?'× '+overallBest.r:'')+'</div>'+
+          '<div class="prog-best-val">'+(overallBest?fmtSetPill(overallBest):'—')+'</div>'+
+          '<div class="prog-best-label"></div>'+
         '</div>'+
         '<div class="prog-arrow">←</div>'+
       '</div>';
