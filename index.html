@@ -1474,20 +1474,23 @@ async function syncToSupabase(){
 async function loadFromSupabase(){
   try {
     var deviceId = getDeviceId();
-    // If logged in, try loading by user_id first (picks up data from any device)
+    var controller = new AbortController();
+    var tid = setTimeout(function(){controller.abort();}, 6000);
+    var opts = {headers:sbHeaders(), signal:controller.signal};
     if(authUser){
-      var r = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?user_id=eq.'+authUser.id+'&select=data&order=updated_at.desc&limit=1', {headers:sbHeaders()});
+      var r = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?user_id=eq.'+authUser.id+'&select=data&order=updated_at.desc&limit=1', opts);
       if(r.ok){
         var json = await r.json();
         if(json && json.length && json[0].data){
+          clearTimeout(tid);
           logs = json[0].data.logs || {};
           settings = json[0].data.settings || {};
           return true;
         }
       }
     }
-    // Fallback: load by device_id
-    var r2 = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?device_id=eq.'+deviceId+'&select=data', {headers:sbHeaders()});
+    var r2 = await fetch(SB_URL+'/rest/v1/'+SB_TABLE+'?device_id=eq.'+deviceId+'&select=data', opts);
+    clearTimeout(tid);
     if(!r2.ok) return false;
     var json2 = await r2.json();
     if(json2 && json2.length && json2[0].data){
@@ -1575,7 +1578,10 @@ function clearAuthState(){
 
 async function validateStoredToken(token){
   try {
-    var r = await fetch(SB_URL+'/auth/v1/user', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+    var controller = new AbortController();
+    var tid = setTimeout(function(){controller.abort();}, 5000);
+    var r = await fetch(SB_URL+'/auth/v1/user', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}, signal:controller.signal});
+    clearTimeout(tid);
     if(!r.ok) return null;
     return await r.json();
   } catch(e){ return null; }
@@ -4062,11 +4068,18 @@ function switchView(id,btn){
 // INIT
 // ============================================
 (async function(){
-  var hasSession = await initAuth();
-  if(hasSession){
-    initStorage();
-  } else {
-    document.getElementById('loading-screen').style.display='none';
+  try {
+    var hasSession = await initAuth();
+    if(hasSession){
+      await initStorage();
+    } else {
+      document.getElementById('loading-screen').style.display='none';
+      document.getElementById('auth-overlay').classList.add('active');
+    }
+  } catch(e) {
+    console.error('Init error:', e);
+    document.getElementById('loading-screen').classList.add('hide');
+    setTimeout(function(){document.getElementById('loading-screen').style.display='none';},400);
     document.getElementById('auth-overlay').classList.add('active');
   }
 })();
