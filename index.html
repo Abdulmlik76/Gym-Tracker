@@ -549,6 +549,56 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 input[type=file]{display:none}
 @supports(padding:max(0px)){nav{padding-bottom:max(var(--bot),20px)}.view{padding-bottom:calc(max(var(--bot),20px)+70px)}}
+
+/* ===== HOME REDESIGN (Apple Fitness style) ===== */
+.h2-header{padding:32px 24px 28px;flex-shrink:0}
+.h2-date{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:8px}
+.h2-greeting{font-size:32px;font-weight:900;line-height:1.1;margin-bottom:6px;letter-spacing:-.5px}
+.h2-name{font-size:17px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:6px}
+.h2-name .wave{font-size:18px}
+
+.h2-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 24px;margin-bottom:32px}
+.h2-stat{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 8px 16px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.h2-stat-icon{font-size:20px;opacity:.95;margin-bottom:8px}
+.h2-stat-num{font-size:26px;font-weight:900;line-height:1;letter-spacing:-.5px}
+.h2-stat-num .unit{font-size:13px;color:var(--muted);font-weight:700;margin-right:2px}
+.h2-stat-label{font-size:11px;color:var(--muted);font-weight:600;margin-top:6px;letter-spacing:.2px}
+
+.h2-section{padding:0 24px;margin-bottom:24px}
+.h2-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px;padding:0 4px}
+
+.h2-workout-hero{background:var(--card);border:1.5px solid var(--border);border-radius:24px;padding:28px 24px 24px;cursor:pointer;transition:transform .15s,opacity .15s;text-align:center}
+.h2-workout-hero:active{transform:scale(.99);opacity:.92}
+.h2-workout-hero.is-current{border-color:rgba(245,166,35,.4);background:linear-gradient(180deg,rgba(245,166,35,.07),transparent 60%)}
+.h2-workout-day-label{font-size:11px;color:var(--acc);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.h2-workout-focus{font-size:30px;font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.4px}
+.h2-workout-meta{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:18px}
+.h2-workout-chips{display:flex;flex-wrap:wrap;gap:0;justify-content:center;margin-bottom:24px}
+.h2-workout-chip{font-size:12px;color:var(--muted);font-weight:600;padding:0 4px;display:flex;align-items:center}
+.h2-workout-chip:not(:last-child)::after{content:'•';margin:0 8px;color:var(--border)}
+.h2-start-btn{width:100%;padding:18px;border-radius:16px;background:var(--acc);color:#000;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;border:none;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.h2-start-btn:active{opacity:.85}
+.h2-start-btn .arrow{font-size:18px}
+
+.h2-day-list{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.h2-day-row{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .15s;background:transparent}
+.h2-day-row:not(:last-child){border-bottom:1px solid var(--border)}
+.h2-day-row:active{background:var(--s1)}
+.h2-day-row.is-current{background:rgba(245,166,35,.06)}
+.h2-day-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.h2-day-icon.done{background:var(--green);color:#000}
+.h2-day-icon.current{background:var(--acc);color:#000}
+.h2-day-icon.pending{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.h2-day-focus{font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h2-day-arrow{color:var(--muted);font-size:14px;opacity:.5}
+
+.h2-cardio{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .15s,opacity .15s}
+.h2-cardio:active{transform:scale(.99);opacity:.92}
+.h2-cardio-icon{width:44px;height:44px;border-radius:14px;background:rgba(78,205,196,.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.h2-cardio-info{flex:1;min-width:0}
+.h2-cardio-label{font-size:15px;font-weight:800}
+.h2-cardio-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.h2-cardio-arrow{color:var(--muted);font-size:14px;opacity:.5}
 /* AUTH */
 #auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}
 #auth-overlay.active{display:flex}
@@ -600,24 +650,30 @@ input[type=file]{display:none}
 <div id="loading-screen"><div class="loader-icon">💪</div><div class="loader-text">جاري تحميل بياناتك...</div></div>
 <div id="app">
   <div id="home" class="view active">
-    <div class="home-hero">
-      <div class="greeting" id="greeting"></div>
-      <div class="hero-name"><span id="hero-name-text">بطل</span> <span>💪</span></div>
-      <div class="hero-date" id="hero-date"></div>
-      <div class="hero-cycle" id="hero-cycle"></div>
+    <div class="h2-header">
+      <div class="h2-date" id="h2-date"></div>
+      <div class="h2-greeting" id="h2-greeting"></div>
+      <div class="h2-name"><span class="wave">👋</span><span id="h2-name"></span></div>
     </div>
-    <div id="today-card-wrap"></div>
-    <div id="streak-wrap"></div>
-    <div class="cardio-quick-btn" onclick="openCardio()">
-      <div class="cardio-quick-icon">🏃</div>
-      <div class="cardio-quick-info">
-        <div class="cardio-quick-label">كارديو</div>
-        <div class="cardio-quick-sub" id="cardio-quick-sub">سجّل تمرين كارديو</div>
+    <div class="h2-stats" id="h2-stats"></div>
+    <div class="h2-section">
+      <div class="h2-section-title">تمرين اليوم</div>
+      <div id="h2-workout-hero"></div>
+    </div>
+    <div class="h2-section">
+      <div class="h2-section-title">خطة الأسبوع</div>
+      <div class="h2-day-list" id="h2-day-list"></div>
+    </div>
+    <div class="h2-section">
+      <div class="h2-cardio" onclick="openCardio()">
+        <div class="h2-cardio-icon">🏃</div>
+        <div class="h2-cardio-info">
+          <div class="h2-cardio-label">كارديو</div>
+          <div class="h2-cardio-sub" id="h2-cardio-sub">سجّل تمرين كارديو</div>
+        </div>
+        <div class="h2-cardio-arrow">←</div>
       </div>
-      <div class="cardio-quick-arrow">←</div>
     </div>
-    <div class="plan-overview-title" id="plan-title"></div>
-    <div class="days-scroll" id="days-container"></div>
   </div>
   <div id="progress-view" class="view">
     <div class="page-header"><h1>التقدم 📈</h1><p>سجل أوزانك وشوف تطورك</p></div>
@@ -1674,63 +1730,72 @@ function getStorageLabel(){
 // ============================================
 var DAYS_AR=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
+var MONTHS_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
 function renderHome(){
-  var h=new Date().getHours();
-  document.getElementById('greeting').textContent=h<12?'صباح الخير،':'مساء النور،';
+  var h = new Date().getHours();
+  var greeting = h<12 ? 'صباح الخير' : 'مساء النور';
   var userName = settings.userName || 'بطل';
-  document.getElementById('hero-name-text').textContent = userName;
-  var now=new Date();
-  document.getElementById('hero-date').textContent=DAYS_AR[now.getDay()]+' • '+now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear();
+  var now = new Date();
+
+  document.getElementById('h2-date').textContent = DAYS_AR[now.getDay()] + ' • ' + now.getDate() + ' ' + MONTHS_AR[now.getMonth()];
+  document.getElementById('h2-greeting').textContent = greeting;
+  document.getElementById('h2-name').textContent = userName;
 
   var planDays = settings.planDays || 6;
   var curDay = getCurrentDayIdx();
   var dayOrder = getDayOrder(planDays);
-  document.getElementById('hero-cycle').textContent='خطة '+planDays+' أيام • يوم '+(curDay+1)+' من '+planDays;
-
   var days = buildPlanDays(planDays);
   var curOrigIdx = dayOrder[curDay] !== undefined ? dayOrder[curDay] : curDay;
   var day = days[curOrigIdx];
 
-  // Today card
-  var tcw = document.getElementById('today-card-wrap');
-  tcw.innerHTML='<div class="today-card" onclick="startWorkout('+curOrigIdx+')">'+
-    '<div class="today-card-top">'+
-      '<div class="today-badge">'+(curDay+1)+'</div>'+
-      '<div class="today-info"><div class="today-label">التمرين القادم</div><div class="today-focus">'+day.focus+'</div></div>'+
-      '<div class="today-arrow">←</div>'+
-    '</div>'+
-    '<div class="today-chips">'+day.chips.map(function(ch,i){return'<span class="chip '+ch+'">'+day.labels[i]+'</span>';}).join('')+'</div>'+
-  '</div>';
+  // Stats row
+  var streak = getStreak();
+  var completedThisCycle = (settings.completedDays || []).length;
+  var todayDate = today();
+  var cardioMin = (settings.cardioLogs || []).filter(function(l){return l.date === todayDate;})
+    .reduce(function(n,l){return n + ((l.fields && l.fields.duration) || 0);}, 0);
 
-  // Streak
-  var streak=getStreak();
-  var sw=document.getElementById('streak-wrap');
-  sw.innerHTML=streak>0?'<div class="streak-bar"><div class="streak-fire">🔥</div><div class="streak-text">سلسلة التمرين المتواصلة</div><div class="streak-num">'+streak+' يوم</div></div>':'';
+  document.getElementById('h2-stats').innerHTML =
+    '<div class="h2-stat"><div class="h2-stat-icon">🔥</div><div class="h2-stat-num">'+streak+'</div><div class="h2-stat-label">يوم متتالي</div></div>'+
+    '<div class="h2-stat"><div class="h2-stat-icon">✓</div><div class="h2-stat-num">'+completedThisCycle+'<span class="unit">/'+planDays+'</span></div><div class="h2-stat-label">هذا الأسبوع</div></div>'+
+    '<div class="h2-stat"><div class="h2-stat-icon">🏃</div><div class="h2-stat-num">'+cardioMin+'<span class="unit"> د</span></div><div class="h2-stat-label">كارديو اليوم</div></div>';
 
-  updateCardioQuickBtn();
+  // Today's workout hero
+  var exCount = day.exercises.length;
+  var estMin = Math.round(exCount * 6);
+  var chipsHtml = day.labels.map(function(l){return '<span class="h2-workout-chip">'+l+'</span>';}).join('');
+  document.getElementById('h2-workout-hero').innerHTML =
+    '<div class="h2-workout-hero is-current" onclick="startWorkout('+curOrigIdx+')">'+
+      '<div class="h2-workout-day-label">يوم '+(curDay+1)+' من '+planDays+'</div>'+
+      '<div class="h2-workout-focus">'+day.focus+'</div>'+
+      '<div class="h2-workout-meta">'+exCount+' تمارين • ~'+estMin+' دقيقة</div>'+
+      (chipsHtml ? '<div class="h2-workout-chips">'+chipsHtml+'</div>' : '')+
+      '<button class="h2-start-btn">ابدأ التمرين <span class="arrow">←</span></button>'+
+    '</div>';
 
-  // Plan overview (in user's preferred order)
-  document.getElementById('plan-title').textContent='خطة التمرين ('+planDays+' أيام)';
-  var c=document.getElementById('days-container');c.innerHTML='';
+  // Day list (week plan)
+  var c = document.getElementById('h2-day-list');
+  c.innerHTML = '';
   dayOrder.forEach(function(origIdx, pos){
     var d = days[origIdx];
     var isCurrent = pos === curDay;
     var isCompleted = isDayCompleted(pos);
-    var tile=document.createElement('div');
-    tile.className='day-tile'+(isCurrent?' current-day':'')+(isCompleted?' completed-day':'');
-    tile.innerHTML=
-      '<div class="day-tile-top">'+
-        '<div class="day-badge '+(isCurrent?'badge-current':(isCompleted?'badge-done':'badge-pending'))+'">'+(pos+1)+'</div>'+
-        '<div class="day-info">'+
-          '<div class="day-name">'+(isCurrent?'التالي ★':isCompleted?'مكتمل':'يوم '+(pos+1))+'</div>'+
-          '<div class="day-focus">'+d.focus+'</div>'+
-        '</div>'+
-        (isCompleted?'<div class="day-done-badge">✓ مكتمل</div>':'')+
-      '</div>'+
-      '<div class="muscle-chips">'+d.chips.map(function(ch,i){return'<span class="chip '+ch+'">'+d.labels[i]+'</span>';}).join('')+'</div>';
-    (function(oi){tile.onclick=function(){startWorkout(oi);};})(origIdx);
-    c.appendChild(tile);
+    var iconHtml, iconClass;
+    if(isCompleted){iconHtml='✓'; iconClass='done';}
+    else if(isCurrent){iconHtml=(pos+1); iconClass='current';}
+    else{iconHtml=(pos+1); iconClass='pending';}
+    var row = document.createElement('div');
+    row.className = 'h2-day-row' + (isCurrent ? ' is-current' : '');
+    row.innerHTML =
+      '<div class="h2-day-icon '+iconClass+'">'+iconHtml+'</div>'+
+      '<div class="h2-day-focus">'+d.focus+'</div>'+
+      '<div class="h2-day-arrow">←</div>';
+    (function(oi){row.onclick=function(){startWorkout(oi);};})(origIdx);
+    c.appendChild(row);
   });
+
+  updateCardioQuickBtn();
 }
 
 // ============================================
@@ -2095,7 +2160,7 @@ function saveCardioSession(){
 }
 
 function updateCardioQuickBtn(){
-  var el = document.getElementById('cardio-quick-sub');
+  var el = document.getElementById('h2-cardio-sub');
   if(!el) return;
   var logs = settings.cardioLogs || [];
   var todayLogs = logs.filter(function(l){return l.date === today();});
