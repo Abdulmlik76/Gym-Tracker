@@ -30,12 +30,13 @@ if('caches' in window){
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0a0a0f;--s1:#111118;--s2:#18181f;--card:#1e1e28;--border:#2c2c3e;
-  --acc:#f5a623;--acc2:#e8503a;--acc3:#4ecdc4;--text:#eeeef5;--muted:#6b6b8a;
-  --green:#2ecc71;--red:#e74c3c;
+  --bg:#0C0E14;--s1:#111520;--s2:#171C28;--card:#1C2130;--border:#2A3044;
+  --acc:#6C8EEF;--acc2:#EF6B6B;--acc3:#5EC6B8;--text:#E4E8F2;--muted:#6B7494;
+  --green:#4ADE80;--red:#EF5B5B;
   --top:env(safe-area-inset-top,44px);
   --bot:env(safe-area-inset-bottom,34px);
 }
+.ic{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;overflow:hidden;-webkit-text-size-adjust:100%}
 #app{display:flex;flex-direction:column;height:100dvh;padding-top:var(--top)}
 .view{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;flex-direction:column;padding-bottom:calc(var(--bot) + 70px)}
@@ -45,6 +46,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Cairo'
 .loader-icon{font-size:48px;margin-bottom:16px;animation:pulse 1.2s infinite}
 .loader-text{font-size:14px;color:var(--muted);font-weight:600}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(10,10,15,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);padding-bottom:var(--bot);z-index:200}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 0 6px;cursor:pointer;border:none;background:none;color:var(--muted);font-family:'Cairo',sans-serif;transition:color .2s}
@@ -624,7 +626,7 @@ input[type=file]{display:none}
 <body>
 <!-- Auth Overlay -->
 <div id="auth-overlay">
-  <div class="auth-logo">💪</div>
+  <div class="auth-logo" style="font-size:32px;font-weight:900;letter-spacing:4px;color:var(--acc)">GYM</div>
   <div class="auth-title">Gym Tracker</div>
   <div class="auth-sub">سجّل دخولك لمزامنة بياناتك على جميع أجهزتك</div>
   <div class="auth-card">
@@ -647,13 +649,13 @@ input[type=file]{display:none}
   </div>
 </div>
 
-<div id="loading-screen"><div class="loader-icon">💪</div><div class="loader-text">جاري تحميل بياناتك...</div></div>
+<div id="loading-screen"><div class="loader-icon" style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite"></div><div class="loader-text">جاري تحميل بياناتك...</div></div>
 <div id="app">
   <div id="home" class="view active">
     <div class="h2-header">
       <div class="h2-date" id="h2-date"></div>
       <div class="h2-greeting" id="h2-greeting"></div>
-      <div class="h2-name"><span class="wave">👋</span><span id="h2-name"></span></div>
+      <div class="h2-name" id="h2-name"></div>
     </div>
     <div class="h2-stats" id="h2-stats"></div>
     <div class="h2-section">
@@ -666,7 +668,7 @@ input[type=file]{display:none}
     </div>
     <div class="h2-section">
       <div class="h2-cardio" onclick="openCardio()">
-        <div class="h2-cardio-icon">🏃</div>
+        <div class="h2-cardio-icon" style="color:var(--acc3)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM5.8 8.1l3.2-2.6c.4-.3 1-.4 1.5-.2l2.5 1c.4.2.9.2 1.3 0l2.2-.9c.8-.3 1.7.2 1.8 1L19 11l-4-1-3 3.5V19c0 .6-.4 1-1 1s-1-.4-1-1v-5.5l-3.5-2.9c-.7-.6-.6-1.8.3-2.5z"/></svg></div>
         <div class="h2-cardio-info">
           <div class="h2-cardio-label">كارديو</div>
           <div class="h2-cardio-sub" id="h2-cardio-sub">سجّل تمرين كارديو</div>
@@ -676,16 +678,16 @@ input[type=file]{display:none}
     </div>
   </div>
   <div id="progress-view" class="view">
-    <div class="page-header"><h1>التقدم 📈</h1><p>سجل أوزانك وشوف تطورك</p></div>
+    <div class="page-header"><h1>التقدم</h1><p>سجل أوزانك وشوف تطورك</p></div>
     <div class="prog-tabs">
       <div class="ptab active" onclick="switchProgTab('history',this)">السجل</div>
       <div class="ptab" onclick="switchProgTab('charts',this)">الرسوم البيانية</div>
-      <div class="ptab" onclick="switchProgTab('cardio',this)">الكارديو 🏃</div>
+      <div class="ptab" onclick="switchProgTab('cardio',this)">الكارديو</div>
     </div>
     <div class="weight-card-wrap" id="weight-wrap">
       <div class="weight-card">
         <div class="weight-card-top">
-          <div class="weight-card-icon">⚖️</div>
+          <div class="weight-card-icon" style="color:var(--acc3)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 3L3 21M12 12V3M7 8l5 4 5-4M7 20h10"/></svg></div>
           <div class="weight-card-info">
             <div class="weight-card-title">وزن الجسم</div>
             <div class="weight-card-sub">سجّل وزنك اليومي لتتبع تقدمك</div>
@@ -707,7 +709,7 @@ input[type=file]{display:none}
     <div id="cardio-prog-list" style="display:none;padding:0 16px 80px;flex-direction:column"></div>
   </div>
   <div id="settings-view" class="view">
-    <div class="page-header"><h1>الإعدادات ⚙️</h1><p>خصّص جدولك وتمارينك</p></div>
+    <div class="page-header"><h1>الإعدادات</h1><p>خصّص جدولك وتمارينك</p></div>
     <div class="settings-list" id="settings-list"></div>
   </div>
   <nav>
@@ -762,7 +764,7 @@ input[type=file]{display:none}
       <div class="exd-title" id="exd-title"></div>
       <div class="exd-sub" id="exd-sub"></div>
     </div>
-    <button class="exd-edit-btn" id="exd-edit-btn" onclick="toggleExDetailEdit()">✏️</button>
+    <button class="exd-edit-btn" id="exd-edit-btn" onclick="toggleExDetailEdit()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7m-1.5-10.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
   </div>
   <div class="exd-body" id="exd-body"></div>
 </div>
@@ -815,13 +817,13 @@ input[type=file]{display:none}
   <div class="cust-body" id="cust-body"></div>
   <div class="cust-selected-count" id="cust-bottom">
     <div class="cust-count-text" id="cust-count">تم اختيار <span>0</span> تمارين</div>
-    <button class="cust-count-save" onclick="saveCustomDay()">💾 حفظ</button>
+    <button class="cust-count-save" onclick="saveCustomDay()">حفظ</button>
   </div>
 </div>
 
 <div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirm(event)">
   <div class="confirm-box">
-    <div class="confirm-icon" id="confirm-icon">🗑️</div>
+    <div class="confirm-icon" id="confirm-icon"></div>
     <div class="confirm-title" id="confirm-title">حذف؟</div>
     <div class="confirm-msg" id="confirm-msg"></div>
     <div class="confirm-actions">
@@ -837,7 +839,7 @@ input[type=file]{display:none}
   <div class="cardio-header">
     <div class="cardio-close" onclick="closeCardio()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
     <div style="flex:1">
-      <div style="font-size:17px;font-weight:900">كارديو 🏃</div>
+      <div style="font-size:17px;font-weight:900">كارديو</div>
       <div style="font-size:11px;color:var(--muted)">سجّل جلسة كارديو</div>
     </div>
   </div>
@@ -845,7 +847,7 @@ input[type=file]{display:none}
     <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">نوع التمرين</div>
     <div class="cardio-type-grid" id="cardio-type-grid"></div>
     <div id="cardio-fields"></div>
-    <button class="cardio-save-btn" onclick="saveCardioSession()">💾 حفظ الجلسة</button>
+    <button class="cardio-save-btn" onclick="saveCardioSession()">حفظ الجلسة</button>
   </div>
 </div>
 
@@ -1498,6 +1500,58 @@ async function loadFromSupabase(){
 }
 
 // ============================================
+// THEMES
+// ============================================
+var THEMES = {
+  steel:{label:'Steel Blue',bg:'#0C0E14',s1:'#111520',s2:'#171C28',card:'#1C2130',border:'#2A3044',acc:'#6C8EEF',acc2:'#EF6B6B',acc3:'#5EC6B8',text:'#E4E8F2',muted:'#6B7494',green:'#4ADE80',red:'#EF5B5B'},
+  gold:{label:'Gold',bg:'#0D0B08',s1:'#14110C',s2:'#1C1812',card:'#24201A',border:'#3A3428',acc:'#D4A846',acc2:'#4ADE80',acc3:'#48D1A5',text:'#EAE6DC',muted:'#8A8474',green:'#4ADE80',red:'#EF5B5B'},
+  rose:{label:'Rose',bg:'#0E0B10',s1:'#151218',s2:'#1C1822',card:'#24202C',border:'#362E40',acc:'#C084FC',acc2:'#FB7185',acc3:'#5EC6B8',text:'#EAE4F2',muted:'#8474A0',green:'#4ADE80',red:'#EF5B5B'},
+  classic:{label:'Classic Orange',bg:'#0a0a0f',s1:'#111118',s2:'#18181f',card:'#1e1e28',border:'#2c2c3e',acc:'#f5a623',acc2:'#e8503a',acc3:'#4ecdc4',text:'#eeeef5',muted:'#6b6b8a',green:'#2ecc71',red:'#e74c3c'}
+};
+function applyTheme(id){
+  var t=THEMES[id];if(!t)return;var r=document.documentElement.style;
+  ['bg','s1','s2','card','border','acc','acc2','acc3','text','muted','green','red'].forEach(function(k){r.setProperty('--'+k,t[k]);});
+  settings.theme=id;saveAll();
+}
+
+// ============================================
+// ICON SYSTEM
+// ============================================
+function ic(n,sz){
+  sz=sz||20;
+  var d={
+    flame:'M12 22c5.52 0 10-4.48 10-10 0-3.5-2-6.5-4-8.5-.71 2-2.5 3.5-4.5 4C12.71 4.71 12 2 8 2c1 3 2 6 0 9-1.5-1-2-2.5-2-4C3.5 9.5 2 12 2 14.5 2 18.64 6.48 22 12 22z',
+    check:'M20 6L9 17l-5-5',
+    run:'M13 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM5.8 8.1l3.2-2.6c.4-.3 1-.4 1.5-.2l2.5 1c.4.2.9.2 1.3 0l2.2-.9c.8-.3 1.7.2 1.8 1L19 11l-4-1-3 3.5V19c0 .6-.4 1-1 1s-1-.4-1-1v-5.5l-3.5-2.9c-.7-.6-.6-1.8.3-2.5z',
+    dumbbell:'M6.5 6.5l11 11M4 4l2 2M18 18l2 2M2 8l4-4M22 20l-4-4M20 8l-4-4M4 20l4-4',
+    chevL:'M15 18l-6-6 6-6',
+    chart:'M22 12l-4 0-3 9-6-18-3 9-4 0',
+    trophy:'M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.9 18.8 7 20 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.2.5 2 1.8 2 3.8M18 2H6v7a6 6 0 0 0 12 0V2z',
+    scale:'M21 3L3 21M12 12V3M7 8l5 4 5-4M7 20h10',
+    note:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z',
+    gear:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.05 1.51 1.08H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z',
+    trash:'M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2',
+    user:'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+    db:'M12 8c4.97 0 9-1.34 9-3s-4.03-3-9-3-9 1.34-9 3 4.03 3 9 3zM21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5',
+    dl:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5l5 5 5-5m-5 5V3',
+    ul:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12',
+    star:'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z',
+    target:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+    inbox:'M22 12l-6 0-2 3h-4l-2-3-6 0M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z',
+    refresh:'M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10M3.51 15A9 9 0 0 0 18.36 18.36L23 14',
+    clock:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
+    plus:'M12 5v14M5 12h14',
+    x:'M18 6L6 18M6 6l12 12',
+    edit:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7m-1.5-10.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z',
+    zap:'M13 2L3 14h9l-1 8 10-12h-9l1-8',
+    cal:'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zM16 2v4M8 2v4M3 10h18',
+    pkg:'M16.5 9.4l-9-5.2M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12'
+  };
+  var fill = n==='flame'?'fill="currentColor" stroke="none"':'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+  return '<span class="ic"><svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" '+fill+'><path d="'+(d[n]||'')+'"/></svg></span>';
+}
+
+// ============================================
 // AUTH
 // ============================================
 var authToken = null;
@@ -1702,6 +1756,7 @@ async function initStorage(){
   if(!settings.cardioLogs) settings.cardioLogs = [];
 
   restoreUserExercises();
+  if(settings.theme && THEMES[settings.theme]) applyTheme(settings.theme);
   await saveAll();
   document.getElementById('loading-screen').classList.add('hide');
   setTimeout(function(){document.getElementById('loading-screen').style.display='none';},400);
@@ -1757,9 +1812,9 @@ function renderHome(){
     .reduce(function(n,l){return n + ((l.fields && l.fields.duration) || 0);}, 0);
 
   document.getElementById('h2-stats').innerHTML =
-    '<div class="h2-stat"><div class="h2-stat-icon">🔥</div><div class="h2-stat-num">'+streak+'</div><div class="h2-stat-label">يوم متتالي</div></div>'+
-    '<div class="h2-stat"><div class="h2-stat-icon">✓</div><div class="h2-stat-num">'+completedThisCycle+'<span class="unit">/'+planDays+'</span></div><div class="h2-stat-label">هذا الأسبوع</div></div>'+
-    '<div class="h2-stat"><div class="h2-stat-icon">🏃</div><div class="h2-stat-num">'+cardioMin+'<span class="unit"> د</span></div><div class="h2-stat-label">كارديو اليوم</div></div>';
+    '<div class="h2-stat"><div class="h2-stat-icon" style="color:var(--acc2)">'+ic('flame',22)+'</div><div class="h2-stat-num">'+streak+'</div><div class="h2-stat-label">يوم متتالي</div></div>'+
+    '<div class="h2-stat"><div class="h2-stat-icon" style="color:var(--green)">'+ic('check',22)+'</div><div class="h2-stat-num">'+completedThisCycle+'<span class="unit">/'+planDays+'</span></div><div class="h2-stat-label">هذا الأسبوع</div></div>'+
+    '<div class="h2-stat"><div class="h2-stat-icon" style="color:var(--acc3)">'+ic('run',22)+'</div><div class="h2-stat-num">'+cardioMin+'<span class="unit"> د</span></div><div class="h2-stat-label">كارديو اليوم</div></div>';
 
   // Today's workout hero
   var exCount = day.exercises.length;
@@ -1865,7 +1920,7 @@ function renderWorkoutStep(){
 
   // Exercise card with progress link
   html += '<div class="wo-ex-card">';
-  html += '<div class="wo-ex-name">'+ex.name+' <button class="wo-ex-prog-btn" onclick="event.stopPropagation();openExDetail(\''+ex.id+'\')">📊</button></div>';
+  html += '<div class="wo-ex-name">'+ex.name+' <button class="wo-ex-prog-btn" onclick="event.stopPropagation();openExDetail(\''+ex.id+'\')">'+ic('chart',14)+'</button></div>';
   html += '<div class="wo-ex-muscle">'+ex.muscle+'</div>';
   html += '<div class="wo-ex-target">الهدف: '+ex.target+'</div>';
   html += '</div>';
@@ -1882,9 +1937,9 @@ function renderWorkoutStep(){
         return '<span class="wo-last-pill" onclick="woFillSet(\''+ex.id+'\','+i+','+(s.w||0)+','+(s.r||0)+','+(s.t||0)+')">'+pillLabel+'</span>';
       }).join('')+'</div>';
       var todayLog = (logs[ex.id]||[]).find(function(s){return s.date === woState.date;});
-      if(!todayLog) html += '<button class="wo-use-last" onclick="woUseLastSession(\''+ex.id+'\')">↩ استخدم نفس الأوزان</button>';
+      if(!todayLog) html += '<button class="wo-use-last" onclick="woUseLastSession(\''+ex.id+'\')">استخدم نفس الأوزان</button>';
     }
-    if(lastSetup) html += '<div class="wo-setup-last">⚙️ <span>إعداد:</span> '+lastSetup+'</div>';
+    if(lastSetup) html += '<div class="wo-setup-last">'+ic('gear',14)+' <span>إعداد:</span> '+lastSetup+'</div>';
     html += '</div>';
   }
 
@@ -1921,13 +1976,13 @@ function renderWorkoutStep(){
 
   // Machine setup field
   var curSetup = woState.setup[ex.id] || '';
-  html += '<div class="wo-notes-wrap"><div class="wo-notes-label">⚙️ إعداد الجهاز / التمرين</div>';
+  html += '<div class="wo-notes-wrap"><div class="wo-notes-label">'+ic('gear',14)+' إعداد الجهاز / التمرين</div>';
   html += '<input class="wo-setup-input" type="text" placeholder="مثال: مقعد 3، قبضة واسعة، ارتفاع 5..." value="'+curSetup.replace(/"/g,'&quot;')+'" id="wo-setup" oninput="woUpdateSetup()">';
   html += '</div>';
 
   // Notes field
   var curNotes = woState.notes[ex.id] || '';
-  html += '<div class="wo-notes-wrap"><div class="wo-notes-label">📝 ملاحظات</div>';
+  html += '<div class="wo-notes-wrap"><div class="wo-notes-label">'+ic('note',14)+' ملاحظات</div>';
   html += '<textarea class="wo-notes-input" placeholder="أضف ملاحظاتك عن هذا التمرين..." id="wo-notes" oninput="woUpdateNotes()">'+curNotes+'</textarea>';
   html += '</div>';
 
@@ -1943,7 +1998,7 @@ function renderWorkoutStep(){
     navHtml += '<button class="wo-nav-btn wo-finish" onclick="woFinish()">إنهاء التمرين ✓</button>';
   }
   // Edit button
-  navHtml += '<button class="wo-nav-btn wo-prev" onclick="openEditMode()" style="flex:0;padding:14px 16px">✏️</button>';
+  navHtml += '<button class="wo-nav-btn wo-prev" onclick="openEditMode()" style="flex:0;padding:14px 16px">'+ic('edit',16)+'</button>';
   nav.innerHTML = navHtml;
 }
 
@@ -2056,7 +2111,7 @@ function woUseLastSession(exId){
   if(!last) return;
   woState.sets[exId] = last.sets.map(function(s){return{w:s.w,r:s.r,t:s.t||0,done:false};});
   renderWorkoutStep();
-  showToast('✅ تم تحميل آخر جلسة');
+  showToast('تم تحميل آخر جلسة');
 }
 
 function woUpdateNotes(){
@@ -2077,15 +2132,15 @@ function woUpdateSetup(){
 // CARDIO LOGGING
 // ============================================
 var CARDIO_TYPES = [
-  {id:'treadmill', label:'جهاز الجري 🏃', fields:['duration','speed','incline']},
-  {id:'bike', label:'دراجة 🚴', fields:['duration','speed']},
-  {id:'elliptical', label:'إليبتكال ⚡', fields:['duration','resistance']},
-  {id:'rowing', label:'تجديف 🚣', fields:['duration','distance']},
-  {id:'stairs', label:'السلالم 🪜', fields:['duration','level']},
-  {id:'jump_rope', label:'حبل القفز ⭕', fields:['duration','sets']},
-  {id:'swim', label:'سباحة 🏊', fields:['duration','distance']},
-  {id:'walk', label:'مشي 🚶', fields:['duration','distance']},
-  {id:'other', label:'أخرى 🏋️', fields:['duration']}
+  {id:'treadmill', label:'جهاز الجري', fields:['duration','speed','incline']},
+  {id:'bike', label:'دراجة', fields:['duration','speed']},
+  {id:'elliptical', label:'إليبتكال', fields:['duration','resistance']},
+  {id:'rowing', label:'تجديف', fields:['duration','distance']},
+  {id:'stairs', label:'السلالم', fields:['duration','level']},
+  {id:'jump_rope', label:'حبل القفز', fields:['duration','sets']},
+  {id:'swim', label:'سباحة', fields:['duration','distance']},
+  {id:'walk', label:'مشي', fields:['duration','distance']},
+  {id:'other', label:'أخرى', fields:['duration']}
 ];
 var CARDIO_FIELD_LABELS = {
   duration: {label:'المدة (دقيقة)', placeholder:'مثال: 30', type:'number'},
@@ -2140,7 +2195,7 @@ function renderCardioFields(){
 
 function saveCardioSession(){
   var ct = CARDIO_TYPES.find(function(t){return t.id===cardioSelectedType;});
-  if(!ct){showToast('⚠️ اختر نوع التمرين');return;}
+  if(!ct){showToast('اختر نوع التمرين');return;}
   var entry = {date: today(), type: cardioSelectedType, typeLabel: ct.label, fields: {}};
   var hasDuration = false;
   ct.fields.forEach(function(f){
@@ -2150,13 +2205,13 @@ function saveCardioSession(){
       if(f==='duration') hasDuration = true;
     }
   });
-  if(!hasDuration){showToast('⚠️ أدخل المدة على الأقل');return;}
+  if(!hasDuration){showToast('أدخل المدة على الأقل');return;}
   if(!settings.cardioLogs) settings.cardioLogs = [];
   settings.cardioLogs.unshift(entry);
   saveAll();
   closeCardio();
   updateCardioQuickBtn();
-  showToast('✅ تم حفظ جلسة الكارديو!');
+  showToast('تم حفظ جلسة الكارديو!');
 }
 
 function updateCardioQuickBtn(){
@@ -2178,7 +2233,7 @@ function renderCardioProgress(){
   if(!container) return;
   var logs = settings.cardioLogs || [];
   if(!logs.length){
-    container.innerHTML = '<div class="empty" style="margin-top:40px"><div class="empty-icon">🏃</div><p>ما سجّلت أي كارديو بعد</p><button class="wo-add-set" style="margin-top:16px" onclick="openCardio()">+ سجّل الآن</button></div>';
+    container.innerHTML = '<div class="empty" style="margin-top:40px"><div class="empty-icon">'+ic('run',32)+'</div><p>ما سجّلت أي كارديو بعد</p><button class="wo-add-set" style="margin-top:16px" onclick="openCardio()">+ سجّل الآن</button></div>';
     return;
   }
   var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:14px;font-weight:700">'+logs.length+' جلسة كارديو مسجّلة</div><button class="wo-add-set" onclick="openCardio()">+ جديد</button></div>';
@@ -2189,7 +2244,7 @@ function renderCardioProgress(){
     });
     html += '<div class="cardio-hist-item">';
     html += '<div class="cardio-hist-header"><div class="cardio-hist-type">'+entry.typeLabel+'</div><div class="cardio-hist-date">'+fmtDate(entry.date)+'</div>';
-    html += '<div style="color:var(--red);cursor:pointer;font-size:13px" onclick="deleteCardioLog('+idx+')">🗑️</div>';
+    html += '<div style="color:var(--red);cursor:pointer;font-size:13px" onclick="deleteCardioLog('+idx+')">'+ic('trash',14)+'</div>';
     html += '</div>';
     html += '<div class="cardio-hist-stats">'+fieldStrs.map(function(s){return '<span class="cardio-stat">'+s+'</span>';}).join('')+'</div>';
     html += '</div>';
@@ -2202,7 +2257,7 @@ function deleteCardioLog(idx){
   settings.cardioLogs.splice(idx, 1);
   saveAll();
   renderCardioProgress();
-  showToast('🗑️ تم الحذف');
+  showToast('تم الحذف');
 }
 
 function getExSetup(exId){
@@ -2298,7 +2353,7 @@ function woFinish(){
     var s = elapsed%60;
     timeStr = '\nالوقت: '+m+' دقيقة';
   }
-  showToast('🎉 أحسنت! تم إنهاء التمرين'+timeStr);
+  showToast('أحسنت! تم إنهاء التمرين'+timeStr);
   closeWorkout();
   renderHome();
 }
@@ -2450,7 +2505,7 @@ function swapExercise(oldEx, newEx, exIdx){
   // Jump to the swapped exercise
   woState.exIdx = exIdx;
   renderWorkoutStep();
-  showToast('✅ تم استبدال التمرين');
+  showToast('تم استبدال التمرين');
 }
 
 // ============================================
@@ -2466,7 +2521,7 @@ function openExDetail(exId){
 
   document.getElementById('exd-title').textContent = ex.name;
   document.getElementById('exd-sub').textContent = ex.muscle + ' • ' + ex.target;
-  document.getElementById('exd-edit-btn').textContent = '✏️';
+  document.getElementById('exd-edit-btn').innerHTML = ic('edit',16);
 
   renderExDetailBody();
   document.getElementById('ex-detail-overlay').classList.add('active');
@@ -2479,7 +2534,7 @@ function closeExDetail(){
 
 function toggleExDetailEdit(){
   exDetailState.editMode = !exDetailState.editMode;
-  document.getElementById('exd-edit-btn').textContent = exDetailState.editMode ? '✓ تم' : '✏️';
+  document.getElementById('exd-edit-btn').innerHTML = exDetailState.editMode ? '✓ تم' : ic('edit',16);
   renderExDetailBody();
 }
 
@@ -2499,7 +2554,7 @@ function renderExDetailBody(){
 
   if(overallBest){
     html += '<div class="exd-best-card">';
-    html += '<div class="exd-best-icon">🏆</div>';
+    html += '<div class="exd-best-icon">'+ic('trophy',24)+'</div>';
     html += '<div class="exd-best-info"><div class="exd-best-label">أفضل أداء</div>';
     html += '<div class="exd-best-val">'+fmtSetPill(overallBest)+'</div>';
     html += '</div></div>';
@@ -2512,16 +2567,16 @@ function renderExDetailBody(){
 
   // Sessions list
   if(!sessions.length){
-    html += '<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد لهذا التمرين</p></div>';
+    html += '<div class="empty"><div class="empty-icon">'+ic('inbox',32)+'</div><p>ما في تسجيلات بعد لهذا التمرين</p></div>';
   } else {
-    html += '<div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px">📅 السجلات ('+sessions.length+' جلسة)</div>';
+    html += '<div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px">'+ic('cal',14)+' السجلات ('+sessions.length+' جلسة)</div>';
     sessions.slice().reverse().forEach(function(s, ri){
       var oi = sessions.length - 1 - ri;
       html += '<div class="exd-session">';
       html += '<div class="exd-session-header">';
       html += '<div class="exd-session-date">'+fmtDate(s.date)+'</div>';
       if(exDetailState.editMode){
-        html += '<div class="exd-session-del" onclick="confirmDeleteSession(\''+exId+'\','+oi+',\'\',\''+s.date+'\')">🗑️</div>';
+        html += '<div class="exd-session-del" onclick="confirmDeleteSession(\''+exId+'\','+oi+',\'\',\''+s.date+'\')">'+ic('trash',14)+'</div>';
       }
       html += '</div>';
       html += '<div class="exd-sets">';
@@ -2531,8 +2586,8 @@ function renderExDetailBody(){
         html += '</span>';
       });
       html += '</div>';
-      if(s.notes) html += '<div class="exd-notes"><span>📝</span> '+s.notes+'</div>';
-      if(s.setup) html += '<div class="exd-setup">⚙️ '+s.setup+'</div>';
+      if(s.notes) html += '<div class="exd-notes">'+ic('note',14)+' '+s.notes+'</div>';
+      if(s.setup) html += '<div class="exd-setup">'+ic('gear',14)+' '+s.setup+'</div>';
       html += '</div>';
     });
   }
@@ -2577,7 +2632,7 @@ function switchProgTab(tab,btn){
 function saveWeight(){
   var input = document.getElementById('weight-input');
   var w = parseFloat(input.value);
-  if(!w || w <= 0){showToast('⚠️ أدخل وزن صحيح');return;}
+  if(!w || w <= 0){showToast('أدخل وزن صحيح');return;}
   if(!settings.weightLog) settings.weightLog = [];
   var d = today();
   var existing = settings.weightLog.findIndex(function(e){return e.date === d;});
@@ -2586,7 +2641,7 @@ function saveWeight(){
   saveAll();
   input.value = '';
   updateWeightCard();
-  showToast('✅ تم حفظ الوزن: '+w+' كج');
+  showToast('تم حفظ الوزن: '+w+' كج');
 }
 
 function updateWeightCard(){
@@ -2622,7 +2677,7 @@ function updateWeightCard(){
     var first = settings.weightLog[0].weight;
     var last = latest.weight;
     var diff = (last - first).toFixed(1);
-    var arrow = diff > 0 ? '📈 +' : diff < 0 ? '📉 ' : '➡️ ';
+    var arrow = diff > 0 ? '+' : '';
     trendEl.textContent = 'من '+first+' كج إلى '+last+' كج ('+arrow+diff+' كج)';
   } else {
     trendEl.textContent = '';
@@ -2678,7 +2733,7 @@ function renderProgress(){
     });
   }
 
-  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>';return;}
+  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">'+ic('inbox',32)+'</div><p>ما في تسجيلات بعد.<br>ابدأ تتمرن وسجل أوزانك!</p></div>';return;}
   filtered.forEach(function(id){
     var ex=allExs[id]||{name:id,muscle:'',target:''};
     var sessions=logs[id],overallBest=null;
@@ -2716,7 +2771,7 @@ function renderCharts(){
   if(settings.weightLog && settings.weightLog.length >= 2){
     var wc = document.createElement('div');wc.className='chart-card';
     var lastW = settings.weightLog[settings.weightLog.length-1];
-    wc.innerHTML='<div class="chart-card-header"><div class="chart-ex-name">الوزن</div><div class="chart-pr-badge">⚖️ '+lastW.weight+'كج</div></div><div class="chart-muscle">تتبع وزن الجسم</div><div class="chart-wrap"><canvas id="chart-weight"></canvas></div>';
+    wc.innerHTML='<div class="chart-card-header"><div class="chart-ex-name">الوزن</div><div class="chart-pr-badge">'+ic('scale',14)+' '+lastW.weight+'كج</div></div><div class="chart-muscle">تتبع وزن الجسم</div><div class="chart-wrap"><canvas id="chart-weight"></canvas></div>';
     container.appendChild(wc);
     setTimeout(function(){
       var ctx=document.getElementById('chart-weight');if(!ctx)return;
@@ -2732,19 +2787,19 @@ function renderCharts(){
   var vDates=Object.keys(volByDate).sort();
   if(vDates.length>=2){
     var vc=document.createElement('div');vc.className='volume-card';
-    vc.innerHTML='<div class="volume-card-header"><div class="volume-title">إجمالي الحجم التدريبي</div><div class="volume-badge">📊 كج × تكرار</div></div><div class="volume-wrap"><canvas id="chart-total-volume"></canvas></div>';
+    vc.innerHTML='<div class="volume-card-header"><div class="volume-title">إجمالي الحجم التدريبي</div><div class="volume-badge">'+ic('chart',14)+' كج × تكرار</div></div><div class="volume-wrap"><canvas id="chart-total-volume"></canvas></div>';
     container.appendChild(vc);
     setTimeout(function(){var ctx=document.getElementById('chart-total-volume');if(!ctx)return;
       activeCharts['vol']=new Chart(ctx,{type:'bar',data:{labels:vDates.map(fmtDate),datasets:[{data:vDates.map(function(d){return volByDate[d];}),backgroundColor:'rgba(78,205,196,0.4)',borderColor:'#4ecdc4',borderWidth:2,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e1e28',borderColor:'#2c2c3e',borderWidth:1,titleColor:'#eeeef5',bodyColor:'#4ecdc4',rtl:true,callbacks:{label:function(c){return c.raw.toLocaleString()+' كج';}}}},scales:{x:{ticks:{color:'#6b6b8a',font:{size:9,family:'Cairo'},maxRotation:30},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},callback:function(v){return v>=1000?(v/1000).toFixed(1)+'k':v;}},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:true}}}});
     },50);
   }
 
-  if(!ids.length && vDates.length < 2){container.innerHTML='<div class="empty"><div class="empty-icon">📊</div><p>تحتاج جلستين على الأقل</p></div>';return;}
+  if(!ids.length && vDates.length < 2){container.innerHTML='<div class="empty"><div class="empty-icon">'+ic('chart',32)+'</div><p>تحتاج جلستين على الأقل</p></div>';return;}
 
   ids.forEach(function(id){
     var ex=allExs[id]||{name:id,muscle:''};var sessions=logs[id],labels=sessions.map(function(s){return fmtDate(s.date);}),data=sessions.map(function(s){var b=bestSet(s.sets);return b?b.w:0;}),maxW=Math.max.apply(null,data);
     var card=document.createElement('div');card.className='chart-card';
-    card.innerHTML='<div class="chart-card-header"><div class="chart-ex-name">'+ex.name+'</div><div class="chart-pr-badge">🏆 '+maxW+'كج</div></div><div class="chart-muscle">'+ex.muscle+'</div><div class="chart-wrap"><canvas id="chart-'+id+'"></canvas></div>';
+    card.innerHTML='<div class="chart-card-header"><div class="chart-ex-name">'+ex.name+'</div><div class="chart-pr-badge">'+ic('trophy',14)+' '+maxW+'كج</div></div><div class="chart-muscle">'+ex.muscle+'</div><div class="chart-wrap"><canvas id="chart-'+id+'"></canvas></div>';
     container.appendChild(card);
     setTimeout(function(){var ctx=document.getElementById('chart-'+id);if(!ctx)return;
       activeCharts[id]=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{data:data,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,0.12)',borderWidth:2.5,pointBackgroundColor:'#f5a623',pointRadius:4,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e1e28',borderColor:'#2c2c3e',borderWidth:1,titleColor:'#eeeef5',bodyColor:'#f5a623',rtl:true,callbacks:{label:function(c){return c.raw+'كج';}}}},scales:{x:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},maxRotation:30},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#6b6b8a',font:{size:10,family:'Cairo'},callback:function(v){return v+'كج';}},grid:{color:'rgba(255,255,255,.06)'},beginAtZero:false}}}});
@@ -2806,7 +2861,7 @@ function renderSettings(){
   var recDays = rec ? rec.days : null;
 
   // Profile / Personalized Journey card
-  var profileHtml = '<div class="setting-card"><div class="setting-card-title"><span>👤</span> رحلتك الشخصية</div>';
+  var profileHtml = '<div class="setting-card"><div class="setting-card-title">'+ic('user',18)+' رحلتك الشخصية</div>';
   profileHtml += '<div class="setting-row"><div><div class="setting-label">الاسم</div></div>';
   profileHtml += '<input class="setting-select" type="text" value="'+(settings.userName||'').replace(/"/g,'&quot;')+'" placeholder="اسمك" onchange="settings.userName=this.value;saveAll();renderHome()" style="min-width:120px;text-align:right"></div>';
 
@@ -2834,27 +2889,46 @@ function renderSettings(){
 
   if(profile.goal && profile.experience){
     profileHtml += '<div class="profile-summary">';
-    profileHtml += '<span class="profile-tag goal">🎯 '+GOAL_LABELS[profile.goal]+'</span>';
-    profileHtml += '<span class="profile-tag exp">📈 '+(EXP_LABELS[profile.experience]||'').split('(')[0].trim()+'</span>';
-    if(profile.age) profileHtml += '<span class="profile-tag days">🎂 '+profile.age+' سنة</span>';
-    if(profile.targetWeight) profileHtml += '<span class="profile-tag weight">🎯 '+profile.targetWeight+' كج</span>';
+    profileHtml += '<span class="profile-tag goal">'+ic('target',13)+' '+GOAL_LABELS[profile.goal]+'</span>';
+    profileHtml += '<span class="profile-tag exp">'+ic('chart',13)+' '+(EXP_LABELS[profile.experience]||'').split('(')[0].trim()+'</span>';
+    if(profile.age) profileHtml += '<span class="profile-tag days">'' + '+profile.age+' سنة</span>';
+    if(profile.targetWeight) profileHtml += '<span class="profile-tag weight">'+ic('target',13)+' '+profile.targetWeight+' كج</span>';
     profileHtml += '</div>';
   }
 
   profileHtml += '<div class="setting-row" style="margin-top:4px"><div><div class="setting-sublabel">تغيير البيانات سيحدث التوصيات تلقائياً</div></div>';
-  profileHtml += '<button class="setting-btn" onclick="showOnboarding()">🔄 إعادة الإعداد</button></div>';
+  profileHtml += '<button class="setting-btn" onclick="showOnboarding()">إعادة الإعداد</button></div>';
   profileHtml += '</div>';
 
   list.innerHTML = profileHtml;
 
+  // Theme picker
+  var curTheme = settings.theme || 'steel';
+  var themeHtml = '<div class="setting-card"><div class="setting-card-title">'+ic('star',18)+' المظهر</div>';
+  themeHtml += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 4px">';
+  Object.keys(THEMES).forEach(function(tid){
+    var t = THEMES[tid];
+    var isActive = tid === curTheme;
+    themeHtml += '<div onclick="applyTheme(\''+tid+'\');renderSettings();renderHome();" style="cursor:pointer;padding:14px 8px;border-radius:14px;text-align:center;border:2px solid '+(isActive?'var(--acc)':'var(--border)')+';background:'+(isActive?'rgba(108,142,239,.08)':'var(--card)')+';">';
+    themeHtml += '<div style="display:flex;gap:3px;justify-content:center;margin-bottom:8px">';
+    themeHtml += '<div style="width:14px;height:14px;border-radius:50%;background:'+t.acc+'"></div>';
+    themeHtml += '<div style="width:14px;height:14px;border-radius:50%;background:'+t.card+'"></div>';
+    themeHtml += '<div style="width:14px;height:14px;border-radius:50%;background:'+t.green+'"></div>';
+    themeHtml += '</div>';
+    themeHtml += '<div style="font-size:11px;font-weight:700;'+(isActive?'color:var(--acc)':'color:var(--muted)')+'">'+t.label+'</div>';
+    themeHtml += '</div>';
+  });
+  themeHtml += '</div></div>';
+  list.innerHTML += themeHtml;
+
   // Plan selection with recommended badge
   list.innerHTML +=
-    '<div class="setting-card"><div class="setting-card-title"><span>🏋️</span> خطة التمرين</div>'+
+    '<div class="setting-card"><div class="setting-card-title">'+ic('dumbbell',18)+' خطة التمرين</div>'+
       '<div class="setting-row"><div><div class="setting-label">عدد أيام التمرين</div><div class="setting-sublabel">اختر الخطة المناسبة لجدولك</div></div></div>'+
       '<div class="plan-option">'+
         [3,4,5,6].map(function(n){
           var isRec = recDays === n;
-          return '<button class="plan-btn '+(planDays===n?'active':'')+'" onclick="setPlanDays('+n+')">'+(isRec?'⭐ ':'')+n+' أيام</button>';
+          return '<button class="plan-btn '+(planDays===n?'active':'')+'" onclick="setPlanDays('+n+')">'+(isRec?''+ic('star',13)+' ':'')+n+' أيام</button>';
         }).join('')+
       '</div>'+
       // Schedule type selector (dropdown with recommended labels)
@@ -2863,7 +2937,7 @@ function renderSettings(){
         '<option value=""'+(schedType===''?' selected':'')+'>— اختر نوع الجدول —</option>'+
         (SCHEDULE_TYPES[planDays]||[]).map(function(s){
           var isRec = topSched === s.id;
-          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+(isRec?'⭐ ':'')+s.nameAr+' ('+s.name+')'+(isRec?' — موصى به':'')+'</option>';
+          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+(isRec?''+ic('star',13)+' ':'')+s.nameAr+' ('+s.name+')'+(isRec?' — موصى به':'')+'</option>';
         }).join('')+
       '</select>'+
       (function(){
@@ -2871,7 +2945,7 @@ function renderSettings(){
         var desc = sel ? '<div class="sched-desc-text">'+sel.desc+'</div>' : '';
         if(topSched && schedType !== topSched && rec){
           var recType = (SCHEDULE_TYPES[planDays]||[]).find(function(s){return s.id === topSched;});
-          if(recType) desc += '<div class="sched-desc-text" style="color:var(--green)">⭐ نوصي بـ: '+recType.nameAr+' — '+rec.reason+'</div>';
+          if(recType) desc += '<div class="sched-desc-text" style="color:var(--green)">'+ic('star',13)+' نوصي بـ: '+recType.nameAr+' — '+rec.reason+'</div>';
         }
         return desc;
       })()+
@@ -2883,7 +2957,7 @@ function renderSettings(){
   var dayOrder = getDayOrder(planDays);
   var orderedDays = dayOrder.map(function(oi){return {day:days[oi], origIdx:oi};});
 
-  var custHtml = '<div class="setting-card"><div class="setting-card-title"><span>🎯</span> ترتيب الأيام والتمارين</div>';
+  var custHtml = '<div class="setting-card"><div class="setting-card-title">'+ic('target',18)+' ترتيب الأيام والتمارين</div>';
   custHtml += '<div class="setting-sublabel" style="margin-bottom:6px">اسحب أو استخدم الأسهم لتغيير ترتيب الأيام، واضغط "تعديل" لتخصيص التمارين</div>';
   custHtml += '<div class="day-order-list" id="day-order-list">';
   orderedDays.forEach(function(item, pos){
@@ -2901,7 +2975,7 @@ function renderSettings(){
     custHtml += '<div class="day-order-focus">'+d.focus+'</div>';
     custHtml += '<div class="day-order-chips">'+chips+'</div>';
     custHtml += '</div>';
-    if(isCustom) custHtml += '<button class="setting-day-reset" onclick="resetCustomDay('+di+')">↩</button>';
+    if(isCustom) custHtml += '<button class="setting-day-reset" onclick="resetCustomDay('+di+')">'+ic('refresh',14)+'</button>';
     custHtml += '<button class="setting-day-edit" onclick="openCustomize('+di+')">تعديل</button>';
     custHtml += '</div>';
   });
@@ -2909,7 +2983,7 @@ function renderSettings(){
   list.innerHTML += custHtml;
 
   // Exercise Manager
-  var emHtml = '<div class="setting-card" style="padding-bottom:8px"><div class="setting-card-title"><span>📋</span> إدارة التمارين</div>';
+  var emHtml = '<div class="setting-card" style="padding-bottom:8px"><div class="setting-card-title">'+ic('edit',18)+' إدارة التمارين</div>';
   emHtml += '<div class="setting-sublabel" style="margin-bottom:10px">ابحث في كل التمارين، أضف تمارين مخصصة، أو أضف تمرين لأي يوم</div>';
   emHtml += '<input class="search-input" type="text" placeholder="ابحث عن تمرين..." id="em-search" oninput="renderExManager()" style="margin-bottom:10px">';
   emHtml += '<div class="muscle-filters" style="padding:0;margin-bottom:10px"><div class="muscle-filters-inner" id="em-filters"></div></div>';
@@ -2921,9 +2995,9 @@ function renderSettings(){
 
   // Export/Import
   list.innerHTML +=
-    '<div class="setting-card"><div class="setting-card-title"><span>📦</span> تصدير واستيراد البيانات</div>'+
-      '<div class="setting-row"><div><div class="setting-label">تصدير البيانات</div><div class="setting-sublabel">حفظ نسخة من كل بياناتك</div></div><button class="setting-btn" onclick="exportData()">📥 تصدير</button></div>'+
-      '<div class="setting-row"><div><div class="setting-label">استيراد البيانات</div><div class="setting-sublabel">استعادة بيانات من ملف محفوظ</div></div><button class="setting-btn" onclick="importData()">📤 استيراد</button></div>'+
+    '<div class="setting-card"><div class="setting-card-title">'+ic('pkg',18)+' تصدير واستيراد البيانات</div>'+
+      '<div class="setting-row"><div><div class="setting-label">تصدير البيانات</div><div class="setting-sublabel">حفظ نسخة من كل بياناتك</div></div><button class="setting-btn" onclick="exportData()">تصدير</button></div>'+
+      '<div class="setting-row"><div><div class="setting-label">استيراد البيانات</div><div class="setting-sublabel">استعادة بيانات من ملف محفوظ</div></div><button class="setting-btn" onclick="importData()">استيراد</button></div>'+
     '</div>';
 
   // Account
@@ -2931,11 +3005,11 @@ function renderSettings(){
     ? '<div class="setting-row"><div><div class="setting-label">الحساب</div><div class="setting-sublabel">'+authUser.email+'</div></div><button class="setting-btn danger" onclick="logout()">تسجيل الخروج</button></div>'
     : '<div class="setting-row"><div><div class="setting-label">الحساب</div><div class="setting-sublabel">غير مسجّل — بياناتك محلية فقط</div></div><button class="setting-btn" onclick="logout()">تسجيل الدخول</button></div>';
   list.innerHTML +=
-    '<div class="setting-card"><div class="setting-card-title"><span>👤</span> الحساب</div>'+accountRows+'</div>';
+    '<div class="setting-card"><div class="setting-card-title">'+ic('user',18)+' الحساب</div>'+accountRows+'</div>';
 
   // Data management
   list.innerHTML +=
-    '<div class="setting-card"><div class="setting-card-title"><span>💾</span> البيانات</div>'+
+    '<div class="setting-card"><div class="setting-card-title">'+ic('db',18)+' البيانات</div>'+
       '<div class="setting-row"><div><div class="setting-label">حالة التخزين</div></div><div class="setting-value">'+getStorageLabel()+'</div></div>'+
       '<div class="setting-row"><div><div class="setting-label">عدد التسجيلات</div></div><div class="setting-value">'+Object.values(logs).reduce(function(n,a){return n+a.length;},0)+'</div></div>'+
       '<div class="setting-row"><div><div class="setting-label">سجلات الوزن</div></div><div class="setting-value">'+(settings.weightLog?settings.weightLog.length:0)+'</div></div>'+
@@ -2953,7 +3027,7 @@ function setPlanDays(n){
   saveAll();
   renderSettings();
   renderHome();
-  showToast('✅ تم تغيير الخطة إلى '+n+' أيام');
+  showToast('تم تغيير الخطة إلى '+n+' أيام');
 }
 
 function setScheduleType(typeId){
@@ -2961,7 +3035,7 @@ function setScheduleType(typeId){
   saveAll();
   renderSettings();
   renderHome();
-  showToast('✅ تم اختيار نوع الجدول');
+  showToast('تم اختيار نوع الجدول');
 }
 
 function updateProfile(key, value){
@@ -3029,7 +3103,7 @@ function resetProgress(){
   saveAll();
   renderSettings();
   renderHome();
-  showToast('🔄 تم إعادة تعيين التقدم');
+  showToast('تم إعادة تعيين التقدم');
 }
 
 // ============================================
@@ -3168,7 +3242,7 @@ function addExToDay(exId, dayIdx){
   closeDayPicker();
   renderSettings();
   renderHome();
-  showToast('✅ تمت الإضافة ليوم ' + (dayIdx + 1));
+  showToast('تمت الإضافة ليوم ' + (dayIdx + 1));
 }
 
 // --- Replace Picker (replace exercise in a day) ---
@@ -3239,7 +3313,7 @@ function replaceExInDay(newExId, oldExId, dayIdx){
   renderHome();
   var oldEx = getExById(oldExId);
   var newEx = getExById(newExId);
-  showToast('✅ تم استبدال "'+oldEx.name+'" بـ "'+newEx.name+'"');
+  showToast('تم استبدال "'+oldEx.name+'" بـ "'+newEx.name+'"');
 }
 
 // --- Add Custom Exercise ---
@@ -3265,8 +3339,8 @@ function saveCustomExercise(){
   var target = document.getElementById('add-ex-target').value.trim();
   var group = document.getElementById('add-ex-group').value;
 
-  if(!name){showToast('⚠️ أدخل اسم التمرين');return;}
-  if(!muscle){showToast('⚠️ أدخل العضلة المستهدفة');return;}
+  if(!name){showToast('أدخل اسم التمرين');return;}
+  if(!muscle){showToast('أدخل العضلة المستهدفة');return;}
 
   var id = 'user_' + name.toLowerCase().replace(/[^a-z0-9]/g,'_') + '_' + Date.now();
   var ex = {id:id, name:name, muscle:muscle, target:target||'3 × 12', group:group};
@@ -3284,7 +3358,7 @@ function saveCustomExercise(){
 
   closeAddExOverlay();
   renderExManager();
-  showToast('✅ تم إضافة "'+name+'"');
+  showToast('تم إضافة "'+name+'"');
 }
 
 // Restore user exercises on load
@@ -3352,7 +3426,7 @@ function renderCustomizeBody(){
 
   // Muscle group selection
   html += '<div class="cust-section">';
-  html += '<div class="cust-section-title">💪 العضلات المستهدفة</div>';
+  html += '<div class="cust-section-title">'+ic('dumbbell',16)+' العضلات المستهدفة</div>';
   html += '<div class="cust-muscle-grid">';
   Object.keys(EXERCISE_DB).forEach(function(g){
     var grp = EXERCISE_DB[g];
@@ -3373,7 +3447,7 @@ function renderCustomizeBody(){
 
   if(activeGroups.length > 0){
     html += '<div class="cust-section">';
-    html += '<div class="cust-section-title">📋 اختر التمارين</div>';
+    html += '<div class="cust-section-title">'+ic('edit',16)+' اختر التمارين</div>';
 
     activeGroups.forEach(function(g){
       var grp = EXERCISE_DB[g];
@@ -3395,7 +3469,7 @@ function renderCustomizeBody(){
     });
     html += '</div>';
   } else {
-    html += '<div class="empty" style="padding:30px"><div class="empty-icon">👆</div><p>اختر عضلة واحدة على الأقل لعرض التمارين</p></div>';
+    html += '<div class="empty" style="padding:30px"><div class="empty-icon">'+ic('target',32)+'</div><p>اختر عضلة واحدة على الأقل لعرض التمارين</p></div>';
   }
 
   body.innerHTML = html;
@@ -3451,7 +3525,7 @@ function saveCustomDay(){
   var selectedMuscles = Object.keys(custState.selectedMuscles).filter(function(g){ return custState.selectedMuscles[g]; });
 
   if(selectedExIds.length === 0){
-    showToast('⚠️ اختر تمرين واحد على الأقل');
+    showToast('اختر تمرين واحد على الأقل');
     return;
   }
 
@@ -3474,7 +3548,7 @@ function saveCustomDay(){
   closeCustomize();
   renderSettings();
   renderHome();
-  showToast('✅ تم حفظ تخصيص يوم ' + (custState.dayIdx + 1));
+  showToast('تم حفظ تخصيص يوم ' + (custState.dayIdx + 1));
 }
 
 function resetCustomDay(dayIdx){
@@ -3485,7 +3559,7 @@ function resetCustomDay(dayIdx){
   saveAll();
   renderSettings();
   renderHome();
-  showToast('🔄 تم إعادة تعيين يوم ' + (dayIdx + 1));
+  showToast('تم إعادة تعيين يوم ' + (dayIdx + 1));
 }
 
 // ============================================
@@ -3507,7 +3581,7 @@ function exportData(){
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('📥 تم تصدير البيانات');
+  showToast('تم تصدير البيانات');
 }
 
 function importData(){
@@ -3559,9 +3633,9 @@ function importData(){
         saveAll();
         renderHome();
         renderSettings();
-        showToast('📤 تم استيراد البيانات بنجاح!');
+        showToast('تم استيراد البيانات بنجاح!');
       }catch(err){
-        showToast('⚠️ خطأ في الملف');
+        showToast('خطأ في الملف');
       }
     };
     reader.readAsText(file);
@@ -3574,21 +3648,21 @@ function importData(){
 // ============================================
 function confirmDeleteSession(exId,si,name,date){
   pendingDelete={type:'session',exId:exId,sessionIdx:si};
-  document.getElementById('confirm-icon').textContent='🗑️';
+  document.getElementById('confirm-icon').innerHTML=ic('trash',28);
   document.getElementById('confirm-title').textContent='حذف جلسة كاملة؟';
   document.getElementById('confirm-msg').textContent='بتنحذف جلسة "'+name+'" بتاريخ '+fmtDate(date);
   document.getElementById('confirm-overlay').classList.add('show');
 }
 function confirmDeleteSet(exId,si,setIdx,name,w,r){
   pendingDelete={type:'set',exId:exId,sessionIdx:si,setIdx:setIdx};
-  document.getElementById('confirm-icon').textContent='⚠️';
+  document.getElementById('confirm-icon').innerHTML=ic('zap',28);
   document.getElementById('confirm-title').textContent='حذف ست واحد؟';
   document.getElementById('confirm-msg').textContent='بتنحذف الست ('+w+'كج × '+r+') من "'+name+'"';
   document.getElementById('confirm-overlay').classList.add('show');
 }
 function clearAllData(){
   pendingDelete={type:'clearAll'};
-  document.getElementById('confirm-icon').textContent='⚠️';
+  document.getElementById('confirm-icon').innerHTML=ic('zap',28);
   document.getElementById('confirm-title').textContent='مسح كل البيانات؟';
   document.getElementById('confirm-msg').textContent='بتنمسح كل السجلات والإعدادات نهائياً. هل أنت متأكد؟';
   document.getElementById('confirm-overlay').classList.add('show');
@@ -3605,15 +3679,15 @@ function execDelete(){
     logs={};
     settings={planDays:6,currentDayIdx:0,completedDays:[],customPlan:{},customDays:{},userExercises:[],weightLog:[],gymSessions:[],exSetup:{},scheduleType:'',dayOrder:{},userName:'',profile:{},onboardingDone:false};
     saveAll();document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
-    renderHome();renderSettings();showToast('🗑️ تم مسح الكل');return;
+    renderHome();renderSettings();showToast('تم مسح الكل');return;
   }
   if(d.type==='session'){
-    if(logs[d.exId]){logs[d.exId].splice(d.sessionIdx,1);if(!logs[d.exId].length)delete logs[d.exId];saveAll();showToast('🗑️ تم حذف الجلسة');}
+    if(logs[d.exId]){logs[d.exId].splice(d.sessionIdx,1);if(!logs[d.exId].length)delete logs[d.exId];saveAll();showToast('تم حذف الجلسة');}
   } else if(d.type==='set'){
     if(logs[d.exId]&&logs[d.exId][d.sessionIdx]){
       logs[d.exId][d.sessionIdx].sets.splice(d.setIdx,1);
       if(!logs[d.exId][d.sessionIdx].sets.length){logs[d.exId].splice(d.sessionIdx,1);if(!logs[d.exId].length)delete logs[d.exId];}
-      saveAll();showToast('🗑️ تم حذف الست');
+      saveAll();showToast('تم حذف الست');
     }
   }
   document.getElementById('confirm-overlay').classList.remove('show');pendingDelete=null;
@@ -3805,11 +3879,11 @@ function renderObStep(){
   html += '</div>';
 
   if(obStep === 0){
-    html += '<div class="ob-logo">💪</div>';
+    html += '<div class="ob-logo" style="font-size:28px;font-weight:900;color:var(--acc)">GYM</div>';
     html += '<div class="ob-title">مرحباً بك في GYM</div>';
     html += '<div class="ob-sub">خلنا نعرف عنك شوي عشان نصمم لك أفضل برنامج تمرين</div>';
     html += '<div class="ob-step">';
-    html += '<div class="ob-step-title">👤 البيانات الشخصية</div>';
+    html += '<div class="ob-step-title">البيانات الشخصية</div>';
     html += '<div class="ob-field"><div class="ob-label">اسمك</div>';
     html += '<input class="ob-input" type="text" placeholder="مثال: عبدالملك" id="ob-name" value="'+obData.name+'" oninput="obData.name=this.value"></div>';
     html += '<div class="ob-field"><div class="ob-label">العمر</div>';
@@ -3821,11 +3895,11 @@ function renderObStep(){
     html += '</div></div>';
     html += '</div>';
   } else if(obStep === 1){
-    html += '<div class="ob-logo">⚖️</div>';
+    html += '<div class="ob-logo" style="font-size:22px;color:var(--acc3)">KG</div>';
     html += '<div class="ob-title">الوزن والهدف</div>';
     html += '<div class="ob-sub">بيانات الوزن تساعدنا نختار لك أفضل نظام تمرين</div>';
     html += '<div class="ob-step">';
-    html += '<div class="ob-step-title">📊 بيانات الجسم</div>';
+    html += '<div class="ob-step-title">بيانات الجسم</div>';
     html += '<div class="ob-field"><div class="ob-label">الوزن الحالي (كج)</div>';
     html += '<input class="ob-input" type="number" inputmode="decimal" placeholder="مثال: 80" id="ob-weight" value="'+obData.currentWeight+'" oninput="obData.currentWeight=this.value"></div>';
     html += '<div class="ob-field"><div class="ob-label">الوزن المستهدف (كج)</div>';
@@ -3833,12 +3907,12 @@ function renderObStep(){
     html += '<div class="ob-field"><div class="ob-label">هدفك الرئيسي</div>';
     html += '<div class="ob-chips">';
     var goals = [
-      {id:'lose_fat',label:'خسارة دهون',icon:'🔥'},
-      {id:'build_muscle',label:'بناء عضلات',icon:'💪'},
-      {id:'recomp',label:'الاثنين معاً',icon:'⚡'},
-      {id:'strength',label:'زيادة قوة',icon:'🏋️'},
-      {id:'maintain',label:'محافظة',icon:'✅'},
-      {id:'endurance',label:'تحمل ولياقة',icon:'🏃'}
+      {id:'lose_fat',label:'خسارة دهون',icon:''},
+      {id:'build_muscle',label:'بناء عضلات',icon:''},
+      {id:'recomp',label:'الاثنين معاً',icon:''},
+      {id:'strength',label:'زيادة قوة',icon:''},
+      {id:'maintain',label:'محافظة',icon:''},
+      {id:'endurance',label:'تحمل ولياقة',icon:''}
     ];
     goals.forEach(function(g){
       html += '<div class="ob-chip'+(obData.goal===g.id?' active':'')+'" onclick="obData.goal=\''+g.id+'\';renderObStep()">'+g.icon+' '+g.label+'</div>';
@@ -3846,11 +3920,11 @@ function renderObStep(){
     html += '</div></div>';
     html += '</div>';
   } else if(obStep === 2){
-    html += '<div class="ob-logo">🎯</div>';
+    html += '<div class="ob-logo" style="font-size:22px;color:var(--acc)">GO</div>';
     html += '<div class="ob-title">خبرتك وجدولك</div>';
     html += '<div class="ob-sub">عشان نعطيك التمارين والحجم المناسب لمستواك</div>';
     html += '<div class="ob-step">';
-    html += '<div class="ob-step-title">📈 مستوى الخبرة</div>';
+    html += '<div class="ob-step-title">'+ic('chart',13)+' مستوى الخبرة</div>';
     html += '<div class="ob-field"><div class="ob-chips">';
     var exps = [
       {id:'beginner',label:'مبتدئ',sub:'أقل من 6 أشهر'},
@@ -3861,7 +3935,7 @@ function renderObStep(){
       html += '<div class="ob-chip'+(obData.experience===e.id?' active':'')+'" onclick="obData.experience=\''+e.id+'\';renderObStep()" style="flex-direction:column;gap:2px"><div>'+e.label+'</div><div style="font-size:10px;color:var(--muted);font-weight:400">'+e.sub+'</div></div>';
     });
     html += '</div></div>';
-    html += '<div class="ob-step-title" style="margin-top:16px">📅 كم يوم تقدر تتمرن بالأسبوع؟</div>';
+    html += '<div class="ob-step-title" style="margin-top:16px">كم يوم تقدر تتمرن بالأسبوع؟</div>';
     html += '<div class="ob-field"><div class="ob-chips">';
     [3,4,5,6].forEach(function(n){
       html += '<div class="ob-chip'+(obData.availableDays===n?' active':'')+'" onclick="obData.availableDays='+n+';renderObStep()">'+n+' أيام</div>';
@@ -3884,12 +3958,12 @@ function renderObStep(){
     var topSched = getTopScheduleForDays(recDays);
     var topType = (SCHEDULE_TYPES[recDays]||[]).find(function(t){return t.id === topSched;});
 
-    html += '<div class="ob-logo">🎉</div>';
+    html += '<div class="ob-logo" style="font-size:22px;color:var(--green)">OK</div>';
     html += '<div class="ob-title">برنامجك جاهز!</div>';
     html += '<div class="ob-sub">بناءً على بياناتك، هذا أفضل برنامج لك</div>';
     html += '<div class="ob-step">';
     html += '<div style="background:linear-gradient(135deg,rgba(245,166,35,.12),rgba(245,166,35,.04));border:1.5px solid rgba(245,166,35,.25);border-radius:16px;padding:18px;margin-bottom:16px;text-align:center">';
-    html += '<div style="font-size:10px;color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">⭐ مُوصى به لك</div>';
+    html += '<div style="font-size:10px;color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">'+ic('star',13)+' مُوصى به لك</div>';
     html += '<div style="font-size:20px;font-weight:900;margin-bottom:4px">'+recDays+' أيام بالأسبوع</div>';
     if(topType) html += '<div style="font-size:14px;font-weight:700;color:var(--acc);margin-bottom:4px">'+topType.nameAr+'</div>';
     if(topType) html += '<div style="font-size:11px;color:var(--muted)">'+topType.desc+'</div>';
@@ -3905,10 +3979,10 @@ function renderObStep(){
     var goalLabel = GOAL_LABELS[obData.goal] || '';
     var expLabel = EXP_LABELS[obData.experience] || '';
     html += '<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">';
-    if(goalLabel) html += '<span class="profile-tag goal">🎯 '+goalLabel+'</span>';
-    if(expLabel) html += '<span class="profile-tag exp">📈 '+expLabel.split('(')[0].trim()+'</span>';
-    html += '<span class="profile-tag days">📅 '+obData.availableDays+' أيام</span>';
-    if(obData.currentWeight) html += '<span class="profile-tag weight">⚖️ '+obData.currentWeight+' كج</span>';
+    if(goalLabel) html += '<span class="profile-tag goal">'+ic('target',13)+' '+goalLabel+'</span>';
+    if(expLabel) html += '<span class="profile-tag exp">'+ic('chart',13)+' '+expLabel.split('(')[0].trim()+'</span>';
+    html += '<span class="profile-tag days">'+obData.availableDays+' أيام</span>';
+    if(obData.currentWeight) html += '<span class="profile-tag weight">'+ic('scale',14)+' '+obData.currentWeight+' كج</span>';
     html += '</div>';
     html += '</div>';
   }
@@ -3928,7 +4002,7 @@ function renderObStep(){
 
 function obNextStep(){
   if(obStep === 0 && !obData.name.trim()){
-    showToast('⚠️ أدخل اسمك');return;
+    showToast('أدخل اسمك');return;
   }
   obStep++;
   renderObStep();
@@ -3968,7 +4042,7 @@ function finishOnboarding(){
   saveAll();
   document.getElementById('onboarding-overlay').classList.remove('active');
   renderHome();
-  showToast('🎉 مرحباً ' + settings.userName + '!');
+  showToast('مرحباً ' + settings.userName + '!');
 }
 
 // ============================================
