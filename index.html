@@ -728,7 +728,7 @@ input[type=file]{display:none}
       <div class="wo-header-sub" id="wo-sub"></div>
     </div>
     <div class="wo-timer" id="wo-gym-timer" style="display:none">
-      <div class="wo-timer-icon">⏱</div>
+      <div class="wo-timer-icon"></div>
       <div class="wo-timer-val" id="wo-gym-timer-val">0:00</div>
     </div>
   </div>
@@ -1777,7 +1777,7 @@ async function saveAll(){
 }
 
 function getStorageLabel(){
-  return '🔗 متزامن مع Supabase';
+  return 'متزامن مع Supabase';
 }
 
 // ============================================
@@ -1837,7 +1837,7 @@ function renderHome(){
     var isCurrent = pos === curDay;
     var isCompleted = isDayCompleted(pos);
     var iconHtml, iconClass;
-    if(isCompleted){iconHtml='✓'; iconClass='done';}
+    if(isCompleted){iconHtml=ic('check',16); iconClass='done';}
     else if(isCurrent){iconHtml=(pos+1); iconClass='current';}
     else{iconHtml=(pos+1); iconClass='pending';}
     var row = document.createElement('div');
@@ -1995,7 +1995,7 @@ function renderWorkoutStep(){
   if(idx < total - 1){
     navHtml += '<button class="wo-nav-btn wo-next" onclick="woSaveAndNext()">التالي ←</button>';
   } else {
-    navHtml += '<button class="wo-nav-btn wo-finish" onclick="woFinish()">إنهاء التمرين ✓</button>';
+    navHtml += '<button class="wo-nav-btn wo-finish" onclick="woFinish()">إنهاء التمرين '+ic('check',16)+'</button>';
   }
   // Edit button
   navHtml += '<button class="wo-nav-btn wo-prev" onclick="openEditMode()" style="flex:0;padding:14px 16px">'+ic('edit',16)+'</button>';
@@ -2534,7 +2534,7 @@ function closeExDetail(){
 
 function toggleExDetailEdit(){
   exDetailState.editMode = !exDetailState.editMode;
-  document.getElementById('exd-edit-btn').innerHTML = exDetailState.editMode ? '✓ تم' : ic('edit',16);
+  document.getElementById('exd-edit-btn').innerHTML = exDetailState.editMode ? ic('check',16)+' تم' : ic('edit',16);
   renderExDetailBody();
 }
 
@@ -2582,7 +2582,7 @@ function renderExDetailBody(){
       html += '<div class="exd-sets">';
       s.sets.forEach(function(st, si){
         html += '<span class="exd-set-pill">'+fmtSetPill(st);
-        if(exDetailState.editMode) html += ' <span style="color:var(--red);cursor:pointer;margin-right:4px" onclick="confirmDeleteSet(\''+exId+'\','+oi+','+si+',\'\','+st.w+','+st.r+')">✕</span>';
+        if(exDetailState.editMode) html += ' <span style="color:var(--red);cursor:pointer;margin-right:4px" onclick="confirmDeleteSet(\''+exId+'\','+oi+','+si+',\'\','+st.w+','+st.r+')">'+ic('x',12)+'</span>';
         html += '</span>';
       });
       html += '</div>';
@@ -2891,7 +2891,7 @@ function renderSettings(){
     profileHtml += '<div class="profile-summary">';
     profileHtml += '<span class="profile-tag goal">'+ic('target',13)+' '+GOAL_LABELS[profile.goal]+'</span>';
     profileHtml += '<span class="profile-tag exp">'+ic('chart',13)+' '+(EXP_LABELS[profile.experience]||'').split('(')[0].trim()+'</span>';
-    if(profile.age) profileHtml += '<span class="profile-tag days">'' + '+profile.age+' سنة</span>';
+    if(profile.age) profileHtml += '<span class="profile-tag days">'+ic('clock',13)+' '+profile.age+' سنة</span>';
     if(profile.targetWeight) profileHtml += '<span class="profile-tag weight">'+ic('target',13)+' '+profile.targetWeight+' كج</span>';
     profileHtml += '</div>';
   }
@@ -2937,7 +2937,7 @@ function renderSettings(){
         '<option value=""'+(schedType===''?' selected':'')+'>— اختر نوع الجدول —</option>'+
         (SCHEDULE_TYPES[planDays]||[]).map(function(s){
           var isRec = topSched === s.id;
-          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+(isRec?''+ic('star',13)+' ':'')+s.nameAr+' ('+s.name+')'+(isRec?' — موصى به':'')+'</option>';
+          return '<option value="'+s.id+'"'+(schedType===s.id?' selected':'')+'>'+(isRec?'* ':'')+s.nameAr+' ('+s.name+')'+(isRec?' — موصى به':'')+'</option>';
         }).join('')+
       '</select>'+
       (function(){
@@ -3907,12 +3907,12 @@ function renderObStep(){
     html += '<div class="ob-field"><div class="ob-label">هدفك الرئيسي</div>';
     html += '<div class="ob-chips">';
     var goals = [
-      {id:'lose_fat',label:'خسارة دهون',icon:''},
-      {id:'build_muscle',label:'بناء عضلات',icon:''},
-      {id:'recomp',label:'الاثنين معاً',icon:''},
-      {id:'strength',label:'زيادة قوة',icon:''},
-      {id:'maintain',label:'محافظة',icon:''},
-      {id:'endurance',label:'تحمل ولياقة',icon:''}
+      {id:'lose_fat',label:'خسارة دهون',icon:ic('flame',14)},
+      {id:'build_muscle',label:'بناء عضلات',icon:ic('dumbbell',14)},
+      {id:'recomp',label:'الاثنين معاً',icon:ic('zap',14)},
+      {id:'strength',label:'زيادة قوة',icon:ic('dumbbell',14)},
+      {id:'maintain',label:'محافظة',icon:ic('check',14)},
+      {id:'endurance',label:'تحمل ولياقة',icon:ic('run',14)}
     ];
     goals.forEach(function(g){
       html += '<div class="ob-chip'+(obData.goal===g.id?' active':'')+'" onclick="obData.goal=\''+g.id+'\';renderObStep()">'+g.icon+' '+g.label+'</div>';
@@ -3971,7 +3971,7 @@ function renderObStep(){
 
     if(rec.reason){
       html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">';
-      html += '<div style="font-size:10px;color:var(--acc3);font-weight:700;margin-bottom:4px">💡 لماذا هذا البرنامج؟</div>';
+      html += '<div style="font-size:10px;color:var(--acc3);font-weight:700;margin-bottom:4px">لماذا هذا البرنامج؟</div>';
       html += '<div style="font-size:12px;color:var(--muted);line-height:1.6">'+rec.reason+'</div>';
       html += '</div>';
     }
@@ -3995,7 +3995,7 @@ function renderObStep(){
   if(obStep < 3){
     navHtml += '<button class="ob-next" onclick="obNextStep()">التالي ←</button>';
   } else {
-    navHtml += '<button class="ob-next" onclick="finishOnboarding()">يلا نبدأ! 🚀</button>';
+    navHtml += '<button class="ob-next" onclick="finishOnboarding()">يلا نبدأ!</button>';
   }
   nav.innerHTML = navHtml;
 }
